@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 import { LoginComponent } from './ui/login/login.component';
 import { authGuard, loginGuard } from './core/guards/auth.guard';
 import { HomeComponent } from './ui/home/home.component';
+import { EmpresaComponent } from './ui/empresa/empresa.component';
 
 export const routes: Routes = [
   {
@@ -14,6 +15,12 @@ export const routes: Routes = [
     path: 'home',
     component: HomeComponent,
     canActivate: [authGuard],
+    children: [
+      {
+        path: 'empresa',
+        component: EmpresaComponent,
+      },
+    ],
   },
 
   { path: '', redirectTo: 'login', pathMatch: 'full' },

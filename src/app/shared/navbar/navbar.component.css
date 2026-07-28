@@ -2,6 +2,8 @@
   background-color: var(--bg-surface);
   min-height: 70px;
   border-bottom: 1px solid var(--border-color);
+  position: relative;
+  z-index: 1050;
 }
 
 .navbar-brand {
@@ -79,12 +81,4 @@
 
 .dropdown-divider {
   border-top-color: var(--border-color);
-}
-
-@media (max-width: 991px) {
-  .user-dropdown {
-    margin-top: 15px;
-    padding-top: 15px;
-    border-top: 1px solid var(--border-color);
-  }
 }

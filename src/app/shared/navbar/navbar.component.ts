@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, EventEmitter, inject, OnInit, Output } from '@angular/core';
 import { AuthService } from '../../core/services/auth.service';
 import { BaseComponent } from '../../ui/base.component';
 
@@ -10,6 +10,8 @@ import { BaseComponent } from '../../ui/base.component';
   styleUrl: './navbar.component.css',
 })
 export class NavbarComponent extends BaseComponent implements OnInit {
+  @Output() menuToggle = new EventEmitter<void>();
+
   nombreUsuario: string = '';
 
   ngOnInit() {
@@ -19,6 +21,10 @@ export class NavbarComponent extends BaseComponent implements OnInit {
         this.nombreUsuario = info.user;
       }
     }
+  }
+
+  toggleMobileMenu(): void {
+    this.menuToggle.emit();
   }
 
   onLogout() {
