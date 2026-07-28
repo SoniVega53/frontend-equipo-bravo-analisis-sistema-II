@@ -1,0 +1,19 @@
+@if (!isAlreadyLoggedIn) {
+  <div class="login-container">
+    <h2>Login - Equipo Bravo</h2>
+    <form (ngSubmit)="onLogin()">
+      <div>
+        <label>Usuario:</label>
+        <input type="text" [(ngModel)]="idUsuario" name="idUsuario" required />
+      </div>
+      <div>
+        <label>Contraseña:</label>
+        <input type="password" [(ngModel)]="password" name="password" required />
+      </div>
+      <button type="submit">Ingresar</button>
+      @if (errorMessage) {
+        <p style="color: red;">{{ errorMessage }}</p>
+      }
+    </form>
+  </div>
+}
