@@ -1,8 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { AuthService } from '../../core/services/auth.service';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
 import { BaseComponent } from '../base.component';
 
 @Component({
@@ -12,29 +11,16 @@ import { BaseComponent } from '../base.component';
   templateUrl: './login.component.html',
   styleUrl: './login.component.css',
 })
-export class LoginComponent extends BaseComponent implements OnInit {
+export class LoginComponent extends BaseComponent {
   idUsuario = '';
   password = '';
   loadData = true;
 
-  isAlreadyLoggedIn = false;
-
-  constructor(
-    private authService: AuthService,
-  ) {
-    super()
-    if (this.authService.isLoggedIn()) {
-      this.isAlreadyLoggedIn = true;
-      this.router.navigate(['/home']);
-    }
+  constructor() {
+    super();
   }
 
-  ngOnInit(): void {
-    
-  }
-
-
- async onLogin() {
+  async onLogin() {
     this.isLoading = true;
     this.errorMessage = '';
 
@@ -46,13 +32,16 @@ export class LoginComponent extends BaseComponent implements OnInit {
 
       this.showSuccessAlert(response.mensaje || 'Inicio Correcto');
 
-      this.navigateTo('/home', {  test: true });
-      
+      this.navigateTo('/home', { test: true });
     } catch (err: any) {
       console.error(err);
       this.showErrorAlert(err.mensaje || 'Error al iniciar servicio');
     } finally {
       this.isLoading = false;
     }
+  }
+
+  onForgotPassword() {
+    // this.navigateTo('/recuperar-password');
   }
 }

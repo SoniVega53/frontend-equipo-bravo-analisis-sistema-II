@@ -2,9 +2,11 @@ import { inject } from '@angular/core';
 import Swal from 'sweetalert2';
 import { NavigationService } from '../core/services/navigation.service';
 import { Router } from '@angular/router';
+import { AuthService } from '../core/services/auth.service';
 
 export abstract class BaseComponent {
   protected router = inject(Router);
+  protected authService = inject(AuthService);
   protected navigationService = inject(NavigationService);
 
   isLoading = false;
@@ -28,6 +30,18 @@ export abstract class BaseComponent {
 
   protected clearNavParams(): void {
     this.navigationService.clearParams();
+  }
+
+  protected getDataToken(){
+    const token = this.authService.getToken();
+    if (token) {
+      const data =  this.authService.decodePayload(token);
+      return {
+        user:data.sub,
+        role:data.role
+      };
+    }
+    return "";
   }
 
   protected showSuccessAlert(message: string, title: string = '¡Éxito!') {

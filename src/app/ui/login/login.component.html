@@ -1,19 +1,73 @@
-@if (!isAlreadyLoggedIn) {
-  <div class="login-container">
-    <h2>Login - Equipo Bravo</h2>
-    <form (ngSubmit)="onLogin()">
-      <div>
-        <label>Usuario:</label>
-        <input type="text" [(ngModel)]="idUsuario" name="idUsuario" required />
+<div class="login-container">
+  <div class="login-card">
+    <!-- Sección Visual (Branding) -->
+    <div class="login-brand">
+      <div class="brand-content">
+        <!-- Puedes cambiar el texto o poner un <img> con tu logo -->
+        <h2>Equipo Bravo</h2>
+        <p>Sistema de Gestión Empresarial</p>
       </div>
-      <div>
-        <label>Contraseña:</label>
-        <input type="password" [(ngModel)]="password" name="password" required />
+      <div class="brand-overlay"></div>
+    </div>
+
+    <!-- Sección del Formulario -->
+    <div class="login-form-section">
+      <div class="form-header">
+        <h3>Bienvenido de nuevo</h3>
+        <p>Ingresa tus credenciales para continuar</p>
       </div>
-      <button type="submit">Ingresar</button>
-      @if (errorMessage) {
-        <p style="color: red;">{{ errorMessage }}</p>
-      }
-    </form>
+
+      <form (ngSubmit)="onLogin()" #loginForm="ngForm" class="form-body">
+        <div class="form-group">
+          <label for="idUsuario">Usuario</label>
+          <div class="input-wrapper">
+            <input
+              type="text"
+              id="idUsuario"
+              name="idUsuario"
+              [(ngModel)]="idUsuario"
+              required
+              placeholder="Ej: admin123"
+              autocomplete="username"
+              [disabled]="isLoading"
+            />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <div class="label-row">
+            <label for="password">Contraseña</label>
+            <a
+              href="javascript:void(0)"
+              class="forgot-link"
+              (click)="onForgotPassword()"
+            >
+              ¿Olvidaste tu contraseña?
+            </a>
+          </div>
+          <div class="input-wrapper">
+            <input
+              type="password"
+              id="password"
+              name="password"
+              [(ngModel)]="password"
+              required
+              placeholder="••••••••"
+              autocomplete="current-password"
+              [disabled]="isLoading"
+            />
+          </div>
+        </div>
+
+        <button
+          type="submit"
+          class="btn-primary"
+          [disabled]="!loginForm.valid || isLoading"
+        >
+          <span *ngIf="!isLoading">Iniciar Sesión</span>
+          <span *ngIf="isLoading" class="btn-loader"></span>
+        </button>
+      </form>
+    </div>
   </div>
-}
+</div>

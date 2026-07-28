@@ -44,7 +44,7 @@ export class AuthService extends BaseService {
     return null;
   }
 
-  private decodePayload(token: string): any {
+  decodePayload(token: string): any {
     try {
       const payload = token.split('.')[1];
       const decoded = atob(payload.replace(/-/g, '+').replace(/_/g, '/'));
