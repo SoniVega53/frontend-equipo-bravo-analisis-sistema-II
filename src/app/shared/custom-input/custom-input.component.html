@@ -1,0 +1,40 @@
+<div class="form-group">
+  <div class="label-row" *ngIf="label || linkText">
+    <label *ngIf="label" [for]="id">{{ label }}</label>
+    <a *ngIf="linkText" href="javascript:void(0)" class="action-link" (click)="onActionLinkClick($event)">
+      {{ linkText }}
+    </a>
+  </div>
+
+  <div class="input-group">
+    <span class="input-group-text custom-addon" *ngIf="iconLeft">
+      <i class="bi" [ngClass]="iconLeft"></i>
+    </span>
+
+    <input 
+      [type]="type === 'password' ? (showPassword ? 'text' : 'password') : type" 
+      [id]="id"
+      [value]="value"
+      (input)="onInputChange($event)"
+      (blur)="onTouched()"
+      [disabled]="disabled"
+      class="form-control custom-input" 
+      [placeholder]="placeholder" 
+    />
+
+    <span class="input-group-text custom-addon" *ngIf="iconRight && type !== 'password'">
+      <i class="bi" [ngClass]="iconRight"></i>
+    </span>
+
+    <button 
+      *ngIf="type === 'password'"
+      type="button" 
+      class="btn custom-toggle-btn" 
+      (click)="togglePassword()"
+      [disabled]="disabled"
+      tabindex="-1"
+    >
+      <i class="bi" [ngClass]="showPassword ? 'bi-eye-slash' : 'bi-eye'"></i>
+    </button>
+  </div>
+</div>

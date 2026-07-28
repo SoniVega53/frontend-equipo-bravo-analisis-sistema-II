@@ -1,19 +1,20 @@
 import { Component } from '@angular/core';
-import { AuthService } from '../../core/services/auth.service';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { BaseComponent } from '../base.component';
+import { CustomInputComponent } from '../../shared/custom-input/custom-input.component';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule,CustomInputComponent],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css',
 })
 export class LoginComponent extends BaseComponent {
   idUsuario = '';
   password = '';
+  showPassword = false;
   loadData = true;
 
   constructor() {
@@ -42,6 +43,7 @@ export class LoginComponent extends BaseComponent {
   }
 
   onForgotPassword() {
+    console.log("CLICK")
     // this.navigateTo('/recuperar-password');
   }
 }

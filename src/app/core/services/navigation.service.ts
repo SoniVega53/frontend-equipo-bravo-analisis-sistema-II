@@ -1,3 +1,4 @@
+import { environment } from '../../../environments/environment';
 import { Injectable, inject } from '@angular/core';
 import { Router, NavigationExtras } from '@angular/router';
 import CryptoJS from 'crypto-js';
@@ -7,8 +8,8 @@ import CryptoJS from 'crypto-js';
 })
 export class NavigationService {
   private router = inject(Router);
-  private readonly STORAGE_KEY = 'app_nav_params';
-  private readonly SECRET_KEY = 'equipo-bravo-analisis-sistema-II';
+  private readonly STORAGE_KEY =  environment.storageKey;
+  private readonly SECRET_KEY = environment.secretKey;
 
   goTo(url: string, params?: Record<string, any>): void {
     if (params) {

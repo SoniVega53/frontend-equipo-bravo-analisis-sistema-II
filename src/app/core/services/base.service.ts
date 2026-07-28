@@ -2,10 +2,11 @@ import { inject } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
 import { ApiErrorResponse } from '../../interface/api-error-response';
+import { environment } from '../../../environments/environment';
 
 export abstract class BaseService {
   protected http = inject(HttpClient);
-  protected apiUrl = 'http://localhost:8080/api';
+  protected apiUrl = environment.apiUrl;
 
   protected async toPromise<T>(observable$: any): Promise<T> {
     try {
