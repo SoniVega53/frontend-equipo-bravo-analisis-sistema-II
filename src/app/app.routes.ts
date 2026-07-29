@@ -3,6 +3,7 @@ import { LoginComponent } from './ui/login/login.component';
 import { authGuard, loginGuard } from './core/guards/auth.guard';
 import { HomeComponent } from './ui/home/home.component';
 import { EmpresaComponent } from './ui/empresa/empresa.component';
+import { GeneroComponent } from './ui/genero/genero.component';
 
 export const routes: Routes = [
   {
@@ -19,6 +20,10 @@ export const routes: Routes = [
       {
         path: 'empresa',
         component: EmpresaComponent,
+      },
+      {
+        path: 'genero',
+        component: GeneroComponent,
       },
     ],
   },
