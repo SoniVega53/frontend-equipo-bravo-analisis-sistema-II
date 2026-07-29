@@ -1,0 +1,84 @@
+.custom-navbar {
+  background-color: var(--bg-surface);
+  min-height: 70px;
+  border-bottom: 1px solid var(--border-color);
+  position: relative;
+  z-index: 1050;
+}
+
+.navbar-brand {
+  color: var(--color-primary) !important;
+  font-size: 1.4rem;
+  letter-spacing: -0.5px;
+  transition: opacity 0.2s;
+}
+
+.navbar-brand:hover {
+  opacity: 0.8;
+}
+
+.brand-icon {
+  margin-right: 4px;
+}
+
+.nav-link {
+  color: var(--text-muted) !important;
+  font-weight: 500;
+  padding: 8px 16px !important;
+  transition: color 0.2s ease;
+}
+
+.nav-link:hover, .nav-link.active {
+  color: var(--color-primary) !important;
+}
+
+
+.user-avatar {
+  width: 35px;
+  height: 35px;
+  background-color: var(--color-primary);
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+
+.user-name {
+  color: var(--text-heading);
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.dropdown-menu {
+  border-radius: 12px;
+  padding: 10px 0;
+  min-width: 220px;
+}
+
+.dropdown-item {
+  color: var(--text-body);
+  font-weight: 500;
+  padding: 10px 20px;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.dropdown-item i {
+  font-size: 1.1rem;
+}
+
+.dropdown-item:hover {
+  background-color: var(--bg-app);
+  color: var(--color-primary);
+}
+
+.dropdown-item.text-danger:hover {
+  background-color: #fee2e2;
+  color: #dc2626 !important;
+}
+
+.dropdown-divider {
+  border-top-color: var(--border-color);
+}

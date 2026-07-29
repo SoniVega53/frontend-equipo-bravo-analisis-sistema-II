@@ -1,0 +1,92 @@
+<nav class="navbar custom-navbar shadow-sm">
+  <div
+    class="container-fluid px-3 d-flex flex-row flex-nowrap justify-content-between align-items-center"
+  >
+    <div class="d-flex align-items-center text-truncate">
+      <button
+        class="btn border-0 me-2 d-md-none p-1 d-flex align-items-center justify-content-center flex-shrink-0"
+        type="button"
+        (click)="toggleMobileMenu()"
+        style="color: var(--text-heading)"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="28"
+          height="28"
+          fill="currentColor"
+          viewBox="0 0 16 16"
+        >
+          <path
+            fill-rule="evenodd"
+            d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z"
+          />
+        </svg>
+      </button>
+
+      <!-- Logo -->
+      <a
+        class="navbar-brand fw-bold m-0 text-truncate"
+        href="javascript:void(0)"
+        (click)="navigateTo('/home')"
+      >
+        <span class="brand-icon"><i class="bi bi-sourceforge"></i></span> Equipo
+        Bravo
+      </a>
+    </div>
+
+    <div class="d-flex align-items-center flex-shrink-0">
+      <div class="dropdown">
+        <a
+          class="d-flex align-items-center gap-2 border-0 text-decoration-none"
+          href="#"
+          id="userDropdown"
+          role="button"
+          data-bs-toggle="dropdown"
+          aria-expanded="false"
+          style="cursor: pointer"
+        >
+          <div class="user-avatar">
+            {{ nombreUsuario.charAt(0) }}
+          </div>
+
+          <span class="user-name d-none d-sm-block">{{ nombreUsuario }}</span>
+        </a>
+
+        <ul
+          class="dropdown-menu dropdown-menu-end shadow border-0 mt-2 position-absolute"
+          aria-labelledby="userDropdown"
+        >
+          <li>
+            <h6 class="dropdown-header text-muted">Mi Cuenta</h6>
+          </li>
+          <li>
+            <a
+              class="dropdown-item d-flex align-items-center gap-2"
+              href="javascript:void(0)"
+            >
+              <i class="bi bi-person"></i> Perfil
+            </a>
+          </li>
+          <li>
+            <a
+              class="dropdown-item d-flex align-items-center gap-2"
+              href="javascript:void(0)"
+            >
+              <i class="bi bi-gear"></i> Configuración
+            </a>
+          </li>
+          <li><hr class="dropdown-divider" /></li>
+          <li>
+            <a
+              class="dropdown-item text-danger d-flex align-items-center gap-2"
+              href="javascript:void(0)"
+              (click)="onLogout()"
+            >
+              <i class="bi bi-box-arrow-right"></i> Cerrar Sesión
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</nav>

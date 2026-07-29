@@ -1,0 +1,52 @@
+<div class="login-container">
+  <div class="login-card">
+    <div class="login-brand">
+      <div class="brand-content">
+        <h2>Equipo Bravo</h2>
+        <p>Sistema de Gestión Empresarial</p>
+      </div>
+      <div class="brand-overlay"></div>
+    </div>
+
+    <div class="login-form-section">
+      <div class="form-header">
+        <h3>Bienvenido de nuevo</h3>
+        <p>Ingresa tus credenciales para continuar</p>
+      </div>
+
+      <form (ngSubmit)="onLogin()" #loginForm="ngForm" class="form-body">
+        <custom-input
+          id="usuario"
+          name="usuario"
+          label="Usuario"
+          placeholder="Ej: admin123"
+          [(ngModel)]="idUsuario"
+          [disabled]="isLoading"
+          required
+        ></custom-input>
+
+        <custom-input
+          type="password"
+          id="password"
+          name="password"
+          label="Contraseña"
+          placeholder="••••••••"
+          [(ngModel)]="password"
+          [disabled]="isLoading"
+          required
+          linkText="¿Olvidaste tu contraseña?"
+          (linkClick)="onForgotPassword()"
+        ></custom-input>
+
+        <button
+          type="submit"
+          class="btn-primary mt-3"
+          [disabled]="!loginForm.valid || isLoading"
+        >
+          <span *ngIf="!isLoading">Iniciar Sesión</span>
+          <span *ngIf="isLoading" class="btn-loader"></span>
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
