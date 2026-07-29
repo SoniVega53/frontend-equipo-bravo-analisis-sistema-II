@@ -32,16 +32,16 @@ export abstract class BaseComponent {
     this.navigationService.clearParams();
   }
 
-  protected getDataToken(){
+  protected getDataToken() {
     const token = this.authService.getToken();
     if (token) {
-      const data =  this.authService.decodePayload(token);
+      const data = this.authService.decodePayload(token);
       return {
-        user:data.sub,
-        role:data.role
+        user: data.sub,
+        role: data.role,
       };
     }
-    return "";
+    return '';
   }
 
   protected showSuccessAlert(message: string, title: string = '¡Éxito!') {
@@ -69,6 +69,27 @@ export abstract class BaseComponent {
       title: title,
       text: message,
       confirmButtonText: 'Entendido',
+    });
+  }
+
+  protected showDeleteConfirm(
+    callback: () => void | Promise<void>,
+    itemName: string = 'este registro',
+  ) {
+    return Swal.fire({
+      title: '¿Estás seguro?',
+      text: `¿Deseas eliminar ${itemName}? Esta acción no se puede deshacer.`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: 'var(--color-danger)',
+      cancelButtonColor: 'var(--text-muted, #6c757d)',
+      confirmButtonText: 'Sí, eliminar',
+      cancelButtonText: 'Cancelar',
+      reverseButtons: true,
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        await callback();
+      }
     });
   }
 }
