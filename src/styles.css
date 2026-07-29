@@ -12,10 +12,27 @@
   --bg-surface: #ffffff;
   --border-color: #cbd5e1;
   --disabled-color: #94a3b8;
+  --color-danger: #ef4444;
+  --color-danger-hover: #dc2626;
 }
 
 body {
   background-color: var(--bg-app);
   color: var(--text-body);
   margin: 0;
+}
+
+.center-page {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  flex: 1;
+}
+
+.page-container {
+  padding: 24px;
+  background-color: var(--bg-app);
+  min-height: 100%;
+  max-width: 80%;
+  flex: 1;
 }
