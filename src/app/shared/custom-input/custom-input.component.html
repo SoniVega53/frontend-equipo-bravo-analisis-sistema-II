@@ -1,6 +1,6 @@
 <div class="form-group">
   <div class="label-row" *ngIf="label || linkText">
-    <label *ngIf="label" [for]="id">{{ label }}</label>
+    <label *ngIf="label" [for]="id">{{ label }}<span *ngIf="required"> *</span></label>
     <a *ngIf="linkText" href="javascript:void(0)" class="action-link" (click)="onActionLinkClick($event)">
       {{ linkText }}
     </a>
@@ -18,6 +18,8 @@
       (input)="onInputChange($event)"
       (blur)="onTouched()"
       [disabled]="disabled"
+      [readonly]="readonly"
+      [required]="required"
       class="form-control custom-input" 
       [placeholder]="placeholder" 
     />

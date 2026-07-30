@@ -22,6 +22,7 @@ export class DropdownSelectComponent implements ControlValueAccessor {
   @Input() placeholder: string = 'Seleccione...';
   @Input() iconLeft: string = '';
   @Input() disabled: boolean = false;
+  @Input() required: boolean = false;
   @Input() id: string = "";
   @Input() options: SelectOption[] = [];
   

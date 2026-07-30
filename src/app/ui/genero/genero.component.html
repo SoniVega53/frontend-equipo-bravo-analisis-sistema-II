@@ -3,7 +3,24 @@
     <h2 class="page-title">Géneros</h2>
 
     <div class="form-card">
-      <form (ngSubmit)="guardar()" #generoForm="ngForm">
+      <app-dynamic-form
+        [fields]="configuracionCampos"
+        [model]="generoActual"
+        [isLoading]="isLoading"
+        [showDelete]="generoActual.idGenero ? true : false"
+        [showCancel]="true"
+        (save)="guardar($event)"
+        (delete)="eliminar(generoActual.idGenero)"
+        (cancel)="limpiarFormulario()"
+      >
+      </app-dynamic-form>
+      <!-- <div class="p-4" style="max-width: 900px; margin: auto">
+        <div class="mt-4 p-3 bg-light border rounded">
+          <pre class="mb-0">{{ generoActual | json }}</pre>
+        </div>
+      </div> -->
+
+      <!-- <form (ngSubmit)="guardar()" #generoForm="ngForm">
         <div class="row align-items-end g-3">
           <div class="col-8">
             <custom-input
@@ -48,7 +65,7 @@
             Cancelar
           </button>
         </div>
-      </form>
+      </form> -->
     </div>
 
     <hr class="divider" />
@@ -60,6 +77,5 @@
       (actionSelect)="seleccionarParaEditar($event)"
     >
     </app-dynamic-table>
-
   </div>
 </div>

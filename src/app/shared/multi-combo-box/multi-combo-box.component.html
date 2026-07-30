@@ -1,6 +1,6 @@
 <div class="form-group">
   <div class="label-row" *ngIf="label">
-    <label [for]="id">{{ label }}</label>
+    <label [for]="id">{{ label }}<span *ngIf="required"> *</span></label>
   </div>
 
   <div class="input-group position-relative">

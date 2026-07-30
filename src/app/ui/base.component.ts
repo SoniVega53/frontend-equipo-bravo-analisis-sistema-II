@@ -18,15 +18,6 @@ export abstract class BaseComponent {
   protected navigationService = inject(NavigationService);
 
   isLoading = false;
-  errorMessage = '';
-
-  protected handleError(
-    err: any,
-    defaultMsg: string = 'Ocurrió un error inesperado',
-  ) {
-    this.errorMessage = err.error?.mensaje || err.message || defaultMsg;
-    this.isLoading = false;
-  }
 
   protected navigateTo(url: string, params?: Record<string, any>): void {
     this.navigationService.goTo(url, params);

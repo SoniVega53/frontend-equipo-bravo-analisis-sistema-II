@@ -11,6 +11,8 @@ import {
   TableColumn,
 } from '../../shared/dynamic-table/dynamic-table.component';
 import { ApiErrorResponse } from '../../interface/api-error-response';
+import { DynamicFormComponent } from '../../shared/dynamic-form/dynamic-form.component';
+import { DynamicField } from '../../interface/dynamic-field.interface';
 
 @Component({
   selector: 'app-genero',
@@ -21,6 +23,7 @@ import { ApiErrorResponse } from '../../interface/api-error-response';
     CustomInputComponent,
     LoaderComponent,
     DynamicTableComponent,
+    DynamicFormComponent,
   ],
   templateUrl: './genero.component.html',
   styleUrl: './genero.component.css',
@@ -33,12 +36,60 @@ export class GeneroComponent extends BaseComponent implements OnInit {
 
   columnasGeneros: TableColumn[] = [];
 
+  configuracionCampos: DynamicField[] = [
+    {
+      name: 'nombre',
+      label: 'Nombre del Género',
+      type: 'text',
+      placeholder: 'Ej: Masculino',
+      required: true,
+      colSpan: 6,
+    },
+  ];
+
+
+  //ejemplo 
+
+  // configuracionCampos: DynamicField[] = [
+  //   {
+  //     name: 'nombre',
+  //     label: 'Nombre del Género',
+  //     type: 'text',
+  //     placeholder: 'Ej: Masculino',
+  //     required: true,
+  //     colSpan: 8,
+  //   },
+  //   {
+  //     name: 'estado',
+  //     label: 'Estado',
+  //     type: 'dropdown',
+  //     placeholder: 'Seleccione estado...',
+  //     colSpan: 4,
+  //     options: [
+  //       { codigo: 'ACT', valor: 'Activo' },
+  //       { codigo: 'INA', valor: 'Inactivo' },
+  //     ],
+  //   },
+  //   {
+  //     name: 'roles',
+  //     label: 'Permisos Asociados',
+  //     type: 'multiselect',
+  //     placeholder: 'Seleccione permisos...',
+  //     iconLeft: 'bi-shield-lock',
+  //     colSpan: 12,
+  //     options: [
+  //       { codigo: 1, valor: 'Lectura' },
+  //       { codigo: 2, valor: 'Escritura' },
+  //       { codigo: 3, valor: 'Borrado' },
+  //     ],
+  //   },
+  // ];
+
   async ngOnInit() {
     await this.cargarLista();
   }
 
   async cargarLista() {
-
     this.executeService({
       callback: async () => {
         const data: any = await this.generoService.getGenero();
@@ -61,45 +112,41 @@ export class GeneroComponent extends BaseComponent implements OnInit {
             dateField: 'fechaModificacion',
           },
         ];
-      }
+      },
     });
-    
   }
 
-  async guardar() {
+  async guardar(data: any) {
+    console.log(data);
     if (!this.generoActual.nombre) return;
 
-    this.isLoading = true;
-    try {
-      await this.generoService.crearToActualizar(this.generoActual);
-      this.limpiarFormulario();
-      await this.cargarLista();
-    } catch (error: any) {
-      this.showErrorAlert(error.mensaje || 'Error al iniciar servicio');
-    } finally {
-      this.isLoading = false;
-    }
+    this.executeService({
+      callback: async () => {
+        await this.generoService.crearToActualizar(this.generoActual);
+        this.limpiarFormulario();
+        await this.cargarLista();
+      },
+      showLoading: true,
+    });
   }
 
   async eliminar(id?: number) {
     if (!id) return;
 
     this.showDeleteConfirm(async () => {
-      this.isLoading = true;
-      try {
-        await this.generoService.eliminar(id);
+      this.executeService({
+        callback: async () => {
+          await this.generoService.eliminar(id);
 
-        if (this.generoActual.idGenero === id) {
-          this.limpiarFormulario();
-        }
+          if (this.generoActual.idGenero === id) {
+            this.limpiarFormulario();
+          }
 
-        this.showSuccessAlert('El género ha sido eliminado correctamente.');
-        await this.cargarLista();
-      } catch (error) {
-        console.error(error);
-      } finally {
-        this.isLoading = false;
-      }
+          this.showSuccessAlert('El género ha sido eliminado correctamente.');
+          await this.cargarLista();
+        },
+        showLoading: true,
+      });
     }, 'este género');
   }
 

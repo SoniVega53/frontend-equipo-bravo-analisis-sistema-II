@@ -1,50 +1,60 @@
-<div class="table-card position-relative">
-  
-  <app-loader [isLoading]="isLoading"></app-loader>
+<div class="main-table">
+  <div class="table-card position-relative">
+    <app-loader [isLoading]="isLoading"></app-loader>
 
-  <div class="table-responsive">
-    <table class="table table-hover align-middle">
-      <thead class="table-light">
-        <tr>
-          @for (col of columns; track col.field) {
-            <th>{{ col.header }}</th>
-          }
-          <th class="text-center">Acciones</th>
-        </tr>
-      </thead>
-      <tbody>
-        @for (row of data; track row) {
+    <div class="table-responsive">
+      <table class="table table-hover align-middle">
+        <thead class="table-light">
           <tr>
             @for (col of columns; track col.field) {
-              <td>
-                @if (col.type === 'audit') {
-                  <small class="d-block text-muted">{{ row[col.userField!] || 'N/A' }}</small>
-                  <small class="d-block">{{ row[col.dateField!] ? (row[col.dateField!] | date: 'short') : '-' }}</small>
-                } @else {
-                  {{ row[col.field] }}
-                }
-              </td>
+              <th>{{ col.header }}</th>
             }
-            <td class="text-center">
-              <button
-                class="btn btn-sm btn-outline-primary"
-                (click)="onSelect(row)"
-                [disabled]="isLoading"
-              >
-                Seleccionar
-              </button>
-            </td>
+            <th class="text-center">Acciones</th>
           </tr>
-        }
+        </thead>
+        <tbody>
+          @for (row of data; track row) {
+            <tr>
+              @for (col of columns; track col.field) {
+                <td>
+                  @if (col.type === "audit") {
+                    <small class="d-block text-muted">{{
+                      row[col.userField!] || "N/A"
+                    }}</small>
+                    <small class="d-block">{{
+                      row[col.dateField!]
+                        ? (row[col.dateField!] | date: "short")
+                        : "-"
+                    }}</small>
+                  } @else {
+                    {{ row[col.field] }}
+                  }
+                </td>
+              }
+              <td class="text-center">
+                <button
+                  class="btn btn-sm btn-outline-primary"
+                  (click)="onSelect(row)"
+                  [disabled]="isLoading"
+                >
+                  Seleccionar
+                </button>
+              </td>
+            </tr>
+          }
 
-        @if (data.length === 0) {
-          <tr>
-            <td [attr.colspan]="columns.length + 1" class="text-center py-4 text-muted">
-              No hay registros disponibles.
-            </td>
-          </tr>
-        }
-      </tbody>
-    </table>
+          @if (data.length === 0) {
+            <tr>
+              <td
+                [attr.colspan]="columns.length + 1"
+                class="text-center py-4 text-muted"
+              >
+                No hay registros disponibles.
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
   </div>
 </div>

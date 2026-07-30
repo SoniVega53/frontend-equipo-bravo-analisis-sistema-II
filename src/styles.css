@@ -36,3 +36,10 @@ body {
   max-width: 80%;
   flex: 1;
 }
+
+@media (max-width: 768px) {
+  .page-container {
+    max-width: 95%;
+    padding: 16px;
+  }
+}

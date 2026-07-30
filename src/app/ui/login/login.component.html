@@ -22,7 +22,7 @@
           placeholder="Ej: admin123"
           [(ngModel)]="idUsuario"
           [disabled]="isLoading"
-          required
+          [required]="true"
         ></custom-input>
 
         <custom-input
@@ -33,7 +33,7 @@
           placeholder="••••••••"
           [(ngModel)]="password"
           [disabled]="isLoading"
-          required
+          [required]="true"
           linkText="¿Olvidaste tu contraseña?"
           (linkClick)="onForgotPassword()"
         ></custom-input>
