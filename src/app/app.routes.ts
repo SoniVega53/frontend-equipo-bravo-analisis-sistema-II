@@ -4,6 +4,8 @@ import { authGuard, loginGuard } from './core/guards/auth.guard';
 import { HomeComponent } from './ui/home/home.component';
 import { EmpresaComponent } from './ui/empresa/empresa.component';
 import { GeneroComponent } from './ui/genero/genero.component';
+import { NotFoundComponent } from './ui/not-found/not-found.component';
+import { WelcomeComponent } from './ui/welcome/welcome.component';
 
 export const routes: Routes = [
   {
@@ -18,12 +20,21 @@ export const routes: Routes = [
     canActivate: [authGuard],
     children: [
       {
+        path: '',
+        component: WelcomeComponent,
+        pathMatch: 'full',
+      },
+      {
         path: 'empresa',
         component: EmpresaComponent,
       },
       {
         path: 'genero',
         component: GeneroComponent,
+      },
+      {
+        path: '**',
+        component: NotFoundComponent,
       },
     ],
   },

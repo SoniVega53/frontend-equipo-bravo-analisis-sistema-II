@@ -1,5 +1,3 @@
-@if (isCheckingAuth) {
-  <app-loader [isLoading]="true" mensaje="Verificando sesión..."></app-loader>
-} @else {
+@if (!isCheckingAuth) {
   <router-outlet></router-outlet>
 }

@@ -3,6 +3,14 @@ import Swal from 'sweetalert2';
 import { NavigationService } from '../core/services/navigation.service';
 import { Router } from '@angular/router';
 import { AuthService } from '../core/services/auth.service';
+import { ApiErrorResponse } from '../interface/api-error-response';
+
+export interface ExecuteServiceOptions {
+  callback?: () => void | Promise<void>;
+  callbackError?: (error: ApiErrorResponse) => void | Promise<void>;
+  showLoading?: boolean;
+  minDelay?: number;
+}
 
 export abstract class BaseComponent {
   protected router = inject(Router);
@@ -91,5 +99,50 @@ export abstract class BaseComponent {
         await callback();
       }
     });
+  }
+
+  protected setTime(callback: () => void | Promise<void>, time = 0) {
+    setTimeout(async () => {
+      await callback();
+    }, time);
+  }
+
+  protected async executeService(
+    options: ExecuteServiceOptions = {},
+  ): Promise<void> {
+    const {
+      callback,
+      callbackError,
+      showLoading = true,
+      minDelay = 300,
+    } = options;
+
+    if (showLoading) {
+      this.isLoading = true;
+    }
+
+    try {
+      if (callback) {
+        await Promise.all([
+          callback(),
+          new Promise((resolve) => setTimeout(resolve, minDelay)),
+        ]);
+      }
+    } catch (error: unknown) {
+      const apiError = error as ApiErrorResponse;
+
+      if (callbackError) {
+        await callbackError(apiError);
+        return;
+      }
+
+      this.showErrorAlert(
+        apiError?.mensaje || 'Ocurrió un error al procesar la solicitud.',
+      );
+    } finally {
+      if (showLoading) {
+        this.isLoading = false;
+      }
+    }
   }
 }

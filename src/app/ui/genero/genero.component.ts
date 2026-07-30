@@ -5,11 +5,23 @@ import { CommonModule } from '@angular/common';
 import { GeneroService } from '../../core/services/genero.service';
 import { Genero } from '../../interface/genero.interface';
 import { CustomInputComponent } from '../../shared/custom-input/custom-input.component';
+import { LoaderComponent } from '../../shared/loader/loader.component';
+import {
+  DynamicTableComponent,
+  TableColumn,
+} from '../../shared/dynamic-table/dynamic-table.component';
+import { ApiErrorResponse } from '../../interface/api-error-response';
 
 @Component({
   selector: 'app-genero',
   standalone: true,
-  imports: [CommonModule, FormsModule, CustomInputComponent],
+  imports: [
+    CommonModule,
+    FormsModule,
+    CustomInputComponent,
+    LoaderComponent,
+    DynamicTableComponent,
+  ],
   templateUrl: './genero.component.html',
   styleUrl: './genero.component.css',
 })
@@ -19,20 +31,39 @@ export class GeneroComponent extends BaseComponent implements OnInit {
   generos: Genero[] = [];
   generoActual: Genero = { nombre: '' };
 
+  columnasGeneros: TableColumn[] = [];
+
   async ngOnInit() {
     await this.cargarLista();
   }
 
   async cargarLista() {
-    this.isLoading = true;
-    try {
-      const data: any = await this.generoService.getGenero();
-      this.generos = Array.isArray(data) ? data : [];
-    } catch (error: any) {
-      this.showErrorAlert(error.mensaje || 'Error al iniciar servicio');
-    } finally {
-      this.isLoading = false;
-    }
+
+    this.executeService({
+      callback: async () => {
+        const data: any = await this.generoService.getGenero();
+        this.generos = Array.isArray(data) ? data : [];
+        this.columnasGeneros = [
+          { field: 'idGenero', header: 'ID' },
+          { field: 'nombre', header: 'Nombre' },
+          {
+            field: 'creacion',
+            header: 'Creación',
+            type: 'audit',
+            userField: 'usuarioCreacion',
+            dateField: 'fechaCreacion',
+          },
+          {
+            field: 'modificacion',
+            header: 'Modificación',
+            type: 'audit',
+            userField: 'usuarioModificacion',
+            dateField: 'fechaModificacion',
+          },
+        ];
+      }
+    });
+    
   }
 
   async guardar() {

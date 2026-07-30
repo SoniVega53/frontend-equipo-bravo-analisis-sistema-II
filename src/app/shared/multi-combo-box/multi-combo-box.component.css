@@ -1,0 +1,123 @@
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+}
+
+.label-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.form-group label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-label);
+  margin: 0;
+}
+
+.custom-input {
+  padding: 12px 16px;
+  border-color: var(--border-color);
+  color: var(--text-body);
+  background-color: var(--bg-app);
+  font-size: 1rem;
+  min-height: 48px; 
+}
+
+.custom-input.focus {
+  border-color: var(--color-primary);
+  background-color: var(--bg-surface);
+  box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1);
+  z-index: 3;
+}
+
+.custom-addon {
+  background-color: var(--bg-app);
+  border-color: var(--border-color);
+  color: var(--text-muted);
+  transition: all 0.2s ease;
+  font-size: 1.1rem;
+}
+
+.custom-toggle-btn {
+  border: 1px solid var(--border-color);
+  background-color: var(--bg-app);
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 16px;
+  font-size: 1.1rem;
+  transition: all 0.2s ease;
+}
+
+.custom-toggle-btn:hover:not(:disabled) {
+  background-color: var(--bg-surface);
+  color: var(--color-primary);
+}
+
+.input-group:focus-within .custom-addon,
+.input-group:focus-within .custom-toggle-btn,
+.custom-input.focus ~ .custom-toggle-btn {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.select-trigger {
+  user-select: none;
+  overflow: hidden;
+}
+
+.disabled {
+  opacity: 0.6;
+  background-color: var(--bg-app) !important;
+  cursor: not-allowed !important;
+}
+
+.custom-dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  margin-top: 4px;
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  max-height: 250px;
+  overflow-y: auto;
+  z-index: 1060;
+}
+
+.dropdown-item {
+  padding: 10px 16px;
+  cursor: pointer;
+  color: var(--text-body);
+  transition: background-color 0.2s ease;
+  user-select: none;
+}
+
+.dropdown-item:hover {
+  background-color: var(--bg-app);
+  color: var(--color-primary);
+}
+
+.dropdown-item.selected {
+  background-color: rgba(79, 70, 229, 0.05); 
+  font-weight: 600;
+  color: var(--color-primary);
+}
+
+.custom-checkbox {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--color-primary);
+  cursor: pointer;
+}

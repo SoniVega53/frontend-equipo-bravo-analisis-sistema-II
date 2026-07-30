@@ -33,12 +33,12 @@ export class HomeComponent extends BaseComponent implements OnInit, OnDestroy {
     {
       id: 'seguridad',
       label: 'Seguridad',
-      expanded: false, 
+      expanded: true, 
       children: [
         {
           id: 'param-generales',
           label: 'Parametros Generales',
-          expanded: false,
+          expanded: true,
           children: [
             {
               id: 'empresas',
