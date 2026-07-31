@@ -1,5 +1,8 @@
 <div class="center-page">
   <div class="page-container position-relative">
+    
+    <app-loader [isLoading]="isLoadingPage"></app-loader>
+
     <h2 class="page-title">Géneros</h2>
 
     <div class="form-card" [hidden]="hiddenFormulary()">
@@ -18,7 +21,7 @@
     </div>
 
     @if (roleSecurity?.consultar) {
-      <hr class="divider" [hidden]="" />
+      <hr class="divider" />
       
       <app-dynamic-table
         [columns]="columnasGeneros"

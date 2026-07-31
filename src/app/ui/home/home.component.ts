@@ -7,9 +7,11 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { filter, Subscription } from 'rxjs';
 import { RoleOpciones } from '../../interface/rolo-opciones.interface';
+import { MenuOpcionService } from '../../core/services/menu-opcion.service';
+import { LoaderComponent } from "../../shared/loader/loader.component";
 
 export interface MenuItem {
-  id: string;
+  id: number;
   label: string;
   url?: string;
   parametros?: RoleOpciones;
@@ -20,61 +22,51 @@ export interface MenuItem {
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, FormsModule, NavbarComponent, RouterOutlet],
+  imports: [CommonModule, FormsModule, NavbarComponent, RouterOutlet, LoaderComponent],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css',
 })
 export class HomeComponent extends BaseComponent implements OnInit, OnDestroy {
-  activeItemId: string = '';
+  menuService = inject(MenuOpcionService);
+
+  activeItemId: number = -1;
   isMobileMenuOpen: boolean = false;
+  isLoadingMenu: boolean = true;
 
   private routerSubscription!: Subscription;
 
-  menuItems: MenuItem[] = [
-    {
-      id: 'seguridad',
-      label: 'Seguridad',
-      expanded: true,
-      children: [
-        {
-          id: 'param-generales',
-          label: 'Parametros Generales',
-          expanded: true,
-          children: [
-            {
-              id: 'empresas',
-              label: 'Empresas',
-              url: 'empresa',
-              parametros: { consultar: true },
-            },
-            { id: 'sucursales', label: 'Sucursales', url: 'sucursal' },
-            {
-              id: 'generos',
-              label: 'Generos',
-              url: 'genero',
-              parametros: { imprimir: true, alta: true, consultar: true, baja:true},
-            },
-          ],
-        },
-      ],
-    },
-  ];
+  menuItems: MenuItem[] = [];
 
   constructor() {
     super();
   }
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
+    await this.cargarListaMenu();
+
     const data = this.getNavParams();
     console.log('DATA IMPLEMENTE', data);
+  }
 
-    this.syncMenuWithUrl(this.router.url);
+  async cargarListaMenu() {
+    this.isLoadingMenu = true;
+    await this.executeService({
+      callback: async () => {
+        const responseMenu = await this.menuService.getMenuList();
+        if (responseMenu) {
+          this.menuItems = responseMenu;
+        }
 
-    this.routerSubscription = this.router.events
-      .pipe(filter((event) => event instanceof NavigationEnd))
-      .subscribe((event: any) => {
-        this.syncMenuWithUrl(event.urlAfterRedirects);
-      });
+        this.syncMenuWithUrl(this.router.url);
+
+        this.routerSubscription = this.router.events
+          .pipe(filter((event) => event instanceof NavigationEnd))
+          .subscribe((event: any) => {
+            this.syncMenuWithUrl(event.urlAfterRedirects);
+          });
+      },
+    });
+    this.isLoadingMenu = false;
   }
 
   ngOnDestroy(): void {
@@ -87,7 +79,7 @@ export class HomeComponent extends BaseComponent implements OnInit, OnDestroy {
     const path = url.split('?')[0];
 
     if (path === '/home') {
-      this.activeItemId = '';
+      this.activeItemId = -1;
       return;
     }
 

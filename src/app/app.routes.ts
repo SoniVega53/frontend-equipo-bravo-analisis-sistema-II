@@ -6,6 +6,7 @@ import { EmpresaComponent } from './ui/empresa/empresa.component';
 import { GeneroComponent } from './ui/genero/genero.component';
 import { NotFoundComponent } from './ui/not-found/not-found.component';
 import { WelcomeComponent } from './ui/welcome/welcome.component';
+import { AccesoDenegadoComponent } from './ui/acceso-denegado/acceso-denegado.component';
 
 export const routes: Routes = [
   {
@@ -31,6 +32,10 @@ export const routes: Routes = [
       {
         path: 'genero',
         component: GeneroComponent,
+      },
+      { 
+        path: '403', 
+        component: AccesoDenegadoComponent 
       },
       {
         path: '**',

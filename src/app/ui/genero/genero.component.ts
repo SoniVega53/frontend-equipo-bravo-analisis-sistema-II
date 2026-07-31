@@ -11,6 +11,7 @@ import {
 import { DynamicFormComponent } from '../../shared/dynamic-form/dynamic-form.component';
 import { DynamicField } from '../../interface/dynamic-field.interface';
 import { RoleOpciones } from '../../interface/rolo-opciones.interface';
+import { LoaderComponent } from "../../shared/loader/loader.component";
 
 @Component({
   selector: 'app-genero',
@@ -20,7 +21,8 @@ import { RoleOpciones } from '../../interface/rolo-opciones.interface';
     FormsModule,
     DynamicTableComponent,
     DynamicFormComponent,
-  ],
+    LoaderComponent
+],
   templateUrl: './genero.component.html',
   styleUrl: './genero.component.css',
 })
@@ -44,12 +46,10 @@ export class GeneroComponent extends BaseComponent implements OnInit {
   ];
 
   async ngOnInit() {
+    await this.cargarPermisos();
     await this.cargarLista();
-    const params = this.getNavParams();
-    if (params) {
-      this.roleSecurity = {...this.roleSecurity, ...params};
-    }
   }
+
 
   async cargarLista() {
     this.executeService({
