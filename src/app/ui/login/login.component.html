@@ -34,6 +34,7 @@
           [(ngModel)]="password"
           [disabled]="isLoading"
           [required]="true"
+          autocomplete="password"
           linkText="¿Olvidaste tu contraseña?"
           (linkClick)="onForgotPassword()"
         ></custom-input>

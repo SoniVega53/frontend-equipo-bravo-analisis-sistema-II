@@ -102,15 +102,34 @@ export abstract class BaseComponent {
     });
   }
 
-  protected setTime(callback: () => void | Promise<void>, time = 0) {
-    setTimeout(async () => {
-      await callback();
-    }, time);
+  protected showSessionEndedAlert(
+    message: string = 'Por seguridad, tu sesión ha caducado. Por favor, vuelve a ingresar.',
+    title: string = 'Sesión finalizada',
+  ) {
+    return Swal.fire({
+      icon: 'error',
+      title: title,
+      text: message,
+      allowOutsideClick: false,
+      allowEscapeKey: false,
+    });
+  }
+
+  protected logout() {
+     this.authService.logout();
+     this.navigateTo('/login')
   }
 
   protected async executeService(
     options: ExecuteServiceOptions = {},
+    isLoggedIn: boolean = true,
   ): Promise<void> {
+    if (this.authService.isTokenExpired() && isLoggedIn) {
+      this.logout();
+      this.showSessionEndedAlert();
+      return;
+    }
+
     const {
       callback,
       callbackError,
@@ -130,7 +149,16 @@ export abstract class BaseComponent {
         ]);
       }
     } catch (error: unknown) {
+      //console.error(error);
       const apiError = error as ApiErrorResponse;
+
+      if (apiError.codigoNumerico == 1501 && isLoggedIn) {
+        this.logout();
+        this.showErrorAlert(
+          apiError?.mensaje || 'Ocurrió un error al procesar la solicitud.',
+        );
+        return;
+      }
 
       if (callbackError) {
         await callbackError(apiError);
@@ -167,9 +195,6 @@ export abstract class BaseComponent {
   }
 
   protected hiddenAction(): boolean {
-    return (
-      !this.roleSecurity.cambio &&
-      !this.roleSecurity.baja
-    );
+    return !this.roleSecurity.cambio && !this.roleSecurity.baja;
   }
 }

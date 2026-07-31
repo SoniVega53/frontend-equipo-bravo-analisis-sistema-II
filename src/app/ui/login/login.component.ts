@@ -15,7 +15,7 @@ export class LoginComponent extends BaseComponent {
   idUsuario = '';
   password = '';
   showPassword = false;
-  
+
   constructor() {
     super();
   }
@@ -32,7 +32,7 @@ export class LoginComponent extends BaseComponent {
         this.navigateTo('/home', { test: true });
       },
       showLoading: false,
-    });
+    },false);
   }
 
   onForgotPassword() {
