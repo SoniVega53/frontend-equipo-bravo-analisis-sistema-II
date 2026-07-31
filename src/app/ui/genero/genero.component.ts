@@ -4,15 +4,13 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { GeneroService } from '../../core/services/genero.service';
 import { Genero } from '../../interface/genero.interface';
-import { CustomInputComponent } from '../../shared/custom-input/custom-input.component';
-import { LoaderComponent } from '../../shared/loader/loader.component';
 import {
   DynamicTableComponent,
   TableColumn,
 } from '../../shared/dynamic-table/dynamic-table.component';
-import { ApiErrorResponse } from '../../interface/api-error-response';
 import { DynamicFormComponent } from '../../shared/dynamic-form/dynamic-form.component';
 import { DynamicField } from '../../interface/dynamic-field.interface';
+import { RoleOpciones } from '../../interface/rolo-opciones.interface';
 
 @Component({
   selector: 'app-genero',
@@ -20,8 +18,6 @@ import { DynamicField } from '../../interface/dynamic-field.interface';
   imports: [
     CommonModule,
     FormsModule,
-    CustomInputComponent,
-    LoaderComponent,
     DynamicTableComponent,
     DynamicFormComponent,
   ],
@@ -47,46 +43,12 @@ export class GeneroComponent extends BaseComponent implements OnInit {
     },
   ];
 
-
-  //ejemplo 
-
-  // configuracionCampos: DynamicField[] = [
-  //   {
-  //     name: 'nombre',
-  //     label: 'Nombre del Género',
-  //     type: 'text',
-  //     placeholder: 'Ej: Masculino',
-  //     required: true,
-  //     colSpan: 8,
-  //   },
-  //   {
-  //     name: 'estado',
-  //     label: 'Estado',
-  //     type: 'dropdown',
-  //     placeholder: 'Seleccione estado...',
-  //     colSpan: 4,
-  //     options: [
-  //       { codigo: 'ACT', valor: 'Activo' },
-  //       { codigo: 'INA', valor: 'Inactivo' },
-  //     ],
-  //   },
-  //   {
-  //     name: 'roles',
-  //     label: 'Permisos Asociados',
-  //     type: 'multiselect',
-  //     placeholder: 'Seleccione permisos...',
-  //     iconLeft: 'bi-shield-lock',
-  //     colSpan: 12,
-  //     options: [
-  //       { codigo: 1, valor: 'Lectura' },
-  //       { codigo: 2, valor: 'Escritura' },
-  //       { codigo: 3, valor: 'Borrado' },
-  //     ],
-  //   },
-  // ];
-
   async ngOnInit() {
     await this.cargarLista();
+    const params = this.getNavParams();
+    if (params) {
+      this.roleSecurity = {...this.roleSecurity, ...params};
+    }
   }
 
   async cargarLista() {
@@ -123,6 +85,10 @@ export class GeneroComponent extends BaseComponent implements OnInit {
     this.executeService({
       callback: async () => {
         await this.generoService.crearToActualizar(this.generoActual);
+
+        this.showSuccessAlert(
+          "Se Guardo Correctamente"
+        )
         this.limpiarFormulario();
         await this.cargarLista();
       },

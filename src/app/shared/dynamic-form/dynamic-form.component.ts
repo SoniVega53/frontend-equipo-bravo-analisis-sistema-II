@@ -25,12 +25,14 @@ export class DynamicFormComponent {
   @Input() isLoading: boolean = false;
   @Input() showDelete: boolean = false;
   @Input() showCancel: boolean = false;
+  @Input() showSave: boolean = false;
   
   @Input() saveText: string = 'Guardar';
   @Input() deleteText: string = 'Eliminar';
   @Input() cancelText: string = 'Cancelar';
 
   @Output() save = new EventEmitter<any>();
+  @Output() update = new EventEmitter<any>();
   @Output() delete = new EventEmitter<void>();
   @Output() cancel = new EventEmitter<void>();
 

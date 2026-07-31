@@ -43,3 +43,23 @@
     padding: 4px;
   }
 }
+
+@media print {
+  .no-print {
+    display: none !important;
+  }
+
+  .table-card {
+    box-shadow: none !important;
+    border: none !important;
+    padding: 0 !important;
+  }
+
+  .print-area {
+    width: 100% !important;
+  }
+
+  .table-responsive {
+    overflow: visible !important;
+  }
+}

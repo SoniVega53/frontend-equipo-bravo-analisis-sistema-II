@@ -6,12 +6,13 @@ import { NavbarComponent } from '../../shared/navbar/navbar.component';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { filter, Subscription } from 'rxjs';
+import { RoleOpciones } from '../../interface/rolo-opciones.interface';
 
 export interface MenuItem {
   id: string;
   label: string;
   url?: string;
-  parametros?: any;
+  parametros?: RoleOpciones;
   children?: MenuItem[];
   expanded?: boolean;
 }
@@ -26,14 +27,14 @@ export interface MenuItem {
 export class HomeComponent extends BaseComponent implements OnInit, OnDestroy {
   activeItemId: string = '';
   isMobileMenuOpen: boolean = false;
-  
+
   private routerSubscription!: Subscription;
 
   menuItems: MenuItem[] = [
     {
       id: 'seguridad',
       label: 'Seguridad',
-      expanded: true, 
+      expanded: true,
       children: [
         {
           id: 'param-generales',
@@ -44,10 +45,15 @@ export class HomeComponent extends BaseComponent implements OnInit, OnDestroy {
               id: 'empresas',
               label: 'Empresas',
               url: 'empresa',
-              parametros: { view: 'list' },
+              parametros: { consultar: true },
             },
             { id: 'sucursales', label: 'Sucursales', url: 'sucursal' },
-            { id: 'generos', label: 'Generos', url: 'genero' },
+            {
+              id: 'generos',
+              label: 'Generos',
+              url: 'genero',
+              parametros: { imprimir: true, alta: true, consultar: true, baja:true},
+            },
           ],
         },
       ],
@@ -64,11 +70,11 @@ export class HomeComponent extends BaseComponent implements OnInit, OnDestroy {
 
     this.syncMenuWithUrl(this.router.url);
 
-    this.routerSubscription = this.router.events.pipe(
-      filter(event => event instanceof NavigationEnd)
-    ).subscribe((event: any) => {
-      this.syncMenuWithUrl(event.urlAfterRedirects);
-    });
+    this.routerSubscription = this.router.events
+      .pipe(filter((event) => event instanceof NavigationEnd))
+      .subscribe((event: any) => {
+        this.syncMenuWithUrl(event.urlAfterRedirects);
+      });
   }
 
   ngOnDestroy(): void {
@@ -78,15 +84,19 @@ export class HomeComponent extends BaseComponent implements OnInit, OnDestroy {
   }
 
   private syncMenuWithUrl(url: string) {
-    const path = url.split('?')[0]; 
+    const path = url.split('?')[0];
+
+    if (path === '/home') {
+      this.activeItemId = '';
+      return;
+    }
 
     const findAndExpand = (items: MenuItem[], parents: MenuItem[]): boolean => {
       for (const item of items) {
-        
         if (item.url && path.endsWith(`/home/${item.url}`)) {
           this.activeItemId = item.id;
-          
-          parents.forEach(p => p.expanded = true);
+
+          parents.forEach((p) => (p.expanded = true));
           return true;
         }
 
@@ -102,8 +112,18 @@ export class HomeComponent extends BaseComponent implements OnInit, OnDestroy {
     findAndExpand(this.menuItems, []);
   }
 
+  private collapseMenu(items: MenuItem[]): void {
+    for (const item of items) {
+      item.expanded = false;
+
+      if (item.children?.length) {
+        this.collapseMenu(item.children);
+      }
+    }
+  }
+
   clickLogSe() {
-    this.authService.logout(); 
+    this.authService.logout();
   }
 
   toggleMobileMenu() {
@@ -119,6 +139,7 @@ export class HomeComponent extends BaseComponent implements OnInit, OnDestroy {
     this.isMobileMenuOpen = false;
 
     if (item.url) {
+      this.clearNavParams();
       this.navigateTo(`/home/${item.url}`, item.parametros || {});
     }
   }

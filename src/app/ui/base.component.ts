@@ -4,6 +4,7 @@ import { NavigationService } from '../core/services/navigation.service';
 import { Router } from '@angular/router';
 import { AuthService } from '../core/services/auth.service';
 import { ApiErrorResponse } from '../interface/api-error-response';
+import { RoleOpciones } from '../interface/rolo-opciones.interface';
 
 export interface ExecuteServiceOptions {
   callback?: () => void | Promise<void>;
@@ -18,6 +19,15 @@ export abstract class BaseComponent {
   protected navigationService = inject(NavigationService);
 
   isLoading = false;
+
+  roleSecurity: RoleOpciones = {
+    consultar: false,
+    alta: false,
+    baja: false,
+    cambio: false,
+    imprimir: false,
+    exportar: false,
+  };
 
   protected navigateTo(url: string, params?: Record<string, any>): void {
     this.navigationService.goTo(url, params);
@@ -135,5 +145,31 @@ export abstract class BaseComponent {
         this.isLoading = false;
       }
     }
+  }
+
+  protected showDeleteButton(id?: any): boolean {
+    return !!this.roleSecurity.baja && !!id;
+  }
+
+  protected showSaveButton(id?: any): boolean {
+    if (id) {
+      return this.roleSecurity?.cambio || false;
+    }
+    return this.roleSecurity?.alta || false;
+  }
+
+  protected hiddenFormulary(): boolean {
+    return (
+      !this.roleSecurity.cambio &&
+      !this.roleSecurity.alta &&
+      !this.roleSecurity.baja
+    );
+  }
+
+  protected hiddenAction(): boolean {
+    return (
+      !this.roleSecurity.cambio &&
+      !this.roleSecurity.baja
+    );
   }
 }

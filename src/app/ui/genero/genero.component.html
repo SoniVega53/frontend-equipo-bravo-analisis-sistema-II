@@ -2,80 +2,35 @@
   <div class="page-container position-relative">
     <h2 class="page-title">Géneros</h2>
 
-    <div class="form-card">
+    <div class="form-card" [hidden]="hiddenFormulary()">
       <app-dynamic-form
         [fields]="configuracionCampos"
         [model]="generoActual"
         [isLoading]="isLoading"
-        [showDelete]="generoActual.idGenero ? true : false"
+        [showDelete]="showDeleteButton(generoActual.idGenero)"
+        [showSave]="showSaveButton(generoActual.idGenero)"
         [showCancel]="true"
         (save)="guardar($event)"
         (delete)="eliminar(generoActual.idGenero)"
         (cancel)="limpiarFormulario()"
       >
       </app-dynamic-form>
-      <!-- <div class="p-4" style="max-width: 900px; margin: auto">
-        <div class="mt-4 p-3 bg-light border rounded">
-          <pre class="mb-0">{{ generoActual | json }}</pre>
-        </div>
-      </div> -->
-
-      <!-- <form (ngSubmit)="guardar()" #generoForm="ngForm">
-        <div class="row align-items-end g-3">
-          <div class="col-8">
-            <custom-input
-              id="nombre"
-              name="nombre"
-              label="Nombre"
-              placeholder="Ej: Masculino"
-              [(ngModel)]="generoActual.nombre"
-              [disabled]="isLoading"
-              required
-            >
-            </custom-input>
-          </div>
-        </div>
-
-        <div class="action-buttons">
-          <button
-            type="submit"
-            class="btn btn-primary"
-            [disabled]="!generoForm.valid || isLoading"
-          >
-            Guardar
-          </button>
-
-          <button
-            type="button"
-            class="btn btn-danger"
-            *ngIf="generoActual.idGenero"
-            (click)="eliminar(generoActual.idGenero)"
-            [disabled]="isLoading"
-          >
-            Eliminar
-          </button>
-
-          <button
-            type="button"
-            class="btn btn-outline-secondary"
-            *ngIf="generoActual.idGenero"
-            (click)="limpiarFormulario()"
-            [disabled]="isLoading"
-          >
-            Cancelar
-          </button>
-        </div>
-      </form> -->
     </div>
 
-    <hr class="divider" />
-
-    <app-dynamic-table
-      [columns]="columnasGeneros"
-      [data]="generos"
-      [isLoading]="isLoading"
-      (actionSelect)="seleccionarParaEditar($event)"
-    >
-    </app-dynamic-table>
+    @if (roleSecurity?.consultar) {
+      <hr class="divider" [hidden]="" />
+      
+      <app-dynamic-table
+        [columns]="columnasGeneros"
+        [data]="generos"
+        [isLoading]="isLoading"
+        [showExport]="roleSecurity?.exportar || false"
+        [showPrint]="roleSecurity?.imprimir || false"
+        [reportName]="'Reporte_Generos_Sistema'"
+        [hiddenAccion]="hiddenAction()"
+        (actionSelect)="seleccionarParaEditar($event)"
+      >
+      </app-dynamic-table>
+    }
   </div>
 </div>

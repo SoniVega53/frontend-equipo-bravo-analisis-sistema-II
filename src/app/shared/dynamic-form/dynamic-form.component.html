@@ -49,16 +49,17 @@
   </div>
 
   <div class="action-buttons mt-4">
-    <button
-      type="submit"
-      class="btn custom-btn-primary"
-      [disabled]="!dynamicForm.valid || isLoading">
-      <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-      {{ saveText }}
+     <button
+        *ngIf="showSave"
+        type="submit"
+        class="btn custom-btn-primary"
+        [disabled]="!dynamicForm.valid || isLoading">
+        <!-- <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span> -->
+        {{ saveText }}
     </button>
 
-    <button
-      *ngIf="showDelete"
+    <button   
+      *ngIf="showDelete"   
       type="button"
       class="btn custom-btn-danger"
       (click)="onDelete()"
