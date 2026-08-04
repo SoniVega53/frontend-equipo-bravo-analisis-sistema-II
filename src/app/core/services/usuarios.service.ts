@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BaseService } from './base.service';
 import { Genero } from '../../interface/genero.interface';
-import { UsuarioRequest, UsuarioResponse } from '../../interface/usuario.interface';
+import { UsuarioPasswordRequest, UsuarioRequest, UsuarioResponse } from '../../interface/usuario.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -30,6 +30,12 @@ export class UsuarioService extends BaseService {
 
   async putDataPerfil(request:UsuarioRequest): Promise<any> {
     const respones: any = await this.put<any>(`${this.endpoint}/perfilUpdate`,request);
+    return respones?.data || {};
+  }
+
+
+  async putCambioPassword(request:UsuarioPasswordRequest): Promise<any> {
+    const respones: any = await this.put<any>(`${this.endpoint}/changePassword`,request);
     return respones?.data || {};
   }
 

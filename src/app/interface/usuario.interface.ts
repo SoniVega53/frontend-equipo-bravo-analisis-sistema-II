@@ -20,3 +20,9 @@ export interface UsuarioRequest {
   correoElectronico: string;
   telefonoMovil: string;
 }
+
+
+export interface UsuarioPasswordRequest {
+  passwordOld: string;
+  passwordNew: string;
+}

@@ -156,7 +156,7 @@ export class PerfilComponent extends BaseComponent implements OnInit, DoCheck {
         this.generos = Array.isArray(data) ? data : [];
         this.optionsGenero = await this.convertirOption(
           this.generos,
-          this.usuarioOriginal?.idGenero || 0,
+          0,
           {
             codigo: 'idGenero',
             valor: 'nombre',
