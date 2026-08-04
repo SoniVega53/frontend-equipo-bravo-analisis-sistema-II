@@ -1,12 +1,15 @@
-<app-navbar (menuToggle)="toggleMobileMenu()"></app-navbar>
+<div class="home-container">
+  <app-navbar (menuToggle)="toggleMobileMenu()"></app-navbar>
 
-<div >
-  <main>
-      @if (esPrimerIngreso) {
-        <primer-ingreso-modal (configuracionExitosa)="onConfiguracionExitosa()">
-        </primer-ingreso-modal>
-      }@else {
-        <router-outlet></router-outlet>
-      }
-    </main>
+  <main class="home-content">
+    @if (esPrimerIngreso) {
+      <primer-ingreso-modal
+        (configuracionExitosa)="onConfiguracionExitosa($event)"
+        [politicaPassword]="passwordPolicy"
+      >
+      </primer-ingreso-modal>
+    } @else {
+      <router-outlet></router-outlet>
+    }
+  </main>
 </div>

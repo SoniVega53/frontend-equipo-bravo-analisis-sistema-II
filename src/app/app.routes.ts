@@ -8,6 +8,7 @@ import { NotFoundComponent } from './ui/not-found/not-found.component';
 import { WelcomeComponent } from './ui/welcome/welcome.component';
 import { AccesoDenegadoComponent } from './ui/acceso-denegado/acceso-denegado.component';
 import { ConsoleComponent } from './ui/console/console.component';
+import { CONSOLE_ROUTES } from './core/routes/route-console';
 
 export const routes: Routes = [
   {
@@ -23,29 +24,7 @@ export const routes: Routes = [
       {
         path: 'console',
         component: ConsoleComponent,
-        children: [
-          {
-            path: '',
-            component: WelcomeComponent,
-            pathMatch: 'full',
-          },
-          {
-            path: 'empresa',
-            component: EmpresaComponent,
-          },
-          {
-            path: 'genero',
-            component: GeneroComponent,
-          },
-          {
-            path: '403',
-            component: AccesoDenegadoComponent,
-          },
-          {
-            path: '**',
-            component: NotFoundComponent,
-          },
-        ],
+        children: CONSOLE_ROUTES,
       },
       {
         path: '',

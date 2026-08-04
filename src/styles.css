@@ -16,6 +16,12 @@
   --color-danger-hover: #dc2626;
 }
 
+html, body {
+  height: 100vh;
+  margin: 0;
+  overflow: hidden;
+}
+
 body {
   background-color: var(--bg-app);
   color: var(--text-body);
@@ -25,6 +31,7 @@ body {
 .center-page {
   display: flex;
   justify-content: center;
+  overflow: hidden;
   width: 100%;
   flex: 1;
 }
@@ -35,6 +42,9 @@ body {
   min-height: 400px;
   max-width: 80%;
   flex: 1;
+  height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 @media (max-width: 768px) {

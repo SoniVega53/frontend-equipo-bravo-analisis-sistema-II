@@ -1,10 +1,11 @@
+import { PasswordPolicy } from './../../interface/password-policy';
 import { Component, OnDestroy, OnInit, inject } from '@angular/core';
-import { RouterOutlet} from '@angular/router';
+import { RouterOutlet } from '@angular/router';
 import { BaseComponent } from '../base.component';
 import { NavbarComponent } from '../../shared/navbar/navbar.component';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import {Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { RoleOpciones } from '../../interface/rolo-opciones.interface';
 import { MenuOpcionService } from '../../core/services/menu-opcion.service';
 import { PrimerIngresoModalComponent } from '../../shared/modals/primer-ingreso-modal/primer-ingreso-modal.component';
@@ -41,6 +42,7 @@ export class HomeComponent extends BaseComponent implements OnInit {
   isLoadingMenu: boolean = true;
 
   esPrimerIngreso = false;
+  passwordPolicy: PasswordPolicy = {};
 
   menuItems: MenuItem[] = [];
 
@@ -58,13 +60,25 @@ export class HomeComponent extends BaseComponent implements OnInit {
     await this.executeService({
       callback: async () => {
         const respones = await this.usuarioService.getChangePassword();
+        console.log(respones);
         if (respones) {
-          console.log(respones?.changePassword)
+          this.passwordPolicy = respones?.policy;
           this.esPrimerIngreso = respones?.changePassword;
         }
       },
     });
     this.isLoadingMenu = false;
+  }
+
+  async postChangePassword(pass: string) {
+    await this.executeService({
+      callback: async () => {
+        await this.usuarioService.postChangePassword(pass);
+        this.clearNavParams();
+        this.esPrimerIngreso = false;
+        this.showSuccessAlert("Se cambio exitosamente");
+      },
+    });
   }
 
   clickLogSe() {
@@ -73,8 +87,8 @@ export class HomeComponent extends BaseComponent implements OnInit {
   toggleMobileMenu() {
     this.isMobileMenuOpen = !this.isMobileMenuOpen;
   }
-  onConfiguracionExitosa() {
-    this.clearNavParams();
-    this.esPrimerIngreso = false;
+
+  onConfiguracionExitosa(event: string) {
+    this.postChangePassword(event);
   }
 }

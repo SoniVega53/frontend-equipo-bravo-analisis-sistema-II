@@ -13,4 +13,14 @@ export class UsuarioService extends BaseService {
     return respones?.data || {};
   }
 
+
+  async postChangePassword(password:string): Promise<any> {
+    const respones: any = await this.put<any>(`${this.endpoint}/primerIngreso`,{
+      password:password
+    });
+    return respones?.data || {};
+  }
+
+
+
 }

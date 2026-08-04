@@ -3,11 +3,18 @@
     <div class="modal-content shadow-lg border-0">
       
       <div class="modal-header border-0 pb-0 justify-content-center mt-3">
-        <h4 class="modal-title fw-bold">Activación de Cuenta</h4>
+        <h4 class="modal-title fw-bold">Actualizar Contraseña</h4>
       </div>
       
       <div class="modal-body px-4 pb-4">
-        <p class="text-muted text-center mb-4">Completa tu primer ingreso configurando una nueva contraseña segura.</p>
+
+        <p class="text-muted text-center mb-4">Configura tu contraseña definitiva para continuar.</p>
+
+        @if (politicaPassword?.mensajeValidacion) {
+          <div class="alert alert-info text-start small mb-3">
+            {{ politicaPassword.mensajeValidacion }}
+          </div>
+        }
 
         @if (errorMensaje) {
           <div class="alert alert-danger text-center">
@@ -23,13 +30,17 @@
               id="passwordNueva"
               name="passwordNueva"
               label="Nueva Contraseña"
-              placeholder="Mínimo 8 caracteres"
+              placeholder="Mínimo {{ politicaPassword.largoMinimo || 8 }} caracteres"
               [(ngModel)]="passwordNueva"
               [disabled]="isLoading"
               [required]="true"
             ></custom-input>
-            @if (passwordNueva.length > 0 && passwordNueva.length < 8) {
-              <small class="text-danger d-block mt-1">La contraseña debe tener al menos 8 caracteres.</small>
+            
+            @if (passwordNueva.length > 0 && !cumpleLargo) {
+              <small class="text-danger d-block mt-1">Debe tener al menos {{ politicaPassword.largoMinimo || 8 }} caracteres.</small>
+            }
+            @if (passwordNueva.length > 0 && !cumpleRegex) {
+              <small class="text-danger d-block mt-1">No cumple con los tipos de caracteres requeridos.</small>
             }
           </div>
 

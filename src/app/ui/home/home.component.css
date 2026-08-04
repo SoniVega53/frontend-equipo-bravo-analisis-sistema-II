@@ -1,0 +1,12 @@
+.home-container {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.home-content {
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+}

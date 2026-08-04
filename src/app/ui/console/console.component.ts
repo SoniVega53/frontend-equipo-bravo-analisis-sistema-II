@@ -5,21 +5,22 @@ import { NavigationEnd, RouterOutlet } from '@angular/router';
 import { LoaderComponent } from '../../shared/loader/loader.component';
 import { MenuOpcionService } from '../../core/services/menu-opcion.service';
 import { filter, Subscription } from 'rxjs';
-import { MenuItem } from '../home/home.component';
+import { HomeComponent, MenuItem } from '../home/home.component';
 import { BaseComponent } from '../base.component';
+import { SidebarComponent } from "../../shared/sidebar/sidebar.component";
 
 @Component({
   selector: 'console',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterOutlet, LoaderComponent],
+  imports: [CommonModule, FormsModule, RouterOutlet, LoaderComponent, SidebarComponent],
   templateUrl: './console.component.html',
   styleUrl: './console.component.css',
 })
 export class ConsoleComponent extends BaseComponent implements OnInit, OnDestroy  {
   menuService = inject(MenuOpcionService);
+  homeComponent = inject(HomeComponent);
 
   activeItemId: number = -1;
-  isMobileMenuOpen: boolean = false;
   isLoadingMenu: boolean = true;
 
   private routerSubscription!: Subscription;
@@ -105,17 +106,9 @@ export class ConsoleComponent extends BaseComponent implements OnInit, OnDestroy
     this.authService.logout();
   }
 
-  toggleMobileMenu() {
-    this.isMobileMenuOpen = !this.isMobileMenuOpen;
-  }
-
-  navigateHome(item: MenuItem, event?: Event) {
-    if (event) {
-      event.stopPropagation();
-    }
-
+  navigateHome(item: MenuItem) {
     this.activeItemId = item.id;
-    this.isMobileMenuOpen = false;
+    this.homeComponent.isMobileMenuOpen = false;
 
     if (item.url) {
       this.clearNavParams();
