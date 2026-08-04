@@ -31,4 +31,9 @@ export class NavbarComponent extends BaseComponent implements OnInit {
     this.authService.logout();
     this.navigateTo('/login');
   }
+
+    navigateHome(url: string) {
+      if (!url) return;
+      this.navigateTo(`/home/${url}`);
+    }
 }

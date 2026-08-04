@@ -9,6 +9,7 @@ import { WelcomeComponent } from './ui/welcome/welcome.component';
 import { AccesoDenegadoComponent } from './ui/acceso-denegado/acceso-denegado.component';
 import { ConsoleComponent } from './ui/console/console.component';
 import { CONSOLE_ROUTES } from './core/routes/route-console';
+import { PerfilComponent } from './ui/perfil/perfil.component';
 
 export const routes: Routes = [
   {
@@ -25,6 +26,10 @@ export const routes: Routes = [
         path: 'console',
         component: ConsoleComponent,
         children: CONSOLE_ROUTES,
+      },
+      {
+        path: 'perfil',
+        component: PerfilComponent,
       },
       {
         path: '',

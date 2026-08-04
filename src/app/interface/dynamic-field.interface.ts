@@ -1,6 +1,6 @@
 import { SelectOption } from './select-option.interface';
 
-export type DynamicFieldType = 'text' | 'password' | 'email' | 'number' | 'dropdown' | 'multiselect'| 'password' | 'email' | 'number';
+export type DynamicFieldType = 'text' | 'password' | 'email' | 'number' | 'dropdown' | 'multiselect'| 'password' | 'email' | 'number' | 'date';
 
 export interface DynamicField {
   name: string;

@@ -4,7 +4,7 @@
       <ng-container [ngSwitch]="field.type">
         
         <custom-input
-          *ngSwitchCase="field.type === 'dropdown' || field.type === 'multiselect' ? '' : field.type"
+          *ngSwitchCase="field.type === 'dropdown' || field.type === 'multiselect' || field.type === 'date' ? '' : field.type"
           [id]="field.name"
           [type]="field?.type"
           [label]="field.label"
@@ -44,6 +44,18 @@
           [name]="field.name">
         </app-multi-combo-box>
 
+        <custom-date-input
+          *ngSwitchCase="'date'"
+          [id]="field.name"
+          [label]="field.label"
+          [placeholder]="field.placeholder || 'YYYY-MM-DD'"
+          [iconLeft]="field.iconLeft || ''"
+          [disabled]="field.disabled || isLoading"
+          [(ngModel)]="model[field.name]"
+          [name]="field.name"
+          [required]="field.required || false">
+        </custom-date-input>
+
       </ng-container>
     </div>
   </div>
@@ -54,7 +66,6 @@
         type="submit"
         class="btn custom-btn-primary"
         [disabled]="!dynamicForm.valid || isLoading">
-        <!-- <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span> -->
         {{ saveText }}
     </button>
 
