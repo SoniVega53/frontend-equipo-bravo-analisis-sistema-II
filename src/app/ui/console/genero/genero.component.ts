@@ -12,6 +12,7 @@ import { DynamicFormComponent } from '../../../shared/dynamic-form/dynamic-form.
 import { DynamicField } from '../../../interface/dynamic-field.interface';
 import { RoleOpciones } from '../../../interface/rolo-opciones.interface';
 import { LoaderComponent } from "../../../shared/loader/loader.component";
+import { CollapsedCardComponent } from "../../../shared/collapsed-card/collapsed-card.component";
 
 @Component({
   selector: 'app-genero',
@@ -21,7 +22,8 @@ import { LoaderComponent } from "../../../shared/loader/loader.component";
     FormsModule,
     DynamicTableComponent,
     DynamicFormComponent,
-    LoaderComponent
+    LoaderComponent,
+    CollapsedCardComponent
 ],
   templateUrl: './genero.component.html',
   styleUrl: './genero.component.css',

@@ -1,11 +1,10 @@
 <div class="center-page">
   <div class="page-container position-relative">
-    
     <app-loader [isLoading]="isLoadingPage"></app-loader>
 
     <h2 class="page-title">Géneros</h2>
 
-    <div class="form-card" [hidden]="hiddenFormulary()">
+    <collapsed-card [hidden]="hiddenFormulary()">
       <app-dynamic-form
         [fields]="configuracionCampos"
         [model]="generoActual"
@@ -18,11 +17,11 @@
         (cancel)="limpiarFormulario()"
       >
       </app-dynamic-form>
-    </div>
+    </collapsed-card>
 
     @if (roleSecurity?.consultar) {
       <hr class="divider" />
-      
+
       <app-dynamic-table
         [columns]="columnasGeneros"
         [data]="generos"

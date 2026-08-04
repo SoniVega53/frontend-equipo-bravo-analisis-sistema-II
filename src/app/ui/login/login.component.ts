@@ -27,7 +27,7 @@ export class LoginComponent extends BaseComponent {
           idUsuario: this.idUsuario,
           password: this.password,
         });
-        this.showSuccessAlert(response.mensaje || 'Inicio Correcto');
+        //this.showSuccessAlert(response.mensaje || 'Inicio Correcto');
         this.navigateTo('/home', { changePassword: response.changePassword == 1 });
       },
       showLoading: false,
