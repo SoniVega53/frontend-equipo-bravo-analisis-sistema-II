@@ -6,6 +6,7 @@ import { AuthService } from '../core/services/auth.service';
 import { ApiErrorResponse } from '../interface/api-error-response';
 import { RoleOpciones } from '../interface/rolo-opciones.interface';
 import { RoleOpcionService } from '../core/services/role-opcion.service';
+import { APP_CONSTANTS } from '../shared/app.constants';
 
 export interface ExecuteServiceOptions {
   callback?: () => void | Promise<void>;
@@ -22,6 +23,9 @@ export abstract class BaseComponent {
   protected rutaActual: string = "";
 
 
+  urlBase =  APP_CONSTANTS.URL_BASE.TYPE_1
+  urlBase2 =  APP_CONSTANTS.URL_BASE.TYPE_2
+
   isLoading = false;
   isLoadingPage = false;
 
@@ -35,7 +39,7 @@ export abstract class BaseComponent {
   };
 
   protected getRutaOffHome(){
-    return this.router.url.replace("/home/","")
+    return this.router.url.replace(this.urlBase,"")
   }
 
   protected navigateTo(url: string, params?: Record<string, any>): void {
@@ -158,8 +162,16 @@ export abstract class BaseComponent {
         ]);
       }
     } catch (error: unknown) {
-      //console.error(error);
+
+      console.error(error);
       const apiError = error as ApiErrorResponse;
+      if (apiError.codigoTexto === "SESION_INVALIDA") {
+        this.showErrorAlert(
+          apiError?.mensaje || 'Ocurrió un error al procesar la solicitud.',
+        );
+        this.logout();
+        return;
+      }
 
       if (apiError.codigoNumerico == 1501 && isLoggedIn) {
         this.logout();
@@ -223,11 +235,11 @@ export abstract class BaseComponent {
           this.roleSecurity = {...this.roleSecurity, ...roleOp};
 
           if (this.pagePermission(this.roleSecurity)) {
-            this.navigateTo('/home/403');
+            this.navigateTo(`${this.urlBase}403`);
           }
         }
     } catch (error) {
-       this.navigateTo('/home/403');
+       this.navigateTo(`${this.urlBase}403`);
     }finally{
       if (showLoading) {
         this.isLoadingPage = false;

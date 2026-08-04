@@ -1,17 +1,17 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { BaseComponent } from '../base.component';
+import { BaseComponent } from '../../base.component';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { GeneroService } from '../../core/services/genero.service';
-import { Genero } from '../../interface/genero.interface';
+import { GeneroService } from '../../../core/services/genero.service';
+import { Genero } from '../../../interface/genero.interface';
 import {
   DynamicTableComponent,
   TableColumn,
-} from '../../shared/dynamic-table/dynamic-table.component';
-import { DynamicFormComponent } from '../../shared/dynamic-form/dynamic-form.component';
-import { DynamicField } from '../../interface/dynamic-field.interface';
-import { RoleOpciones } from '../../interface/rolo-opciones.interface';
-import { LoaderComponent } from "../../shared/loader/loader.component";
+} from '../../../shared/dynamic-table/dynamic-table.component';
+import { DynamicFormComponent } from '../../../shared/dynamic-form/dynamic-form.component';
+import { DynamicField } from '../../../interface/dynamic-field.interface';
+import { RoleOpciones } from '../../../interface/rolo-opciones.interface';
+import { LoaderComponent } from "../../../shared/loader/loader.component";
 
 @Component({
   selector: 'app-genero',

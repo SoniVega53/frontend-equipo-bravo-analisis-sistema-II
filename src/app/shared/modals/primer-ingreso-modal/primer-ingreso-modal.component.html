@@ -1,0 +1,66 @@
+<div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0, 0, 0, 0.6);">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content shadow-lg border-0">
+      
+      <div class="modal-header border-0 pb-0 justify-content-center mt-3">
+        <h4 class="modal-title fw-bold">Activación de Cuenta</h4>
+      </div>
+      
+      <div class="modal-body px-4 pb-4">
+        <p class="text-muted text-center mb-4">Completa tu primer ingreso configurando una nueva contraseña segura.</p>
+
+        @if (errorMensaje) {
+          <div class="alert alert-danger text-center">
+            {{ errorMensaje }}
+          </div>
+        }
+
+        <form (ngSubmit)="onSubmit()">
+          
+          <div class="mb-3">
+            <custom-input
+              type="password"
+              id="passwordNueva"
+              name="passwordNueva"
+              label="Nueva Contraseña"
+              placeholder="Mínimo 8 caracteres"
+              [(ngModel)]="passwordNueva"
+              [disabled]="isLoading"
+              [required]="true"
+            ></custom-input>
+            @if (passwordNueva.length > 0 && passwordNueva.length < 8) {
+              <small class="text-danger d-block mt-1">La contraseña debe tener al menos 8 caracteres.</small>
+            }
+          </div>
+
+          <div class="mb-4">
+            <custom-input
+              type="password"
+              id="confirmarPassword"
+              name="confirmarPassword"
+              label="Confirmar Contraseña"
+              placeholder="Repite tu nueva contraseña"
+              [(ngModel)]="confirmarPassword"
+              [disabled]="isLoading"
+              [required]="true"
+            ></custom-input>
+            @if (passwordsMismatch) {
+              <small class="text-danger d-block mt-1">Las contraseñas no coinciden.</small>
+            }
+          </div>
+
+          <button type="submit" class="btn btn-primary w-100 py-2 fw-bold" [disabled]="!isFormValid || isLoading">
+            @if (isLoading) {
+              <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+              Guardando...
+            } @else {
+              Guardar y Continuar
+            }
+          </button>
+
+        </form>
+      </div>
+
+    </div>
+  </div>
+</div>

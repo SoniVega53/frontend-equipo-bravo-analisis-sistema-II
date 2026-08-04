@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { BaseService } from './base.service';
 import { RoleOpciones } from '../../interface/rolo-opciones.interface';
 import { MenuItem } from '../../ui/home/home.component';
+import { APP_CONSTANTS } from '../../shared/app.constants';
 
 @Injectable({
   providedIn: 'root',
@@ -48,7 +49,7 @@ export class MenuOpcionService extends BaseService {
     for (const item of items) {
       if (item.url) {
         const rutaLimpia = item.url.startsWith('/') ? item.url : `/${item.url}`;
-        urls.push(`/home${rutaLimpia}`);
+        urls.push(`${this.urlBase2}${rutaLimpia}`);
       }
 
       if (item.children && Array.isArray(item.children)) {
