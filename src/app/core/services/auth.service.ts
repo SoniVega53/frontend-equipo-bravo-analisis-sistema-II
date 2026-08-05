@@ -20,7 +20,7 @@ export class AuthService extends BaseService {
         localStorage.setItem('token', response.data.token);
       }
     }
-    return response;
+    return response.data;
   }
 
   logout(): void {

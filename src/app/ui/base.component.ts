@@ -6,6 +6,9 @@ import { AuthService } from '../core/services/auth.service';
 import { ApiErrorResponse } from '../interface/api-error-response';
 import { RoleOpciones } from '../interface/rolo-opciones.interface';
 import { RoleOpcionService } from '../core/services/role-opcion.service';
+import { APP_CONSTANTS } from '../shared/app.constants';
+import { SelectOption } from '../interface/select-option.interface';
+import { SecurityService } from '../core/services/security.service';
 
 export interface ExecuteServiceOptions {
   callback?: () => void | Promise<void>;
@@ -19,8 +22,11 @@ export abstract class BaseComponent {
   protected authService = inject(AuthService);
   protected roleOpService = inject(RoleOpcionService);
   protected navigationService = inject(NavigationService);
-  protected rutaActual: string = "";
+  protected securityService = inject(SecurityService);
+  protected rutaActual: string = '';
 
+  urlBase = APP_CONSTANTS.URL_BASE.TYPE_1;
+  urlBase2 = APP_CONSTANTS.URL_BASE.TYPE_2;
 
   isLoading = false;
   isLoadingPage = false;
@@ -34,8 +40,8 @@ export abstract class BaseComponent {
     exportar: false,
   };
 
-  protected getRutaOffHome(){
-    return this.router.url.replace("/home/","")
+  protected getRutaOffHome() {
+    return this.router.url.replace(this.urlBase, '');
   }
 
   protected navigateTo(url: string, params?: Record<string, any>): void {
@@ -125,8 +131,8 @@ export abstract class BaseComponent {
   }
 
   protected logout() {
-     this.authService.logout();
-     this.navigateTo('/login')
+    this.authService.logout();
+    this.navigateTo('/login');
   }
 
   protected async executeService(
@@ -160,6 +166,13 @@ export abstract class BaseComponent {
     } catch (error: unknown) {
       //console.error(error);
       const apiError = error as ApiErrorResponse;
+      if (apiError.codigoTexto === 'SESION_INVALIDA') {
+        this.showErrorAlert(
+          apiError?.mensaje || 'Ocurrió un error al procesar la solicitud.',
+        );
+        this.logout();
+        return;
+      }
 
       if (apiError.codigoNumerico == 1501 && isLoggedIn) {
         this.logout();
@@ -209,29 +222,56 @@ export abstract class BaseComponent {
 
   pagePermission(opciones: RoleOpciones): boolean {
     const valores = Object.values(opciones);
-    return valores.every(valor => !valor);
+    return valores.every((valor) => !valor);
   }
 
-  
-  async cargarPermisos(showLoading:boolean = true) {
+  async cargarPermisos(showLoading: boolean = true) {
     if (showLoading) {
       this.isLoadingPage = true;
     }
     try {
-      const roleOp = await this.roleOpService.getPermisso(this.getRutaOffHome());
-        if (roleOp) {
-          this.roleSecurity = {...this.roleSecurity, ...roleOp};
+      const roleOp = await this.roleOpService.getPermisso(
+        this.getRutaOffHome(),
+      );
+      if (roleOp) {
+        this.roleSecurity = { ...this.roleSecurity, ...roleOp };
 
-          if (this.pagePermission(this.roleSecurity)) {
-            this.navigateTo('/home/403');
-          }
+        if (this.pagePermission(this.roleSecurity)) {
+          this.navigateTo(`${this.urlBase}403`);
         }
+      }
     } catch (error) {
-       this.navigateTo('/home/403');
-    }finally{
+      this.navigateTo(`${this.urlBase}403`);
+    } finally {
       if (showLoading) {
         this.isLoadingPage = false;
       }
     }
+  }
+
+  async convertirOption(
+    model: any[],
+    idSelect: number,
+    option: SelectOption,
+  ): Promise<SelectOption[]> {
+    return model.map((res) => ({
+      codigo: res[option.codigo],
+      valor: res[option.valor],
+      seleccionado: res[option.codigo] == idSelect ? 1 : 0,
+    }));
+  }
+
+  formatDateFromObject(isoString: string): string {
+    if (!isoString) return '';
+    
+    const d = new Date(isoString);
+    
+    if (isNaN(d.getTime())) return '';
+
+    const year = d.getFullYear();
+    const month = ('0' + (d.getMonth() + 1)).slice(-2);
+    const day = ('0' + d.getDate()).slice(-2);
+    
+    return `${year}-${month}-${day}`;
   }
 }

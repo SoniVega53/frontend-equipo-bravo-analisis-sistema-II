@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
-import { SelectOption } from '../../interface/select-option.interface';
+import { SelectOption } from '../../../interface/select-option.interface';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { DropdownSelectComponent } from '../../shared/dropdown-select/dropdown-select.component';
-import { MultiComboBoxComponent } from '../../shared/multi-combo-box/multi-combo-box.component';
+import { DropdownSelectComponent } from '../../../shared/dropdown-select/dropdown-select.component';
+import { MultiComboBoxComponent } from '../../../shared/multi-combo-box/multi-combo-box.component';
 
 @Component({
   selector: 'app-empresa',

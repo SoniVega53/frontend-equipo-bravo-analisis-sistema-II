@@ -1,0 +1,54 @@
+<div class="form-group">
+  <div class="label-row" *ngIf="label">
+    <label [for]="id">{{ label }}<span *ngIf="required"> *</span></label>
+  </div>
+
+  <div
+    class="input-group"
+    (click)="!disabled && picker.open()"
+    style="cursor: pointer; position: relative"
+  >
+    <span class="input-group-text custom-addon" *ngIf="iconLeft">
+      <i class="bi" [ngClass]="iconLeft"></i>
+    </span>
+
+    <input
+      type="text"
+      [id]="id"
+      [value]="value"
+      [disabled]="disabled"
+      readonly
+      [required]="required"
+      class="form-control custom-input clickable-input"
+      [placeholder]="placeholder"
+    />
+
+    <input
+      [matDatepicker]="picker"
+      (dateChange)="onDateChange($event)"
+      [value]="parsedDate"
+      style="
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        width: 0;
+        height: 0;
+        border: none;
+        padding: 0;
+        opacity: 0;
+        pointer-events: none;
+      "
+    />
+
+    <button
+      type="button"
+      class="btn custom-toggle-btn"
+      [disabled]="disabled"
+      tabindex="-1"
+    >
+      <i class="bi bi-calendar"></i>
+    </button>
+
+    <mat-datepicker #picker></mat-datepicker>
+  </div>
+</div>

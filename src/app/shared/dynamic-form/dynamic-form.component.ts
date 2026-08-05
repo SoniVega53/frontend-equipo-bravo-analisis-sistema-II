@@ -4,7 +4,9 @@ import { FormsModule } from '@angular/forms';
 import { CustomInputComponent } from '../custom-input/custom-input.component';
 import { DropdownSelectComponent } from '../dropdown-select/dropdown-select.component';
 import { MultiComboBoxComponent } from '../multi-combo-box/multi-combo-box.component';
+import { CustomDateInputComponent } from '../custom-date-input/custom-date-input.component';
 import { DynamicField } from '../../interface/dynamic-field.interface';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @Component({
   selector: 'app-dynamic-form',
@@ -14,7 +16,8 @@ import { DynamicField } from '../../interface/dynamic-field.interface';
     FormsModule,
     CustomInputComponent,
     DropdownSelectComponent,
-    MultiComboBoxComponent
+    MultiComboBoxComponent,
+    CustomDateInputComponent
   ],
   templateUrl: './dynamic-form.component.html',
   styleUrls: ['./dynamic-form.component.css']
