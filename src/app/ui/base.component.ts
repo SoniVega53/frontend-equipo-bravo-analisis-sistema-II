@@ -1,23 +1,47 @@
-import { inject } from '@angular/core';
+import { inject, OnInit } from '@angular/core';
 import Swal from 'sweetalert2';
 import { NavigationService } from '../core/services/navigation.service';
 import { Router } from '@angular/router';
 import { AuthService } from '../core/services/auth.service';
+import { ApiErrorResponse } from '../interface/api-error-response';
+import { RoleOpciones } from '../interface/rolo-opciones.interface';
+import { RoleOpcionService } from '../core/services/role-opcion.service';
+import { APP_CONSTANTS } from '../shared/app.constants';
+import { SelectOption } from '../interface/select-option.interface';
+import { SecurityService } from '../core/services/security.service';
+
+export interface ExecuteServiceOptions {
+  callback?: () => void | Promise<void>;
+  callbackError?: (error: ApiErrorResponse) => void | Promise<void>;
+  showLoading?: boolean;
+  minDelay?: number;
+}
 
 export abstract class BaseComponent {
   protected router = inject(Router);
   protected authService = inject(AuthService);
+  protected roleOpService = inject(RoleOpcionService);
   protected navigationService = inject(NavigationService);
+  protected securityService = inject(SecurityService);
+  protected rutaActual: string = '';
+
+  urlBase = APP_CONSTANTS.URL_BASE.TYPE_1;
+  urlBase2 = APP_CONSTANTS.URL_BASE.TYPE_2;
 
   isLoading = false;
-  errorMessage = '';
+  isLoadingPage = false;
 
-  protected handleError(
-    err: any,
-    defaultMsg: string = 'Ocurrió un error inesperado',
-  ) {
-    this.errorMessage = err.error?.mensaje || err.message || defaultMsg;
-    this.isLoading = false;
+  roleSecurity: RoleOpciones = {
+    consultar: false,
+    alta: false,
+    baja: false,
+    cambio: false,
+    imprimir: false,
+    exportar: false,
+  };
+
+  protected getRutaOffHome() {
+    return this.router.url.replace(this.urlBase, '');
   }
 
   protected navigateTo(url: string, params?: Record<string, any>): void {
@@ -91,5 +115,163 @@ export abstract class BaseComponent {
         await callback();
       }
     });
+  }
+
+  protected showSessionEndedAlert(
+    message: string = 'Por seguridad, tu sesión ha caducado. Por favor, vuelve a ingresar.',
+    title: string = 'Sesión finalizada',
+  ) {
+    return Swal.fire({
+      icon: 'error',
+      title: title,
+      text: message,
+      allowOutsideClick: false,
+      allowEscapeKey: false,
+    });
+  }
+
+  protected logout() {
+    this.authService.logout();
+    this.navigateTo('/login');
+  }
+
+  protected async executeService(
+    options: ExecuteServiceOptions = {},
+    isLoggedIn: boolean = true,
+  ): Promise<void> {
+    if (this.authService.isTokenExpired() && isLoggedIn) {
+      this.logout();
+      this.showSessionEndedAlert();
+      return;
+    }
+
+    const {
+      callback,
+      callbackError,
+      showLoading = true,
+      minDelay = 300,
+    } = options;
+
+    if (showLoading) {
+      this.isLoading = true;
+    }
+
+    try {
+      if (callback) {
+        await Promise.all([
+          callback(),
+          new Promise((resolve) => setTimeout(resolve, minDelay)),
+        ]);
+      }
+    } catch (error: unknown) {
+      //console.error(error);
+      const apiError = error as ApiErrorResponse;
+      if (apiError.codigoTexto === 'SESION_INVALIDA') {
+        this.showErrorAlert(
+          apiError?.mensaje || 'Ocurrió un error al procesar la solicitud.',
+        );
+        this.logout();
+        return;
+      }
+
+      if (apiError.codigoNumerico == 1501 && isLoggedIn) {
+        this.logout();
+        this.showErrorAlert(
+          apiError?.mensaje || 'Ocurrió un error al procesar la solicitud.',
+        );
+        return;
+      }
+
+      if (callbackError) {
+        await callbackError(apiError);
+        return;
+      }
+
+      this.showErrorAlert(
+        apiError?.mensaje || 'Ocurrió un error al procesar la solicitud.',
+      );
+    } finally {
+      if (showLoading) {
+        this.isLoading = false;
+      }
+    }
+  }
+
+  protected showDeleteButton(id?: any): boolean {
+    return !!this.roleSecurity.baja && !!id;
+  }
+
+  protected showSaveButton(id?: any): boolean {
+    if (id) {
+      return this.roleSecurity?.cambio || false;
+    }
+    return this.roleSecurity?.alta || false;
+  }
+
+  protected hiddenFormulary(): boolean {
+    return (
+      !this.roleSecurity.cambio &&
+      !this.roleSecurity.alta &&
+      !this.roleSecurity.baja
+    );
+  }
+
+  protected hiddenAction(): boolean {
+    return !this.roleSecurity.cambio && !this.roleSecurity.baja;
+  }
+
+  pagePermission(opciones: RoleOpciones): boolean {
+    const valores = Object.values(opciones);
+    return valores.every((valor) => !valor);
+  }
+
+  async cargarPermisos(showLoading: boolean = true) {
+    if (showLoading) {
+      this.isLoadingPage = true;
+    }
+    try {
+      const roleOp = await this.roleOpService.getPermisso(
+        this.getRutaOffHome(),
+      );
+      if (roleOp) {
+        this.roleSecurity = { ...this.roleSecurity, ...roleOp };
+
+        if (this.pagePermission(this.roleSecurity)) {
+          this.navigateTo(`${this.urlBase}403`);
+        }
+      }
+    } catch (error) {
+      this.navigateTo(`${this.urlBase}403`);
+    } finally {
+      if (showLoading) {
+        this.isLoadingPage = false;
+      }
+    }
+  }
+
+  async convertirOption(
+    model: any[],
+    idSelect: number,
+    option: SelectOption,
+  ): Promise<SelectOption[]> {
+    return model.map((res) => ({
+      codigo: res[option.codigo],
+      valor: res[option.valor],
+      seleccionado: res[option.codigo] == idSelect ? 1 : 0,
+    }));
+  }
+
+  formatDateFromObject(isoString: string): string {
+    if (!isoString) return '';
+    
+    const d = new Date(isoString);
+    
+    if (isNaN(d.getTime())) return '';
+
+    const year = d.getFullYear();
+    const month = ('0' + (d.getMonth() + 1)).slice(-2);
+    const day = ('0' + d.getDate()).slice(-2);
+    
+    return `${year}-${month}-${day}`;
   }
 }

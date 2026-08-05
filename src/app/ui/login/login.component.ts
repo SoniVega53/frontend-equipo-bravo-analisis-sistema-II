@@ -7,7 +7,7 @@ import { CustomInputComponent } from '../../shared/custom-input/custom-input.com
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, FormsModule,CustomInputComponent],
+  imports: [CommonModule, FormsModule, CustomInputComponent],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css',
 })
@@ -15,35 +15,27 @@ export class LoginComponent extends BaseComponent {
   idUsuario = '';
   password = '';
   showPassword = false;
-  loadData = true;
 
   constructor() {
     super();
   }
 
   async onLogin() {
-    this.isLoading = true;
-    this.errorMessage = '';
-
-    try {
-      const response = await this.authService.login({
-        idUsuario: this.idUsuario,
-        password: this.password,
-      });
-
-      this.showSuccessAlert(response.mensaje || 'Inicio Correcto');
-
-      this.navigateTo('/home', { test: true });
-    } catch (err: any) {
-      console.error(err);
-      this.showErrorAlert(err.mensaje || 'Error al iniciar servicio');
-    } finally {
-      this.isLoading = false;
-    }
+    this.executeService({
+      callback: async () => {
+        const response = await this.authService.login({
+          idUsuario: this.idUsuario,
+          password: this.password,
+        });
+        //this.showSuccessAlert(response.mensaje || 'Inicio Correcto');
+        this.navigateTo('/home', { changePassword: response.changePassword == 1 });
+      },
+      showLoading: false,
+    },false);
   }
 
   onForgotPassword() {
-    console.log("CLICK")
+    console.log('CLICK');
     // this.navigateTo('/recuperar-password');
   }
 }

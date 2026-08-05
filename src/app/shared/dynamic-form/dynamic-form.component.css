@@ -1,0 +1,62 @@
+.dynamic-form-container {
+  width: 100%;
+  background-color: var(--bg-surface);
+  padding: 1.5rem;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+}
+
+.action-buttons {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.btn {
+  padding: 10px 20px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.custom-btn-primary {
+  background-color: var(--color-primary);
+  color: #ffffff;
+  border: none;
+}
+
+.custom-btn-primary:hover:not(:disabled) {
+  background-color: var(--color-primary-hover);
+}
+
+.custom-btn-danger {
+  background-color: var(--color-danger);
+  color: #ffffff;
+  border: none;
+}
+
+.custom-btn-danger:hover:not(:disabled) {
+  background-color: var(--color-danger-hover);
+}
+
+.custom-btn-secondary {
+  background-color: transparent;
+  color: var(--text-body);
+  border: 1px solid var(--border-color);
+}
+
+.custom-btn-secondary:hover:not(:disabled) {
+  background-color: var(--bg-app);
+  color: var(--text-heading);
+}

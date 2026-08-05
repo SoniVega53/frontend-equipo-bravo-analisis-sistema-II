@@ -1,0 +1,38 @@
+<div class="form-group">
+  <div class="label-row" *ngIf="label">
+    <label [for]="id">{{ label }} <span *ngIf="required"> *</span></label>
+  </div>
+
+  <div class="input-group position-relative">
+    <span class="input-group-text custom-addon cursor-pointer" *ngIf="iconLeft" (click)="toggleDropdown()">
+      <i class="bi" [ngClass]="iconLeft"></i>
+    </span>
+
+    <div 
+      class="form-control custom-input d-flex align-items-center flex-grow-1 cursor-pointer select-trigger"
+      [class.disabled]="disabled"
+      [class.focus]="isOpen"
+      [tabindex]="disabled ? -1 : 0"
+      (click)="toggleDropdown()"
+      (blur)="onTouched()">
+      <span *ngIf="!hasSelection()" class="text-muted text-truncate w-100">{{ placeholder }}</span>
+      <span *ngIf="hasSelection()" class="text-truncate w-100">{{ displayValue }}</span>
+    </div>
+
+    <button type="button" class="btn custom-toggle-btn" (click)="toggleDropdown()" [disabled]="disabled" tabindex="-1">
+      <i class="bi" [ngClass]="isOpen ? 'bi-chevron-up' : 'bi-chevron-down'"></i>
+    </button>
+
+    <div class="custom-dropdown-menu shadow" *ngIf="isOpen && !disabled">
+      <div class="dropdown-item d-flex align-items-center gap-2"
+           *ngFor="let opt of options"
+           (click)="selectOption(opt, $event)"
+           [class.selected]="isSelected(opt)">
+        <span class="text-truncate">{{ opt.valor }}</span>
+      </div>
+      <div class="dropdown-item text-muted text-center" *ngIf="options?.length === 0">
+        No hay opciones
+      </div>
+    </div>
+  </div>
+</div>

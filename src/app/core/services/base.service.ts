@@ -3,10 +3,14 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
 import { ApiErrorResponse } from '../../interface/api-error-response';
 import { environment } from '../../../environments/environment';
+import { APP_CONSTANTS } from '../../shared/app.constants';
 
 export abstract class BaseService {
   protected http = inject(HttpClient);
   protected apiUrl = environment.apiUrl;
+
+  urlBase = APP_CONSTANTS.URL_BASE.TYPE_1;
+  urlBase2 = APP_CONSTANTS.URL_BASE.TYPE_2;
 
   protected async toPromise<T>(observable$: any): Promise<T> {
     try {

@@ -17,13 +17,15 @@ import { FormsModule, ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/f
   ]
 })
 export class CustomInputComponent implements ControlValueAccessor {
-  @Input() type: 'text' | 'password' | 'email' | 'number' = 'text';
+  @Input() type: any = 'text';
   @Input() label: string = '';
   @Input() placeholder: string = '';
   @Input() iconLeft: string = '';
   @Input() iconRight: string = '';
   @Input() disabled: boolean = false;
-  @Input() id: string = `input-${Math.random().toString(36).substring(2, 9)}`;
+  @Input() readonly: boolean = false;
+  @Input() required: boolean = false;
+  @Input() id: string = "";
   @Input() linkText: string = '';
 
   @Output() linkClick = new EventEmitter<void>();

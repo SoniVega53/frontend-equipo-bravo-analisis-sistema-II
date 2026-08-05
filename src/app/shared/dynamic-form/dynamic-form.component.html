@@ -1,0 +1,90 @@
+<form (ngSubmit)="onSubmit()" #dynamicForm="ngForm" class="dynamic-form-container">
+  <div class="row align-items-end g-3">
+    <div *ngFor="let field of fields" [ngClass]="'col-12 col-md-' + (field.colSpan || 12)">
+      <ng-container [ngSwitch]="field.type">
+        
+        <custom-input
+          *ngSwitchCase="field.type === 'dropdown' || field.type === 'multiselect' || field.type === 'date' ? '' : field.type"
+          [id]="field.name"
+          [type]="field?.type"
+          [label]="field.label"
+          [placeholder]="field.placeholder || ''"
+          [iconLeft]="field.iconLeft || ''"
+          [iconRight]="field.iconRight || ''"
+          [readonly]="field.readonly || false"
+          [disabled]="field.disabled || isLoading"
+          [(ngModel)]="model[field.name]"
+          [name]="field.name"
+          [required]="field.required || false">
+        </custom-input>
+
+        <app-dropdown-select
+          *ngSwitchCase="'dropdown'"
+          [id]="field.name"
+          [label]="field.label"
+          [placeholder]="field.placeholder || 'Seleccione...'"
+          [iconLeft]="field.iconLeft || ''"
+          [disabled]="field.disabled || isLoading"
+          [options]="field.options || []"
+          [(ngModel)]="model[field.name]"
+          [required]="field.required || false"
+          [name]="field.name">
+        </app-dropdown-select>
+
+        <app-multi-combo-box
+          *ngSwitchCase="'multiselect'"
+          [id]="field.name"
+          [label]="field.label"
+          [placeholder]="field.placeholder || 'Seleccione...'"
+          [iconLeft]="field.iconLeft || ''"
+          [disabled]="field.disabled || isLoading"
+          [options]="field.options || []"
+          [(ngModel)]="model[field.name]"
+          [required]="field.required || false"
+          [name]="field.name">
+        </app-multi-combo-box>
+
+        <custom-date-input
+          *ngSwitchCase="'date'"
+          [id]="field.name"
+          [label]="field.label"
+          [placeholder]="field.placeholder || 'YYYY-MM-DD'"
+          [iconLeft]="field.iconLeft || ''"
+          [disabled]="field.disabled || isLoading"
+          [(ngModel)]="model[field.name]"
+          [name]="field.name"
+          [required]="field.required || false">
+        </custom-date-input>
+
+      </ng-container>
+    </div>
+  </div>
+
+  <div class="action-buttons mt-4">
+     <button
+        *ngIf="showSave"
+        type="submit"
+        class="btn custom-btn-primary"
+        [disabled]="!dynamicForm.valid || isLoading">
+        {{ saveText }}
+    </button>
+
+    <button   
+      *ngIf="showDelete"   
+      type="button"
+      class="btn custom-btn-danger"
+      (click)="onDelete()"
+      [disabled]="isLoading">
+      {{ deleteText }}
+    </button>
+
+    <button
+      *ngIf="showCancel"
+      type="button"
+      class="btn custom-btn-secondary"
+      (click)="onCancel()"
+      [disabled]="isLoading">
+      {{ cancelText }}
+    </button>
+  </div>
+</form>

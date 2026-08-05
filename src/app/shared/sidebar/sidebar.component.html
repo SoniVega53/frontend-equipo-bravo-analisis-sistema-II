@@ -1,0 +1,123 @@
+<div
+  class="sidebar-wrapper h-100 p-0 border-end"
+  [ngClass]="{ 'show-mobile': isMobileMenuOpen }"
+>
+  <div class="sidebar h-100 d-flex flex-column">
+    <div class="sidebar-header border-bottom d-md-none d-flex justify-content-between align-items-center p-3">
+      <h5 class="fw-bold m-0 text-heading">Menú</h5>
+      <button
+        type="button"
+        class="btn-close"
+        (click)="onToggleMobileMenu()"
+      ></button>
+    </div>
+
+    <div class="sidebar-body overflow-auto py-3">
+      <!-- Loader -->
+      <div class="d-flex flex-column align-items-center justify-content-center flex-grow-1 text-muted" *ngIf="isLoadingMenu">
+        <div class="spinner-border text-primary mb-3" role="status">
+          <span class="visually-hidden">Cargando...</span>
+        </div>
+        <span class="fw-semibold">Cargando menú...</span>
+      </div>
+
+      <!-- Empty State -->
+      <div class="d-flex flex-column align-items-center justify-content-center flex-grow-1 text-muted px-3 text-center" *ngIf="!isLoadingMenu && (!menuItems || menuItems.length === 0)">
+        <i class="bi bi-folder-x mb-2" style="font-size: 2.5rem; opacity: 0.5"></i>
+        <h6 class="fw-bold mb-1">Sin opciones</h6>
+        <small>No hay módulos disponibles en este momento.</small>
+      </div>
+
+      <!-- Accordion Menú -->
+      <div class="accordion accordion-flush w-100" id="mainAccordion" *ngIf="!isLoadingMenu && menuItems && menuItems.length > 0">
+        <div class="accordion-item border-0" *ngFor="let group of menuItems">
+          <h2 class="accordion-header" [id]="'heading-' + group.id">
+            <button
+              *ngIf="group.children"
+              class="accordion-button fw-bold py-2"
+              [ngClass]="{ collapsed: !group.expanded }"
+              type="button"
+              data-bs-toggle="collapse"
+              [attr.data-bs-target]="'#collapse-' + group.id"
+              [attr.aria-expanded]="group.expanded ? 'true' : 'false'"
+              [attr.aria-controls]="'collapse-' + group.id"
+            >
+              {{ group.label }}
+            </button>
+            <button
+              *ngIf="!group.children"
+              class="accordion-button collapse-none fw-bold py-2"
+              [ngClass]="{ 'active-menu-item': activeItemId === group.id }"
+              type="button"
+              (click)="onNavigate(group, $event)"
+            >
+              {{ group.label }}
+            </button>
+          </h2>
+
+          <div
+            *ngIf="group.children"
+            [id]="'collapse-' + group.id"
+            class="accordion-collapse collapse"
+            [ngClass]="{ show: group.expanded }"
+            [attr.aria-labelledby]="'heading-' + group.id"
+            data-bs-parent="#mainAccordion"
+          >
+            <div class="accordion-body p-0">
+              <div class="accordion accordion-flush" [id]="'subAccordion-' + group.id">
+                <div class="accordion-item border-0" *ngFor="let subGroup of group.children">
+                  <h2 class="accordion-header" [id]="'heading-' + subGroup.id">
+                    <button
+                      *ngIf="subGroup.children"
+                      class="accordion-button py-2 fw-semibold ps-4"
+                      [ngClass]="{ collapsed: !subGroup.expanded }"
+                      type="button"
+                      data-bs-toggle="collapse"
+                      [attr.data-bs-target]="'#collapse-' + subGroup.id"
+                      [attr.aria-expanded]="subGroup.expanded ? 'true' : 'false'"
+                      [attr.aria-controls]="'collapse-' + subGroup.id"
+                    >
+                      {{ subGroup.label }}
+                    </button>
+                    <button
+                      *ngIf="!subGroup.children"
+                      class="accordion-button collapse-none py-2 fw-semibold ps-4"
+                      [ngClass]="{ 'active-menu-item': activeItemId === subGroup.id }"
+                      type="button"
+                      (click)="onNavigate(subGroup)"
+                    >
+                      {{ subGroup.label }}
+                    </button>
+                  </h2>
+
+                  <div
+                    *ngIf="subGroup.children"
+                    [id]="'collapse-' + subGroup.id"
+                    class="accordion-collapse collapse"
+                    [ngClass]="{ show: subGroup.expanded }"
+                    [attr.aria-labelledby]="'heading-' + subGroup.id"
+                    [attr.data-bs-parent]="'#subAccordion-' + group.id"
+                  >
+                    <div class="accordion-body p-0">
+                      <ul class="list-unstyled mb-0">
+                        <li *ngFor="let item of subGroup.children">
+                          <a
+                            class="nav-link py-2 ps-5 menu-link"
+                            [ngClass]="{ 'active-menu-item': activeItemId === item.id }"
+                            (click)="onNavigate(item)"
+                          >
+                            {{ item.label }}
+                          </a>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
