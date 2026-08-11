@@ -83,6 +83,7 @@
   font-size: 0.9rem;
   color: var(--text-label);
   display: block;
+  padding-right: 4px;
 }
 
 .menu-link:hover {
