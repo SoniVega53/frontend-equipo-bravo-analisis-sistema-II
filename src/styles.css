@@ -47,6 +47,14 @@ body {
   overflow-x: hidden;
 }
 
+
+.page-title {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--text-heading);
+  margin-bottom: 24px;
+}
+
 @media (max-width: 768px) {
   .page-container {
     max-width: 95%;
