@@ -4,6 +4,7 @@ import { EmpresaComponent } from '../../ui/console/empresa/empresa.component';
 import { GeneroComponent } from '../../ui/console/genero/genero.component';
 import { AccesoDenegadoComponent } from '../../ui/acceso-denegado/acceso-denegado.component';
 import { NotFoundComponent } from '../../ui/not-found/not-found.component';
+import { StatusUserComponent } from '../../ui/console/status-user/status-user.component';
 
 export const CONSOLE_ROUTES: Routes = [
   {
@@ -14,6 +15,10 @@ export const CONSOLE_ROUTES: Routes = [
   {
     path: 'empresa',
     component: EmpresaComponent,
+  },
+  {
+    path: 'status-user',
+    component: StatusUserComponent,
   },
   {
     path: 'genero',

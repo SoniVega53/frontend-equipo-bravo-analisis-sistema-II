@@ -45,6 +45,14 @@ export class GeneroComponent extends BaseComponent implements OnInit {
       required: true,
       colSpan: 6,
     },
+    {
+      name: 'prueba',
+      label: 'Nombre del Género',
+      type: 'text',
+      placeholder: 'Ej: Masculino',
+      required: true,
+      colSpan: 6,
+    },
   ];
 
   async ngOnInit() {

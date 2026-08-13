@@ -1,0 +1,38 @@
+<div class="center-page">
+  <div class="page-container position-relative">
+    <app-loader [isLoading]="isLoadingPage"></app-loader>
+
+    <h2 class="page-title">Géneros</h2>
+
+    <collapsed-card [hidden]="hiddenFormulary()">
+      <app-dynamic-form
+        [fields]="configuracionCampos"
+        [model]="generoActual"
+        [isLoading]="isLoading"
+        [showDelete]="showDeleteButton(generoActual.idGenero)"
+        [showSave]="showSaveButton(generoActual.idGenero)"
+        [showCancel]="true"
+        (save)="guardar($event)"
+        (delete)="eliminar(generoActual.idGenero)"
+        (cancel)="limpiarFormulario()"
+      >
+      </app-dynamic-form>
+    </collapsed-card>
+
+    @if (roleSecurity?.consultar) {
+      <hr class="divider" />
+
+      <app-dynamic-table
+        [columns]="columnasGeneros"
+        [data]="generos"
+        [isLoading]="isLoading"
+        [showExport]="roleSecurity?.exportar || false"
+        [showPrint]="roleSecurity?.imprimir || false"
+        [reportName]="'Reporte_Generos_Sistema'"
+        [hiddenAccion]="hiddenAction()"
+        (actionSelect)="seleccionarParaEditar($event)"
+      >
+      </app-dynamic-table>
+    }
+  </div>
+</div>
