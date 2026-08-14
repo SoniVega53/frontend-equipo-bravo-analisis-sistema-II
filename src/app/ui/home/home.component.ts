@@ -12,7 +12,7 @@ import { PrimerIngresoModalComponent } from '../../shared/modals/primer-ingreso-
 import { UsuarioService } from '../../core/services/usuarios.service';
 
 export interface MenuItem {
-  id: number;
+  id: string;
   label: string;
   url?: string;
   parametros?: RoleOpciones;

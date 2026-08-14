@@ -13,6 +13,8 @@ export class SidebarComponent {
   @Input() menuItems: MenuItem[] = [];
   @Input() isLoadingMenu: boolean = false;
   @Input() isMobileMenuOpen: boolean = false;
+  @Input() isCollapseMenu: boolean = false;
+  @Input() isCollapseModule: boolean = false;
   @Input() activeItemId: string | number | null = null;
 
   @Output() toggleMenu = new EventEmitter<void>();

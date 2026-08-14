@@ -9,6 +9,7 @@ export interface DynamicField {
   placeholder?: string;
   iconLeft?: string;
   iconRight?: string;
+  hidden?: boolean;
   required?: boolean;
   readonly?: boolean;
   disabled?: boolean;

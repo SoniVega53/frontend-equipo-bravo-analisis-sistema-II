@@ -9,6 +9,7 @@ import { RoleOpcionService } from '../core/services/role-opcion.service';
 import { APP_CONSTANTS } from '../shared/app.constants';
 import { SelectOption } from '../interface/select-option.interface';
 import { SecurityService } from '../core/services/security.service';
+import { DynamicField } from '../interface/dynamic-field.interface';
 
 export interface ExecuteServiceOptions {
   callback?: () => void | Promise<void>;
@@ -236,8 +237,13 @@ export abstract class BaseComponent {
       if (roleOp) {
         this.roleSecurity = { ...this.roleSecurity, ...roleOp };
 
+        if ( !roleOp.alta && !roleOp.baja && !roleOp.consultar && !roleOp.cambio) {
+          this.navigateTo(`/home`);
+        }
+
         if (this.pagePermission(this.roleSecurity)) {
-          this.navigateTo(`${this.urlBase}403`);
+          //this.navigateTo(`${this.urlBase}403`);
+          this.navigateTo(`/home`);
         }
       }
     } catch (error) {
@@ -273,5 +279,9 @@ export abstract class BaseComponent {
     const day = ('0' + d.getDate()).slice(-2);
     
     return `${year}-${month}-${day}`;
+  }
+
+  findToItemField(configuraciones:any[],name:string):DynamicField{
+    return configuraciones.find(res => res.name === name);
   }
 }
