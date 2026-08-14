@@ -20,7 +20,7 @@ export class ConsoleComponent extends BaseComponent implements OnInit, OnDestroy
   menuService = inject(MenuOpcionService);
   homeComponent = inject(HomeComponent);
 
-  activeItemId: number = -1;
+  activeItemId: string = "";
   isLoadingMenu: boolean = true;
 
   private routerSubscription!: Subscription;
@@ -67,7 +67,7 @@ export class ConsoleComponent extends BaseComponent implements OnInit, OnDestroy
     const path = url.split('?')[0];
 
     if (path === this.urlBase2) {
-      this.activeItemId = -1;
+      this.activeItemId = "";
       return;
     }
 

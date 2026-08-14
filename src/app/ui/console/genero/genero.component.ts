@@ -38,12 +38,21 @@ export class GeneroComponent extends BaseComponent implements OnInit {
 
   configuracionCampos: DynamicField[] = [
     {
+      name: 'idGenero',
+      label: 'ID Genero',
+      type: 'text',
+      placeholder: 'idGenero',
+      disabled: true,
+      colSpan: 7,
+      hidden:true
+    },
+    {
       name: 'nombre',
       label: 'Nombre del Género',
       type: 'text',
       placeholder: 'Ej: Masculino',
       required: true,
-      colSpan: 6,
+      colSpan: 7,
     },
   ];
 
@@ -81,16 +90,18 @@ export class GeneroComponent extends BaseComponent implements OnInit {
   }
 
   async guardar(data: any) {
-    console.log(data);
     if (!this.generoActual.nombre) return;
 
     this.executeService({
       callback: async () => {
         await this.generoService.crearToActualizar(this.generoActual);
 
+        const update = this.generoActual.idGenero;
+
         this.showSuccessAlert(
-          "Se Guardo Correctamente"
+         update ? "Se Actualizo Correctamente" : "Se Guardo Correctamente"
         )
+        
         this.limpiarFormulario();
         await this.cargarLista();
       },
@@ -120,9 +131,14 @@ export class GeneroComponent extends BaseComponent implements OnInit {
 
   seleccionarParaEditar(genero: Genero) {
     this.generoActual = { ...genero };
+
+    if (this.generoActual.idGenero) {
+      this.findToItemField(this.configuracionCampos,"idGenero").hidden = false;
+    }
   }
 
   limpiarFormulario() {
     this.generoActual = { nombre: '' };
+    this.findToItemField(this.configuracionCampos,"idGenero").hidden = true;
   }
 }

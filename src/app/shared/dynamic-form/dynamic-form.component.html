@@ -1,6 +1,6 @@
 <form (ngSubmit)="onSubmit()" #dynamicForm="ngForm" class="dynamic-form-container">
   <div class="row align-items-end g-3">
-    <div *ngFor="let field of fields" [ngClass]="'col-12 col-md-' + (field.colSpan || 12)">
+    <div *ngFor="let field of fields" [ngClass]="'col-12 col-md-' + (field.colSpan || 12)" [hidden]="field?.hidden || false">
       <ng-container [ngSwitch]="field.type">
         
         <custom-input
@@ -79,7 +79,7 @@
     </button>
 
     <button
-      *ngIf="showCancel"
+      *ngIf="showCancel && !onHiddenCancel()"
       type="button"
       class="btn custom-btn-secondary"
       (click)="onCancel()"
