@@ -50,4 +50,8 @@ export class DynamicFormComponent {
   onCancel() {
     this.cancel.emit();
   }
+
+  onHiddenCancel(){
+    return !this.showDelete && !this.showSave;
+  }
 }

@@ -30,7 +30,9 @@
 
       <!-- Accordion Menú -->
       <div class="accordion accordion-flush w-100" id="mainAccordion" *ngIf="!isLoadingMenu && menuItems && menuItems.length > 0">
+
         <div class="accordion-item border-0" *ngFor="let group of menuItems">
+
           <h2 class="accordion-header" [id]="'heading-' + group.id">
             <button
               *ngIf="group.children"
@@ -61,11 +63,13 @@
             class="accordion-collapse collapse"
             [ngClass]="{ show: group.expanded }"
             [attr.aria-labelledby]="'heading-' + group.id"
-            data-bs-parent="#mainAccordion"
+            [attr.data-bs-parent]=" isCollapseModule ? '#mainAccordion' : '' "
           >
             <div class="accordion-body p-0">
               <div class="accordion accordion-flush" [id]="'subAccordion-' + group.id">
+
                 <div class="accordion-item border-0" *ngFor="let subGroup of group.children">
+                  
                   <h2 class="accordion-header" [id]="'heading-' + subGroup.id">
                     <button
                       *ngIf="subGroup.children"
@@ -96,10 +100,11 @@
                     class="accordion-collapse collapse"
                     [ngClass]="{ show: subGroup.expanded }"
                     [attr.aria-labelledby]="'heading-' + subGroup.id"
-                    [attr.data-bs-parent]="'#subAccordion-' + group.id"
+                    [attr.data-bs-parent]=" isCollapseMenu ? '#subAccordion-' + group.id : ''"
                   >
                     <div class="accordion-body p-0">
                       <ul class="list-unstyled mb-0">
+
                         <li *ngFor="let item of subGroup.children">
                           <a
                             class="nav-link py-2 ps-5 menu-link"
@@ -109,6 +114,7 @@
                             {{ item.label }}
                           </a>
                         </li>
+
                       </ul>
                     </div>
                   </div>
