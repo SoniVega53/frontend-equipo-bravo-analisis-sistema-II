@@ -1,0 +1,74 @@
+<div class="main-table">
+  <div class="table-card position-relative">
+    <app-loader [isLoading]="isLoading"></app-loader>
+
+    <div class="d-flex justify-content-end gap-2 mb-3 no-print">
+      @if (showExport) {
+        <button 
+          class="btn btn-outline-success btn-sm" 
+          (click)="exportarExcel()" 
+          [disabled]="isLoading || data.length === 0">
+          Exportar a Excel
+        </button>
+      }
+      
+      @if (showPrint) {
+        <button 
+          class="btn btn-outline-secondary btn-sm" 
+          (click)="imprimir()" 
+          [disabled]="isLoading || data.length === 0">
+          Imprimir Tabla
+        </button>
+      }
+    </div>
+
+    <div class="table-responsive" #printZone>
+      <table class="table table-hover align-middle">
+        <thead class="table-light">
+          <tr>
+            <th>Opción</th>
+            <th class="text-center">Consultar</th>
+            <th class="text-center">Alta</th>
+            <th class="text-center">Baja</th>
+            <th class="text-center">Cambio</th>
+            <th class="text-center">Imprimir</th>
+            <th class="text-center">Exportar</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (row of data; track row.idOpcion) {
+            <tr>
+              <td>{{ row.nombreOpcion }}</td>
+              <td class="text-center">
+                <input class="form-check-input" type="checkbox" [checked]="row.consultar === 1" (change)="onToggle(row, 'consultar', $event)">
+              </td>
+              <td class="text-center">
+                <input class="form-check-input" type="checkbox" [checked]="row.alta === 1" (change)="onToggle(row, 'alta', $event)">
+              </td>
+              <td class="text-center">
+                <input class="form-check-input" type="checkbox" [checked]="row.baja === 1" (change)="onToggle(row, 'baja', $event)">
+              </td>
+              <td class="text-center">
+                <input class="form-check-input" type="checkbox" [checked]="row.cambio === 1" (change)="onToggle(row, 'cambio', $event)">
+              </td>
+              <td class="text-center">
+                <input class="form-check-input" type="checkbox" [checked]="row.imprimir === 1" (change)="onToggle(row, 'imprimir', $event)">
+              </td>
+              <td class="text-center">
+                <input class="form-check-input" type="checkbox" [checked]="row.exportar === 1" (change)="onToggle(row, 'exportar', $event)">
+              </td>
+            </tr>
+          }
+
+          @if (data.length === 0 && !isLoading) {
+            <tr>
+              <td colspan="7" class="text-center py-4 text-muted">
+                No hay registros disponibles.
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

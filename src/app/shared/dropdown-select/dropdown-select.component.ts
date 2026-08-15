@@ -50,8 +50,8 @@ export class DropdownSelectComponent implements ControlValueAccessor {
     }
   }
 
-  selectOption(option: SelectOption, event: Event) {
-    event.stopPropagation();
+  selectOption(option: SelectOption, event?: Event) {
+    event?.stopPropagation();
     if (this.disabled) return;
 
     this.value = option.codigo;
