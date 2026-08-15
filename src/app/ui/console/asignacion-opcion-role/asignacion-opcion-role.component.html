@@ -1,0 +1,59 @@
+<div class="center-page">
+  <div class="page-container position-relative">
+    <app-loader [isLoading]="isLoadingPage"></app-loader>
+
+    <h2 class="page-title">Géneros</h2>
+
+    <div class="row gap-4 mb-4">
+      <div class="col-12 col-md-5">
+        <app-dropdown-select
+          label="Rol"
+          placeholder="Elija un Rol..."
+          [options]="opcionesRol"
+          [(ngModel)]="modelRol"
+          (selectionChange)="selectionChange()"
+        >
+        </app-dropdown-select>
+      </div>
+
+      <div class="col-12 col-md-5">
+        <app-dropdown-select
+          #dropdowModulo
+          label="Módulo"
+          placeholder="Elija un Módulo..."
+          [options]="opcionesModulo"
+          [(ngModel)]="modelModulo"
+          (selectionChange)="selectionChange()"
+        >
+        </app-dropdown-select>
+      </div>
+    </div>
+
+    <app-role-opcion-table
+      #tablaRole
+      [data]="permisosTabla"
+      [isLoading]="isLoading"
+      (dataChange)="onPermisosActualizados($event)"
+      (onClickActions)="onClickActions()"
+    >
+    </app-role-opcion-table>
+
+    @if (this.updateTabla.length > 0) {
+      <div class="d-flex justify-content-end mt-4">
+        <button
+          class="btn btn-outline-secondary me-2"
+          (click)="cancelarCambios()"
+        >
+          Cancelar
+        </button>
+        <button
+          class="btn btn-primary"
+          (click)="guardarCambios()"
+          [disabled]="isLoading"
+        >
+          Guardar Permisos
+        </button>
+      </div>
+    }
+  </div>
+</div>
