@@ -29,14 +29,18 @@
       </div>
     </div>
 
-    <app-role-opcion-table
-      #tablaRole
-      [data]="permisosTabla"
-      [isLoading]="isLoading"
-      (dataChange)="onPermisosActualizados($event)"
-      (onClickActions)="onClickActions()"
-    >
-    </app-role-opcion-table>
+    @if (roleSecurity.consultar) {
+      <app-role-opcion-table
+        #tablaRole
+        [data]="permisosTabla"
+        [isLoading]="isLoading"
+        [showExport]="roleSecurity.exportar || false"
+        [showPrint]="roleSecurity.imprimir || false"
+        (dataChange)="onPermisosActualizados($event)"
+        (onClickActions)="onClickActions()"
+      >
+      </app-role-opcion-table>
+    }
 
     @if (this.updateTabla.length > 0) {
       <div class="d-flex justify-content-end mt-4">
