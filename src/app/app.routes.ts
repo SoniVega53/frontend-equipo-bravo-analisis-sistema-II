@@ -11,11 +11,17 @@ import { ConsoleComponent } from './ui/console/console.component';
 import { CONSOLE_ROUTES } from './core/routes/route-console';
 import { PerfilComponent } from './ui/perfil/perfil.component';
 import { CambiarPasswordComponent } from './ui/cambiar-password/cambiar-password.component';
+import { RecuperarPasswordComponent } from './ui/recuperar-password/recuperar-password.component';
 
 export const routes: Routes = [
   {
     path: 'login',
     component: LoginComponent,
+    canActivate: [loginGuard],
+  },
+  {
+    path: 'recuperar-password',
+    component: RecuperarPasswordComponent,
     canActivate: [loginGuard],
   },
   {

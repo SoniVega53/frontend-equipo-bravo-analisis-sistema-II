@@ -183,6 +183,17 @@ export abstract class BaseComponent {
         return;
       }
 
+      if ((apiError.codigoTexto === "AUTH_USER_BLOCKED" || apiError.codigoTexto === "AUTH_USER_INACTIVE") && !isLoggedIn) {
+        this.showErrorAlert(
+          apiError?.mensaje || 'Ocurrió un error al procesar la solicitud.',
+        );
+        setTimeout(() => {  
+          this.navigateTo('/login');
+        },1000);
+        return;
+      }
+
+
       if (callbackError) {
         await callbackError(apiError);
         return;

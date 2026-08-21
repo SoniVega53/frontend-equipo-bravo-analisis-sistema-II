@@ -1,3 +1,5 @@
+import { PasswordPolicy } from "./password-policy";
+
 export interface UsuarioResponse {
   nombre: string;
   apellido: string;
@@ -25,4 +27,9 @@ export interface UsuarioRequest {
 export interface UsuarioPasswordRequest {
   passwordOld: string;
   passwordNew: string;
+}
+
+export interface PreguntaSeguridadResponse {
+  pregunta: string;
+  politica: PasswordPolicy;
 }
