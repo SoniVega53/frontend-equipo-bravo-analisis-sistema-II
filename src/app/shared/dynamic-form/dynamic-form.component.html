@@ -1,10 +1,10 @@
 <form (ngSubmit)="onSubmit()" #dynamicForm="ngForm" class="dynamic-form-container">
-  <div class="row align-items-end g-3">
+  <div class="row align-items-end g-3 justify-content-md-center">
     <div *ngFor="let field of fields" [ngClass]="'col-12 col-md-' + (field.colSpan || 12)" [hidden]="field?.hidden || false">
       <ng-container [ngSwitch]="field.type">
         
         <custom-input
-          *ngSwitchCase="field.type === 'dropdown' || field.type === 'multiselect' || field.type === 'date' ? '' : field.type"
+          *ngSwitchCase="field.type === 'dropdown' || field.type === 'multiselect' || field.type === 'date' || field.type === 'password-policy' ? ''  : field.type"
           [id]="field.name"
           [type]="field?.type"
           [label]="field.label"
@@ -28,6 +28,7 @@
           [options]="field.options || []"
           [(ngModel)]="model[field.name]"
           [required]="field.required || false"
+          (selectionChange)="selectionChange($event,field)"
           [name]="field.name">
         </app-dropdown-select>
 
@@ -56,16 +57,27 @@
           [required]="field.required || false">
         </custom-date-input>
 
+        <app-password-policy-input
+          *ngSwitchCase="'password-policy'"
+          [field]="field"
+          [politicaPassword]="field?.policyData || null" 
+          [isLoading]="isLoading"
+          [required]="field.required || false"
+          (isValid)="onCustomValidationChange($event, field) "
+          (passwordChange)="model[field.name] = $event">
+        </app-password-policy-input>
+        
+
       </ng-container>
     </div>
   </div>
 
-  <div class="action-buttons mt-4">
+  <div class="action-buttons mt-4 justify-content-md-center">
      <button
         *ngIf="showSave"
         type="submit"
         class="btn custom-btn-primary"
-        [disabled]="!dynamicForm.valid || isLoading">
+        [disabled]="!isFormValid || isLoading">
         {{ saveText }}
     </button>
 

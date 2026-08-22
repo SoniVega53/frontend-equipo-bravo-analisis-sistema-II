@@ -4,11 +4,12 @@ import { FormsModule } from '@angular/forms';
 import { CustomInputComponent } from '../../shared/custom-input/custom-input.component';
 import { BaseComponent } from '../base.component';
 import { PasswordPolicy } from '../../interface/password-policy';
+import { PasswordPolicyInputComponent } from "../../shared/password-policy-input/password-policy-input.component";
 
 @Component({
   selector: 'recuperar-password',
   standalone: true,
-  imports: [CommonModule, FormsModule, CustomInputComponent],
+  imports: [CommonModule, FormsModule, CustomInputComponent, PasswordPolicyInputComponent],
   templateUrl: './recuperar-password.component.html',
   styleUrls: ['./recuperar-password.component.css']
 })
@@ -28,6 +29,7 @@ export class RecuperarPasswordComponent extends BaseComponent {
 
   errorMensaje = '';
   exitoMensaje = '';
+  isFormValid = false;
 
   async buscarUsuario() {
     if (!this.idUsuario) return;
@@ -91,35 +93,8 @@ export class RecuperarPasswordComponent extends BaseComponent {
     },false);
   }
 
-  get isFormValid(): boolean {
-    const cumpleRegex = this.politicaPassword.regex
-      ? new RegExp(this.politicaPassword.regex).test(this.passwordNueva)
-      : true;
-    return (
-      this.passwordNueva.length >= (this.politicaPassword.largoMinimo || 8) &&
-      cumpleRegex &&
-      this.confirmarPassword.length > 0 &&
-      this.passwordNueva === this.confirmarPassword
-    );
-  }
-
-  get passwordsMismatch(): boolean {
-    return (
-      this.confirmarPassword.length > 0 &&
-      this.passwordNueva !== this.confirmarPassword
-    );
-  }
-
-  get cumpleLargo(): boolean {
-    return (
-      this.passwordNueva.length >= (this.politicaPassword.largoMinimo || 8)
-    );
-  }
-
-  get cumpleRegex(): boolean {
-    if (!this.politicaPassword.regex || this.passwordNueva.length === 0)
-      return true;
-    return new RegExp(this.politicaPassword.regex).test(this.passwordNueva);
+  isValid(isValid: boolean) {
+    this.isFormValid = isValid;
   }
 
   volverInicio() {

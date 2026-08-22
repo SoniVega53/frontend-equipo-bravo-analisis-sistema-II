@@ -1,12 +1,12 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter, ViewChild, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, NgForm } from '@angular/forms';
 import { CustomInputComponent } from '../custom-input/custom-input.component';
 import { DropdownSelectComponent } from '../dropdown-select/dropdown-select.component';
 import { MultiComboBoxComponent } from '../multi-combo-box/multi-combo-box.component';
 import { CustomDateInputComponent } from '../custom-date-input/custom-date-input.component';
 import { DynamicField } from '../../interface/dynamic-field.interface';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { PasswordPolicyInputComponent } from "../password-policy-input/password-policy-input.component";
 
 @Component({
   selector: 'app-dynamic-form',
@@ -17,19 +17,22 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     CustomInputComponent,
     DropdownSelectComponent,
     MultiComboBoxComponent,
-    CustomDateInputComponent
+    CustomDateInputComponent,
+    PasswordPolicyInputComponent
   ],
   templateUrl: './dynamic-form.component.html',
   styleUrls: ['./dynamic-form.component.css']
 })
-export class DynamicFormComponent {
+export class DynamicFormComponent implements OnInit {
+  @ViewChild('dynamicForm') dynamicForm!: NgForm;
+
   @Input() fields: DynamicField[] = [];
   @Input() model: any = {};
   @Input() isLoading: boolean = false;
   @Input() showDelete: boolean = false;
   @Input() showCancel: boolean = false;
   @Input() showSave: boolean = false;
-  
+
   @Input() saveText: string = 'Guardar';
   @Input() deleteText: string = 'Eliminar';
   @Input() cancelText: string = 'Cancelar';
@@ -38,6 +41,8 @@ export class DynamicFormComponent {
   @Output() update = new EventEmitter<any>();
   @Output() delete = new EventEmitter<void>();
   @Output() cancel = new EventEmitter<void>();
+
+  customValidations: { [key: string]: boolean } = {};
 
   onSubmit() {
     this.save.emit(this.model);
@@ -51,7 +56,34 @@ export class DynamicFormComponent {
     this.cancel.emit();
   }
 
-  onHiddenCancel(){
+  onHiddenCancel() {
     return !this.showDelete && !this.showSave;
+  }
+
+  selectionChange(event: any, field: DynamicField) {
+    field.onChange?.emit(event);
+  }
+
+  ngOnInit() {
+
+  }
+
+  onCustomValidationChange(isValid: boolean, field: DynamicField) {
+    this.customValidations[field.name] = isValid;
+  }
+
+  get isFormValid(): boolean {
+    const isNgFormValid = this.dynamicForm ? this.dynamicForm.valid : false;
+
+    const areCustomFieldsValid = this.fields
+      .filter(field => !field.hidden && field.type === 'password-policy')
+      .every(field => {
+        if (field.required) {
+          return this.customValidations[field.name] === true;
+        }
+        return this.customValidations[field.name] !== false;
+      });
+
+    return (isNgFormValid && areCustomFieldsValid) || false;
   }
 }
