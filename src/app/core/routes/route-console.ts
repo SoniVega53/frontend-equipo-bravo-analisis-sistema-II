@@ -6,6 +6,7 @@ import { AccesoDenegadoComponent } from '../../ui/acceso-denegado/acceso-denegad
 import { NotFoundComponent } from '../../ui/not-found/not-found.component';
 import { AsignacionOpcionRoleComponent } from '../../ui/console/asignacion-opcion-role/asignacion-opcion-role.component';
 import { UsuarioComponent } from '../../ui/console/usuario/usuario.component';
+import { SucursalComponent } from '../../ui/console/sucursal/sucursal.component';
 
 export const CONSOLE_ROUTES: Routes = [
   {
@@ -16,6 +17,10 @@ export const CONSOLE_ROUTES: Routes = [
   {
     path: 'empresa',
     component: EmpresaComponent,
+  },
+  {
+    path: 'sucursal',
+    component: SucursalComponent,
   },
   {
     path: 'genero',

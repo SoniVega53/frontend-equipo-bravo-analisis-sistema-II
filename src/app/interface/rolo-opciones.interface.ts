@@ -34,3 +34,11 @@ export interface ListadoOpcionesItem {
   modulos: ModuloItem[];
   roles: RolItem[];
 }
+
+
+export const CODE_ERROR_PERMIT: Partial<Record<number, keyof RoleOpciones>> = {
+  4001: 'consultar',
+  4002: 'cambio',
+  4003: 'baja',
+  4004: 'alta',
+};

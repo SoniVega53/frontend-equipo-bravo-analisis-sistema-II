@@ -29,7 +29,6 @@ import { PasswordPolicy } from '../../../interface/password-policy';
   styleUrl: './usuario.component.css',
 })
 export class UsuarioComponent extends BaseComponent implements OnInit {
-  private catalogoService = inject(CatalogoService);
   private usuarioService = inject(UsuarioService);
 
   usuarios: IUsuario[] = [];
@@ -89,7 +88,7 @@ export class UsuarioComponent extends BaseComponent implements OnInit {
       { name: 'apellido', label: 'Apellidos', type: 'text', required: true, colSpan: 4 },
       { name: 'fechaNacimiento', label: 'Fecha de Nacimiento', type: 'date', required: true, colSpan: 4 },
       { name: 'correoElectronico', label: 'Correo Electrónico', type: 'email', required: true, colSpan: 4 },
-      { name: 'telefonoMovil', label: 'Teléfono Móvil', type: 'text', required: true, colSpan: 4 },
+      { name: 'telefonoMovil', label: 'Teléfono Móvil', type: 'number', required: true, colSpan: 4 },
       {
         name: 'idEmpresa', label: 'Empresa', type: 'dropdown', required: true, colSpan: 6, options: this.optionsEmpresa,
         onChange: empresaChangeEvent
