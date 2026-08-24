@@ -42,6 +42,7 @@ export class HomeComponent extends BaseComponent implements OnInit {
   isLoadingMenu: boolean = true;
 
   esPrimerIngreso = false;
+  textoIngresoPassword = '';
   passwordPolicy: PasswordPolicy = {};
 
   menuItems: MenuItem[] = [];
@@ -63,7 +64,8 @@ export class HomeComponent extends BaseComponent implements OnInit {
         console.log(respones);
         if (respones) {
           this.passwordPolicy = respones?.policy;
-          this.esPrimerIngreso = respones?.changePassword;
+          this.esPrimerIngreso = respones?.changePassword > 0;
+          this.textoIngresoPassword = respones?.textoIngresoPassword;
         }
       },
     });
