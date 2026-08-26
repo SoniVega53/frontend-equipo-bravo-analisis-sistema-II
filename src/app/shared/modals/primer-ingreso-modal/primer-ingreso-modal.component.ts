@@ -20,6 +20,10 @@ export class PrimerIngresoModalComponent {
   };
 
   @Output() configuracionExitosa = new EventEmitter<string>();
+  @Output() onSalirAlLogin = new EventEmitter<void>();
+  @Input() texto:string = 'Por favor, configure su nueva contraseña.';
+
+
 
   passwordNueva = '';
   confirmarPassword = '';
@@ -73,5 +77,9 @@ export class PrimerIngresoModalComponent {
     } finally {
       this.isLoading = false;
     }
+  }
+
+  salirAlLogin(){
+    this.onSalirAlLogin.emit();
   }
 }

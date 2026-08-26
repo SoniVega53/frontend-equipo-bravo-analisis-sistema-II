@@ -6,6 +6,8 @@
       <primer-ingreso-modal
         (configuracionExitosa)="onConfiguracionExitosa($event)"
         [politicaPassword]="passwordPolicy"
+        [texto]="textoIngresoPassword"
+        (onSalirAlLogin)="logout()"
       >
       </primer-ingreso-modal>
     } @else {
