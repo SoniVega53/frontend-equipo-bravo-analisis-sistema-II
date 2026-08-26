@@ -57,7 +57,8 @@ export class ConsoleComponent extends BaseComponent implements OnInit, OnDestroy
     this.isLoadingMenu = false;
   }
 
-  ngOnDestroy(): void {
+  override ngOnDestroy(): void {
+    super.ngOnDestroy();
     if (this.routerSubscription) {
       this.routerSubscription.unsubscribe();
     }
@@ -73,11 +74,15 @@ export class ConsoleComponent extends BaseComponent implements OnInit, OnDestroy
 
     const findAndExpand = (items: MenuItem[], parents: MenuItem[]): boolean => {
       for (const item of items) {
-        if (item.url && path.endsWith(`${this.urlBase}${item.url}`)) {
-          this.activeItemId = item.id;
+        if (item.url) {
+          const matchExacto = path.endsWith(`${this.urlBase}${item.url}`);
+          const matchConCode = path.endsWith(`${this.urlBase}${item.url}/${item.code}`);
 
-          parents.forEach((p) => (p.expanded = true));
-          return true;
+          if (matchExacto || matchConCode) {
+            this.activeItemId = item.id;
+            parents.forEach((p) => (p.expanded = true));
+            return true;
+          }
         }
 
         if (item.children && item.children.length > 0) {
@@ -89,7 +94,11 @@ export class ConsoleComponent extends BaseComponent implements OnInit, OnDestroy
       return false;
     };
 
-    findAndExpand(this.menuItems, []);
+    const rutaPermitida = findAndExpand(this.menuItems, []);
+
+    if (!rutaPermitida) {
+      this.router.navigate([this.urlBase2 || '/home/console']); 
+    }
   }
 
   private collapseMenu(items: MenuItem[]): void {
@@ -112,7 +121,7 @@ export class ConsoleComponent extends BaseComponent implements OnInit, OnDestroy
 
     if (item.url) {
       this.clearNavParams();
-      this.navigateTo(`${this.urlBase}${item.url}`, item.parametros || {});
+      this.navigateToConsole(`${this.urlBase}${item.url}`, item.code);
     }
   }
 

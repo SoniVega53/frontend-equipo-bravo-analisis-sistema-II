@@ -13,6 +13,7 @@ import { UsuarioService } from '../../core/services/usuarios.service';
 
 export interface MenuItem {
   id: string;
+  code: number;
   label: string;
   url?: string;
   parametros?: RoleOpciones;

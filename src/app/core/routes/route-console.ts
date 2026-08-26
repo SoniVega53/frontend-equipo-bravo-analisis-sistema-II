@@ -13,15 +13,15 @@ export const CONSOLE_ROUTES: Routes = [
     pathMatch: 'full',
   },
   {
-    path: 'empresa',
+    path: 'empresa/:code',
     component: EmpresaComponent,
   },
   {
-    path: 'genero',
+    path: 'genero/:code',
     component: GeneroComponent,
   },
   {
-    path: 'asignacion_opcion_role',
+    path: 'asignacion_opcion_role/:code',
     component: AsignacionOpcionRoleComponent,
   },
   {
