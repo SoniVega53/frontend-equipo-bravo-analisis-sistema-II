@@ -27,9 +27,10 @@ export class StatusUsuarioComponent extends BaseComponent implements OnInit {
   configuracionCampos: DynamicField[] = [];
 
   async ngOnInit() {
-    await this.cargarPermisos();
-    this.configurarCampos();
-    await this.cargarLista();
+    await this.onChangeViewURL(async () => {
+      this.configurarCampos();
+      await this.cargarLista(); 
+    });  
   }
 
   configurarCampos() {

@@ -49,10 +49,11 @@ export class UsuarioComponent extends BaseComponent implements OnInit {
   configuracionCampos: DynamicField[] = [];
 
   async ngOnInit() {
-    await this.cargarPermisos();
-    await this.cargarCatalogosPrincipales();
-
-    await this.cargarLista();
+    await this.onChangeViewURL(async () => {
+      await this.cargarCatalogosPrincipales();
+      await this.cargarLista();
+    }); 
+   
   }
 
   async cargarCatalogosPrincipales() {

@@ -36,23 +36,26 @@ export class EmpresaComponent extends BaseComponent implements OnInit {
   configuracionCampos: DynamicField[] = [];
 
   async ngOnInit() {
-    await this.cargarPermisos(); 
-    this.configurarCampos();
-    await this.cargarLista(); 
+    await this.onChangeViewURL(async () => {
+      this.configurarCampos();
+      await this.cargarLista();     
+    });
+   
   }
 
   configurarCampos() {
     this.configuracionCampos = [
       { name: 'nombre', label: 'Nombre', type: 'text', required: true, colSpan: 4 }, 
-      { name: 'direccion', label: 'Dirección', type: 'text', required: true, colSpan: 4 },
       { name: 'nit', label: 'NIT', type: 'number', required: true, colSpan: 4 },
+      { name: 'direccion', label: 'Dirección', type: 'text', required: true, colSpan: 12 },
       { name: 'passwordLargo', label: 'Largo Mínimo Contraseña', type: 'number', required: false, colSpan: 3 },
       { name: 'passwordCantidadMayusculas', label: 'Min. Mayúsculas', type: 'number', required: false, colSpan: 3 },
       { name: 'passwordCantidadMinusculas', label: 'Min. Minúsculas', type: 'number', required: false, colSpan: 3 },
       { name: 'passwordCantidadNumeros', label: 'Min. Números', type: 'number', required: false, colSpan: 3 },
-      { name: 'passwordCantidadCaracteresEspeciales', label: 'Min. Caracteres Esp.', type: 'number', required: false, colSpan: 4 },
-      { name: 'passwordCantidadCaducidadDias', label: 'Días Caducidad', type: 'number', required: false, colSpan: 4 },
-      { name: 'passwordIntentosAntesDeBloquear', label: 'Intentos Antes Bloqueo', type: 'number', required: false, colSpan: 4 },
+      { name: 'passwordCantidadCaracteresEspeciales', label: 'Min. Caracteres Esp.', type: 'number', required: false, colSpan: 3 },
+      { name: 'passwordCantidadCaducidadDias', label: 'Días Caducidad', type: 'number', required: false, colSpan: 3 },
+      { name: 'passwordIntentosAntesDeBloquear', label: 'Intentos Antes Bloqueo', type: 'number', required: false, colSpan: 3 },
+      { name: 'passwordCantidadPreguntasValidar', label: 'Cantidad Preguntas', type: 'number', required: false, colSpan: 3 },
     ];
   }
 

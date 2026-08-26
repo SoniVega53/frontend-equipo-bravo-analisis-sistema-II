@@ -39,8 +39,9 @@ export class AsignacionOpcionRoleComponent  extends BaseComponent implements OnI
   modelModulo:any = "";
 
   async ngOnInit() {
-    await this.cargarPermisos();
-    await this.cargarListaModulo();
+    await this.onChangeViewURL(async () => {
+      await this.cargarListaModulo();
+    });
   }
 
   async cargarListaTabla() {

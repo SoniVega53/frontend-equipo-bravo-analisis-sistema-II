@@ -12,6 +12,7 @@ import { SecurityService } from '../core/services/security.service';
 import { DynamicField } from '../interface/dynamic-field.interface';
 import { CatalogoService } from '../core/services/CatalogoService';
 import { Subscription } from 'rxjs';
+import { ConsoleComponent } from './console/console.component';
 
 export interface ExecuteServiceOptions {
   callback?: () => void | Promise<void>;

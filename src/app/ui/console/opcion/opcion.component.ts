@@ -12,6 +12,7 @@ import { SelectOption } from '../../../interface/select-option.interface';
 import { CatalogoService } from '../../../core/services/CatalogoService';
 import { OpcionService } from '../../../core/services/opcion.service';
 import { IOpcion } from '../../../interface/opcion.interface';
+import { ConsoleComponent } from '../console.component';
 
 @Component({
   selector: 'app-opcion',
@@ -29,6 +30,7 @@ import { IOpcion } from '../../../interface/opcion.interface';
 })
 export class OpcionComponent extends BaseComponent implements OnInit { 
   private opcionService = inject(OpcionService); 
+  private consolePadre = inject(ConsoleComponent);
 
   opciones: IOpcion[] = [];
   opcionActual: IOpcion = {};
@@ -39,9 +41,11 @@ export class OpcionComponent extends BaseComponent implements OnInit {
   configuracionCampos: DynamicField[] = [];
 
   async ngOnInit() {
-    await this.cargarPermisos(); 
-    await this.cargarCatalogosPrincipales();
-    await this.cargarLista(); 
+    await this.onChangeViewURL(async () => {
+      await this.cargarCatalogosPrincipales();
+      await this.cargarLista(); 
+    });  
+    
   }
 
   async cargarCatalogosPrincipales() {
@@ -103,6 +107,7 @@ export class OpcionComponent extends BaseComponent implements OnInit {
         this.showSuccessAlert(this.isUpdate ? "Se Actualizó Correctamente" : "Se Guardó Correctamente"); 
         this.limpiarFormulario();
         await this.cargarLista();
+        this.consolePadre?.cargarListaMenu();
       },
       showLoading: true, 
     });
