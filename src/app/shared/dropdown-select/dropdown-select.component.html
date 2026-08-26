@@ -3,7 +3,7 @@
     <label [for]="id">{{ label }} <span *ngIf="required"> *</span></label>
   </div>
 
-  <div class="input-group position-relative">
+  <div class="input-group position-relative" [style.zIndex]="isOpen ? 1050 : 'auto'">
     <span class="input-group-text custom-addon cursor-pointer" *ngIf="iconLeft" (click)="toggleDropdown()">
       <i class="bi" [ngClass]="iconLeft"></i>
     </span>

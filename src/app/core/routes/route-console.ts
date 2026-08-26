@@ -8,6 +8,10 @@ import { AsignacionOpcionRoleComponent } from '../../ui/console/asignacion-opcio
 import { UsuarioComponent } from '../../ui/console/usuario/usuario.component';
 import { SucursalComponent } from '../../ui/console/sucursal/sucursal.component';
 import { StatusUsuarioComponent } from '../../ui/console/status-usuario/status-usuario.component';
+import { RoleComponent } from '../../ui/console/role/role.component';
+import { ModuloComponent } from '../../ui/console/modulo/modulo.component';
+import { MenuComponent } from '../../ui/console/menu/menu.component';
+import { OpcionComponent } from '../../ui/console/opcion/opcion.component';
 
 export const CONSOLE_ROUTES: Routes = [
   {
@@ -34,6 +38,22 @@ export const CONSOLE_ROUTES: Routes = [
   {
     path: 'usuario',
     component: UsuarioComponent,
+  },
+  {
+    path: 'role',
+    component: RoleComponent,
+  },
+  {
+    path: 'modulo',
+    component: ModuloComponent,
+  },
+  {
+    path: 'menu',
+    component: MenuComponent,
+  },
+  {
+    path: 'opcion',
+    component: OpcionComponent,
   },
   {
     path: 'asignacion_opcion_role',
