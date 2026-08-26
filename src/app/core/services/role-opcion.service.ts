@@ -8,8 +8,8 @@ import { ListadoOpcionesItem, ModuloItem, RoleOpciones, RoleOpcionTabla } from '
 export class RoleOpcionService extends BaseService {
   private readonly endpoint = 'OpRole';
 
-  async getPermisso(page: string): Promise<RoleOpciones> {
-    const respones: any = await this.get<any>(`${this.endpoint}/${page}`);
+  async getPermisso(code: number): Promise<RoleOpciones> {
+    const respones: any = await this.get<any>(`${this.endpoint}/${code}`);
     return respones?.data?.permisos || {};
   }
 

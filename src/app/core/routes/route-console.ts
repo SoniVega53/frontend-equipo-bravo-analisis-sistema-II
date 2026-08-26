@@ -20,43 +20,43 @@ export const CONSOLE_ROUTES: Routes = [
     pathMatch: 'full',
   },
   {
-    path: 'empresa',
+    path: 'empresa/:code',
     component: EmpresaComponent,
   },
   {
-    path: 'sucursal',
+    path: 'sucursal/:code',
     component: SucursalComponent,
   },
   {
-    path: 'genero',
+    path: 'genero/:code',
     component: GeneroComponent,
   },
   {
-    path: 'status_usuario',
+    path: 'status_usuario/:code',
     component: StatusUsuarioComponent,
   },
   {
-    path: 'usuario',
+    path: 'usuario/:code',
     component: UsuarioComponent,
   },
   {
-    path: 'role',
+    path: 'role/:code',
     component: RoleComponent,
   },
   {
-    path: 'modulo',
+    path: 'modulo/:code',
     component: ModuloComponent,
   },
   {
-    path: 'menu',
+    path: 'menu/:code',
     component: MenuComponent,
   },
   {
-    path: 'opcion',
+    path: 'opcion/:code',
     component: OpcionComponent,
   },
   {
-    path: 'asignacion_opcion_role',
+    path: 'asignacion_opcion_role/:code',
     component: AsignacionOpcionRoleComponent,
   },
   {

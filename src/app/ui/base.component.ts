@@ -1,7 +1,7 @@
-import { inject, OnInit } from '@angular/core';
+import { Directive, inject} from '@angular/core';
 import Swal from 'sweetalert2';
 import { NavigationService } from '../core/services/navigation.service';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '../core/services/auth.service';
 import { ApiErrorResponse } from '../interface/api-error-response';
 import { CODE_ERROR_PERMIT, RoleOpciones } from '../interface/rolo-opciones.interface';
@@ -11,6 +11,7 @@ import { SelectOption } from '../interface/select-option.interface';
 import { SecurityService } from '../core/services/security.service';
 import { DynamicField } from '../interface/dynamic-field.interface';
 import { CatalogoService } from '../core/services/CatalogoService';
+import { Subscription } from 'rxjs';
 
 export interface ExecuteServiceOptions {
   callback?: () => void | Promise<void>;
@@ -19,14 +20,17 @@ export interface ExecuteServiceOptions {
   minDelay?: number;
 }
 
+@Directive()
 export abstract class BaseComponent {
   protected router = inject(Router);
+  private route = inject(ActivatedRoute);
   protected authService = inject(AuthService);
   protected roleOpService = inject(RoleOpcionService);
   protected navigationService = inject(NavigationService);
   protected securityService = inject(SecurityService);
   protected catalogoService = inject(CatalogoService);
   protected rutaActual: string = '';
+  private paramsSub!: Subscription;
 
   urlBase = APP_CONSTANTS.URL_BASE.TYPE_1;
   urlBase2 = APP_CONSTANTS.URL_BASE.TYPE_2;
@@ -43,12 +47,21 @@ export abstract class BaseComponent {
     exportar: false,
   };
 
-  protected getRutaOffHome() {
-    return this.router.url.replace(this.urlBase, '');
+  protected getRutaOffHome():number {
+    const code = this.route.snapshot.paramMap.get('code');
+    return Number(code);
   }
 
   protected navigateTo(url: string, params?: Record<string, any>): void {
     this.navigationService.goTo(url, params);
+  }
+
+  protected navigateToConsole(url: string, code?: number): void {
+    if (code) {
+      this.router.navigate([url, code]);
+    } else {
+      this.router.navigate([url]);
+    }
   }
 
   protected getNavParams<T = any>(key?: string): T {
@@ -254,14 +267,34 @@ export abstract class BaseComponent {
     return valores.every((valor) => !valor);
   }
 
+  async onChangeViewURL(callback: () => Promise<void>) {
+    this.paramsSub = this.route.paramMap.subscribe(async (params) => {
+      const codeStr = params.get('code');
+      if (codeStr) {
+        if (callback) {
+          try {
+            await this.cargarPermisos();
+            await callback();
+          } catch (error) {
+            console.error('Error al ejecutar la recarga de la vista:', error);
+          }
+        }
+      }
+    });
+  }
+
+
   async cargarPermisos(showLoading: boolean = true) {
     if (showLoading) {
       this.isLoadingPage = true;
     }
     try {
-      const roleOp = await this.roleOpService.getPermisso(
-        this.getRutaOffHome(),
-      );
+      const code = this.getRutaOffHome();
+      if (!code) {
+        this.navigateTo(`/home`);
+        return;
+      }
+      const roleOp = await this.roleOpService.getPermisso(code);
       if (roleOp) {
         this.roleSecurity = { ...this.roleSecurity, ...roleOp };
 
@@ -311,5 +344,11 @@ export abstract class BaseComponent {
 
   findToItemField(configuraciones:any[],name:string):DynamicField{
     return configuraciones.find(res => res.name === name);
+  }
+
+  ngOnDestroy() {
+    if (this.paramsSub) {
+      this.paramsSub.unsubscribe();
+    }
   }
 }
