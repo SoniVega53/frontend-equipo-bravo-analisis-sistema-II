@@ -8,10 +8,10 @@ import CryptoJS from 'crypto-js';
 })
 export class NavigationService {
   private router = inject(Router);
-  private readonly STORAGE_KEY =  environment.storageKey;
+  private readonly STORAGE_KEY = environment.storageKey;
   private readonly SECRET_KEY = environment.secretKey;
 
-  goTo(url: string, params?: Record<string, any>): void {
+  goTo(url: string, params?: Record<string, any>, code?: number): void {
     if (params) {
       const currentParams = this.getParams();
       const mergedParams = { ...currentParams, ...params };
@@ -26,7 +26,11 @@ export class NavigationService {
         localStorage.setItem(this.STORAGE_KEY, encryptedData);
       }
     }
-    this.router.navigate([url]);
+    if (code) {
+      this.router.navigate([url, code]);
+    } else {
+      this.router.navigate([url]);
+    }
   }
 
   getParams<T = any>(key?: string): T {

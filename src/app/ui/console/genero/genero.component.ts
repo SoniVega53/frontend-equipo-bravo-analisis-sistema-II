@@ -57,8 +57,9 @@ export class GeneroComponent extends BaseComponent implements OnInit {
   ];
 
   async ngOnInit() {
-    await this.cargarPermisos();
-    await this.cargarLista();
+    await this.onChangeViewURL(async () => {
+      await this.cargarLista();
+    });
   }
 
 

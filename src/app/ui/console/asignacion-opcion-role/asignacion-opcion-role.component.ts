@@ -8,6 +8,7 @@ import { ListadoOpcionesItem, ModuloItem, RoleOpcionTabla, RolItem } from '../..
 import { RoleOpcionTableComponent } from "../../../shared/role-opcion-table/role-opcion-table.component";
 import { DropdownSelectComponent } from "../../../shared/dropdown-select/dropdown-select.component";
 import { SelectOption } from '../../../interface/select-option.interface';
+import { ConsoleComponent } from '../console.component';
 
 @Component({
   selector: 'asignacion-opcion-role',
@@ -24,7 +25,9 @@ import { SelectOption } from '../../../interface/select-option.interface';
 })
 export class AsignacionOpcionRoleComponent  extends BaseComponent implements OnInit{
   @ViewChild("tablaRole") tablaRole:RoleOpcionTableComponent | undefined;
-  
+
+  private consolePadre = inject(ConsoleComponent);
+
   permisosTabla: RoleOpcionTabla[] = [];
   permisosTablaOriginal: RoleOpcionTabla[] = [];
   updateTabla: RoleOpcionTabla[] = [];
@@ -88,6 +91,7 @@ export class AsignacionOpcionRoleComponent  extends BaseComponent implements OnI
         this.updateTabla = [];
 
         this.showSuccessAlert(response);
+        this.consolePadre?.cargarListaMenu();
       },
     });
   }
