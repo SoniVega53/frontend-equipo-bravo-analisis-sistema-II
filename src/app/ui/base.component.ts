@@ -10,7 +10,6 @@ import { APP_CONSTANTS } from '../shared/app.constants';
 import { SelectOption } from '../interface/select-option.interface';
 import { SecurityService } from '../core/services/security.service';
 import { DynamicField } from '../interface/dynamic-field.interface';
-import { CatalogoService } from '../core/services/CatalogoService';
 import { Subscription } from 'rxjs';
 
 export interface ExecuteServiceOptions {
