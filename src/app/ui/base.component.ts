@@ -206,6 +206,10 @@ export abstract class BaseComponent {
         return;
       }
 
+      if ((apiError.codigoTexto === 'NETWORK_ERROR' || apiError.codigoNumerico == 500) && isLoggedIn) {
+        this.showErrorAlert( 'Ocurrió un error al procesar la solicitud.');
+        return;
+      }
 
       if (callbackError) {
         await callbackError(apiError);

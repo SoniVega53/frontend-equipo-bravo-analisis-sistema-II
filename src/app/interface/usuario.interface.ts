@@ -79,3 +79,8 @@ export interface IUsuario {
   fechaModificacion?: string;
   usuarioModificacion?: string;
 }
+
+export interface StatusUsuario {
+  idStatusUsuario?: string;
+  nombre?: string;
+}

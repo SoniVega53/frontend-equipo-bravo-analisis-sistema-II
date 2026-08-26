@@ -45,7 +45,7 @@ export class EmpresaComponent extends BaseComponent implements OnInit {
     this.configuracionCampos = [
       { name: 'nombre', label: 'Nombre', type: 'text', required: true, colSpan: 4 }, 
       { name: 'direccion', label: 'Dirección', type: 'text', required: true, colSpan: 4 },
-      { name: 'nit', label: 'NIT', type: 'text', required: true, colSpan: 4 },
+      { name: 'nit', label: 'NIT', type: 'number', required: true, colSpan: 4 },
       { name: 'passwordLargo', label: 'Largo Mínimo Contraseña', type: 'number', required: false, colSpan: 3 },
       { name: 'passwordCantidadMayusculas', label: 'Min. Mayúsculas', type: 'number', required: false, colSpan: 3 },
       { name: 'passwordCantidadMinusculas', label: 'Min. Minúsculas', type: 'number', required: false, colSpan: 3 },

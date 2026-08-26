@@ -7,6 +7,7 @@ import { NotFoundComponent } from '../../ui/not-found/not-found.component';
 import { AsignacionOpcionRoleComponent } from '../../ui/console/asignacion-opcion-role/asignacion-opcion-role.component';
 import { UsuarioComponent } from '../../ui/console/usuario/usuario.component';
 import { SucursalComponent } from '../../ui/console/sucursal/sucursal.component';
+import { StatusUsuarioComponent } from '../../ui/console/status-usuario/status-usuario.component';
 
 export const CONSOLE_ROUTES: Routes = [
   {
@@ -25,6 +26,10 @@ export const CONSOLE_ROUTES: Routes = [
   {
     path: 'genero',
     component: GeneroComponent,
+  },
+  {
+    path: 'status_usuario',
+    component: StatusUsuarioComponent,
   },
   {
     path: 'usuario',
