@@ -33,7 +33,19 @@ export class DynamicTableComponent {
   @ViewChild('printZone') printZone!: ElementRef;
 
   onSelect(item: any) {
+    this.scrollToTop();
     this.actionSelect.emit(item);
+  }
+
+  scrollToTop() {
+    const mainContainer = document.querySelector('.main-content');
+    
+    if (mainContainer) {
+      mainContainer.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+    }
   }
 
   exportarExcel() {
