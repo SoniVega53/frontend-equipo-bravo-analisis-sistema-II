@@ -5,10 +5,8 @@ import { DynamicFormComponent } from '../../shared/dynamic-form/dynamic-form.com
 import { UsuarioResponse } from '../../interface/usuario.interface';
 import { DynamicField } from '../../interface/dynamic-field.interface';
 import { LoaderComponent } from '../../shared/loader/loader.component';
-import { BaseService } from '../../core/services/base.service';
 import { UsuarioService } from '../../core/services/usuarios.service';
 import { BaseComponent } from '../base.component';
-import { GeneroService } from '../../core/services/genero.service';
 import { SelectOption } from '../../interface/select-option.interface';
 
 @Component({
@@ -20,7 +18,6 @@ import { SelectOption } from '../../interface/select-option.interface';
 })
 export class PerfilComponent extends BaseComponent implements OnInit, DoCheck {
   usuarioService = inject(UsuarioService);
-  private generoService = inject(GeneroService);
 
   hasChanges = false;
 
@@ -152,16 +149,8 @@ export class PerfilComponent extends BaseComponent implements OnInit, DoCheck {
   async cargarListaGeneros() {
     this.executeService({
       callback: async () => {
-        const data: any = await this.generoService.getGenero();
-        this.generos = Array.isArray(data) ? data : [];
-        this.optionsGenero = await this.convertirOption(
-          this.generos,
-          0,
-          {
-            codigo: 'idGenero',
-            valor: 'nombre',
-          },
-        );
+        const data: any = await this.catalogoService.getGeneros();
+        this.optionsGenero = data
 
         this.configurarCampos();
       },

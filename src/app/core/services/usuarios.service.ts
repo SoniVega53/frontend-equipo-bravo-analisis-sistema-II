@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BaseService } from './base.service';
 import { Genero } from '../../interface/genero.interface';
-import { UsuarioPasswordRequest, UsuarioRequest, UsuarioResponse } from '../../interface/usuario.interface';
+import { IUsuario, UsuarioPasswordRequest, UsuarioRequest, UsuarioResponse, UsuarioSaveRequest } from '../../interface/usuario.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -40,5 +40,18 @@ export class UsuarioService extends BaseService {
   }
 
 
+  async getUsuarios(): Promise<IUsuario[]> {
+    const response: any = await this.get<any>(`${this.endpoint}/console/listar`);
+    return response?.data || [];
+  }
+
+  async guardarUsuario(payload: UsuarioSaveRequest): Promise<any> {
+    console.log('Payload enviado al servicio:', payload);
+    return await this.post<any>(`${this.endpoint}/console/guardar`, payload);
+  }
+
+  async eliminarUsuario(idUsuario: string): Promise<any> {
+    return await this.delete<any>(`${this.endpoint}/console/eliminar/${idUsuario}`);
+  }
 
 }

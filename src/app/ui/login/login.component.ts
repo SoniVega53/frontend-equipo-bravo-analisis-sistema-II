@@ -35,7 +35,6 @@ export class LoginComponent extends BaseComponent {
   }
 
   onForgotPassword() {
-    console.log('CLICK');
-    // this.navigateTo('/recuperar-password');
+    this.navigateTo('/recuperar-password');
   }
 }

@@ -2,16 +2,16 @@
   <div class="page-container position-relative">
     <app-loader [isLoading]="isLoadingPage"></app-loader> 
 
-    <h2 class="page-title">Empresas</h2>
+    <h2 class="page-title">Módulos</h2>
 
     <collapsed-card [hidden]="hiddenFormulary()"> 
       <app-dynamic-form
-        [saveText]="isUpdate ? 'Actualizar' : 'Crear Nueva'"
+        [saveText]="isUpdate ? 'Actualizar' : 'Crear Nuevo'"
         [fields]="configuracionCampos"
-        [model]="empresaActual"
+        [model]="moduloActual"
         [isLoading]="isLoading"
-        [showDelete]="showDeleteButton(empresaActual?.idEmpresa) && isUpdate"
-        [showSave]="showSaveButton(empresaActual?.idEmpresa)"
+        [showDelete]="showDeleteButton(moduloActual?.idModulo) && isUpdate"
+        [showSave]="showSaveButton(moduloActual?.idModulo)"
         [showCancel]="true"
         (save)="guardar()"
         (delete)="eliminar()"
@@ -24,12 +24,12 @@
       <hr class="divider" />
 
       <app-dynamic-table
-        [columns]="columnasEmpresas"
-        [data]="empresas"
+        [columns]="columnasModulos"
+        [data]="modulos"
         [isLoading]="isLoading"
         [showExport]="roleSecurity?.exportar || false"
         [showPrint]="roleSecurity?.imprimir || false"
-        [reportName]="'Reporte_Empresas_Sistema'"
+        [reportName]="'Reporte_Modulos_Sistema'"
         [hiddenAccion]="hiddenAction()"
         (actionSelect)="seleccionarParaEditar($event)"
       > 

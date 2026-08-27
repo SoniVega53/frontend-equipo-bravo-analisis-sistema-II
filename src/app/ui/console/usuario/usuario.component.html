@@ -1,17 +1,17 @@
 <div class="center-page">
   <div class="page-container position-relative">
-    <app-loader [isLoading]="isLoadingPage"></app-loader> 
+    <app-loader [isLoading]="isLoadingPage"></app-loader>
 
-    <h2 class="page-title">Empresas</h2>
+    <h2 class="page-title">Usuarios</h2>
 
-    <collapsed-card [hidden]="hiddenFormulary()"> 
+    <collapsed-card [hidden]="hiddenFormulary()">
       <app-dynamic-form
-        [saveText]="isUpdate ? 'Actualizar' : 'Crear Nueva'"
+        [saveText]="isUpdate ? 'Actualizar' : 'Crear Nuevo'"
         [fields]="configuracionCampos"
-        [model]="empresaActual"
+        [model]="usuarioActual"
         [isLoading]="isLoading"
-        [showDelete]="showDeleteButton(empresaActual?.idEmpresa) && isUpdate"
-        [showSave]="showSaveButton(empresaActual?.idEmpresa)"
+        [showDelete]="showDeleteButton(usuarioActual?.idUsuario) && isUpdate"
+        [showSave]="showSaveButton(usuarioActual?.idUsuario)"
         [showCancel]="true"
         (save)="guardar()"
         (delete)="eliminar()"
@@ -20,19 +20,19 @@
       </app-dynamic-form>
     </collapsed-card>
 
-    @if (roleSecurity?.consultar) { 
+    @if (roleSecurity?.consultar) {
       <hr class="divider" />
 
       <app-dynamic-table
-        [columns]="columnasEmpresas"
-        [data]="empresas"
+        [columns]="columnasUsuarios"
+        [data]="usuarios"
         [isLoading]="isLoading"
         [showExport]="roleSecurity?.exportar || false"
         [showPrint]="roleSecurity?.imprimir || false"
-        [reportName]="'Reporte_Empresas_Sistema'"
+        [reportName]="'Reporte_Usuarios_Sistema'"
         [hiddenAccion]="hiddenAction()"
         (actionSelect)="seleccionarParaEditar($event)"
-      > 
+      >
       </app-dynamic-table>
     }
   </div>

@@ -6,7 +6,7 @@ import { Genero } from '../../interface/genero.interface';
   providedIn: 'root',
 })
 export class GeneroService extends BaseService {
-  private readonly endpoint = 'genero';
+  private readonly endpoint = 'console/genero';
 
   async getGenero(id?: number): Promise<Genero> {
     const respones: any = id
