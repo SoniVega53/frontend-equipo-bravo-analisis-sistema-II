@@ -1,5 +1,5 @@
 <div class="home-container">
-  <app-navbar (menuToggle)="toggleMobileMenu()"></app-navbar>
+  <app-navbar (menuToggle)="toggleMobileMenu()" [isMobile]="isShowMobileMenu"></app-navbar>
 
   <main class="home-content">
     @if (esPrimerIngreso) {

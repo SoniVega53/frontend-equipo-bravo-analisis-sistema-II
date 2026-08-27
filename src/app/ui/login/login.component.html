@@ -1,9 +1,15 @@
 <div class="login-container">
   <div class="login-card">
+
     <div class="login-brand">
-      <div class="brand-content">
-        <h2>Equipo Bravo</h2>
-        <p>Sistema de Gestión Empresarial</p>
+      <div>
+        <div class="brand-content">
+          <img src="../../../assets/icon-735.png" alt="Logo" class="brand-logo">
+        </div>
+        <div class="brand-content">
+          <h2>Equipo Bravo</h2>
+          <p>Sistema de Gestión Empresarial</p>
+        </div>
       </div>
       <div class="brand-overlay"></div>
     </div>
@@ -15,35 +21,14 @@
       </div>
 
       <form (ngSubmit)="onLogin()" #loginForm="ngForm" class="form-body">
-        <custom-input
-          id="usuario"
-          name="usuario"
-          label="Usuario"
-          placeholder="Ej: admin123"
-          [(ngModel)]="idUsuario"
-          [disabled]="isLoading"
-          [required]="true"
-        ></custom-input>
+        <custom-input id="usuario" name="usuario" label="Usuario" placeholder="Ej: admin123" [(ngModel)]="idUsuario"
+          [disabled]="isLoading" [required]="true"></custom-input>
 
-        <custom-input
-          type="password"
-          id="password"
-          name="password"
-          label="Contraseña"
-          placeholder="••••••••"
-          [(ngModel)]="password"
-          [disabled]="isLoading"
-          [required]="true"
-          autocomplete="password"
-          linkText="¿Olvidaste tu contraseña?"
-          (linkClick)="onForgotPassword()"
-        ></custom-input>
+        <custom-input type="password" id="password" name="password" label="Contraseña" placeholder="••••••••"
+          [(ngModel)]="password" [disabled]="isLoading" [required]="true" autocomplete="password"
+          linkText="¿Olvidaste tu contraseña?" (linkClick)="onForgotPassword()"></custom-input>
 
-        <button
-          type="submit"
-          class="btn-primary mt-3"
-          [disabled]="!loginForm.valid || isLoading"
-        >
+        <button type="submit" class="btn-primary mt-3" [disabled]="!loginForm.valid || isLoading">
           <span *ngIf="!isLoading">Iniciar Sesión</span>
           <span *ngIf="isLoading" class="btn-loader"></span>
         </button>

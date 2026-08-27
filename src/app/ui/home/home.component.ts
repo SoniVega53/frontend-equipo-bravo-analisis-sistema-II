@@ -41,6 +41,7 @@ export class HomeComponent extends BaseComponent implements OnInit {
   activeItemId: number = -1;
   isMobileMenuOpen: boolean = false;
   isLoadingMenu: boolean = true;
+  isShowMobileMenu: boolean = true;
 
   esPrimerIngreso = false;
   textoIngresoPassword = '';
