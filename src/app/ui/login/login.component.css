@@ -21,19 +21,25 @@
 
 .login-brand {
   flex: 1;
-  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+  background: linear-gradient(135deg, var(--border-color) 0%, var(--bg-app) 100%);
   position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 40px;
-  color: white;
+  color: rgb(36, 35, 35);
   text-align: center;
 }
 
 .brand-content {
   position: relative;
   z-index: 2;
+}
+
+.brand-content img{
+  width: 150px;
+  height: 150px;
+  margin-bottom: 16px;
 }
 
 .brand-content h2 {

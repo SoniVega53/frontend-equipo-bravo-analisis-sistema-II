@@ -34,6 +34,7 @@ export class ConsoleComponent extends BaseComponent implements OnInit, OnDestroy
   async ngOnInit(): Promise<void> {
     await this.cargarListaMenu();
     const data = this.getNavParams();
+    this.homeComponent.isShowMobileMenu = true;
   }
 
   async cargarListaMenu() {

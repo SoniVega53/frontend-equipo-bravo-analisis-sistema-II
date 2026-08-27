@@ -6,6 +6,7 @@ import { PasswordPolicy } from '../../interface/password-policy';
 import { BaseComponent } from '../base.component';
 import { UsuarioService } from '../../core/services/usuarios.service';
 import { UsuarioPasswordRequest } from '../../interface/usuario.interface';
+import { HomeComponent } from '../home/home.component';
 
 @Component({
   selector: 'app-cambiar-password',
@@ -16,6 +17,7 @@ import { UsuarioPasswordRequest } from '../../interface/usuario.interface';
 })
 export class CambiarPasswordComponent extends BaseComponent implements OnInit {
   usuarioService = inject(UsuarioService);
+  homeComponent = inject(HomeComponent);
 
   politicaPassword: PasswordPolicy = {
     regex: '',
@@ -32,6 +34,7 @@ export class CambiarPasswordComponent extends BaseComponent implements OnInit {
 
   ngOnInit() {
     this.cargarPoliticas();
+    this.homeComponent.isShowMobileMenu = false;
   }
 
   async cargarPoliticas() {
