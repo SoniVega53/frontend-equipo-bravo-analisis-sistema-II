@@ -1,0 +1,38 @@
+<div class="center-page">
+  <div class="page-container position-relative">
+    <app-loader [isLoading]="isLoadingPage"></app-loader>
+
+    <h2 class="page-title">Estatus de Usuario</h2>
+
+    <collapsed-card [hidden]="hiddenFormulary()">
+      <app-dynamic-form
+        [fields]="configuracionCampos"
+        [model]="statusUsuarioActual"
+        [isLoading]="isLoading"
+        [showDelete]="showDeleteButton(statusUsuarioActual.idStatusUsuario)"
+        [showSave]="showSaveButton(statusUsuarioActual.idStatusUsuario)"
+        [showCancel]="true"
+        (save)="guardar($event)"
+        (delete)="eliminar(statusUsuarioActual.idStatusUsuario)"
+        (cancel)="limpiarFormulario()"
+      >
+      </app-dynamic-form>
+    </collapsed-card>
+
+    @if (roleSecurity?.consultar) {
+      <hr class="divider" />
+
+      <app-dynamic-table
+        [columns]="columnasStatusUsuario"
+        [data]="statusUsuarios"
+        [isLoading]="isLoading"
+        [showExport]="roleSecurity?.exportar || false"
+        [showPrint]="roleSecurity?.imprimir || false"
+        [reportName]="'Reporte_Estatus_Usuario_Sistema'"
+        [hiddenAccion]="hiddenAction()"
+        (actionSelect)="seleccionarParaEditar($event)"
+      >
+      </app-dynamic-table>
+    }
+  </div>
+</div>
