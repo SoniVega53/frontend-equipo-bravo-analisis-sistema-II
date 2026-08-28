@@ -1,6 +1,7 @@
 import { PasswordPolicy } from "./password-policy";
 
 export interface UsuarioResponse {
+  idUsuario: string;
   nombre: string;
   apellido: string;
   fechaNacimiento: string;

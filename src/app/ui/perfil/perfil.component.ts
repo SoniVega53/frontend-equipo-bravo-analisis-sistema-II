@@ -9,11 +9,13 @@ import { UsuarioService } from '../../core/services/usuarios.service';
 import { BaseComponent } from '../base.component';
 import { SelectOption } from '../../interface/select-option.interface';
 import { HomeComponent } from '../home/home.component';
+import { lastValueFrom } from 'rxjs';
+import { AvatarIconoComponent } from "../../shared/avatar-icono/avatar-icono.component";
 
 @Component({
   selector: 'app-perfil',
   standalone: true,
-  imports: [CommonModule, DynamicFormComponent, LoaderComponent],
+  imports: [CommonModule, DynamicFormComponent, LoaderComponent, AvatarIconoComponent],
   templateUrl: './perfil.component.html',
   styleUrls: ['./perfil.component.css'],
 })
@@ -51,6 +53,8 @@ export class PerfilComponent extends BaseComponent implements OnInit, DoCheck {
       callback: async () => {
         const respones = await this.usuarioService.getPerfil();
         if (respones) {
+          respones.fotografia = "data:image/jpeg;base64,"+respones.fotografia;
+
           this.usuarioOriginal = JSON.parse(JSON.stringify(respones));
           this.usuarioModel = JSON.parse(JSON.stringify(respones));
           if (this.usuarioOriginal?.idGenero) {
@@ -63,6 +67,7 @@ export class PerfilComponent extends BaseComponent implements OnInit, DoCheck {
     });
     this.isLoading = false;
   }
+  
 
   configurarCampos() {
     this.camposEditables = [
@@ -181,5 +186,10 @@ export class PerfilComponent extends BaseComponent implements OnInit, DoCheck {
       this.usuarioModel = JSON.parse(JSON.stringify(this.usuarioOriginal));
       this.hasChanges = false;
     }
+  }
+
+
+  updateFoto(event:string){
+    this.homeComponent.updateFotografia(event);
   }
 }
