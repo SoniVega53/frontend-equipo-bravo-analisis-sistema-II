@@ -92,7 +92,7 @@ export class AsignacionOpcionRoleComponent  extends BaseComponent implements OnI
         this.updateTabla = [];
 
         this.showSuccessAlert(response);
-        this.consolePadre?.cargarListaMenu();
+        this.consolePadre?.updateListaMenu();
       },
     });
   }

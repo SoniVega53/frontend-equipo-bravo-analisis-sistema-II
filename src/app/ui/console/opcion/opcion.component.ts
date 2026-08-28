@@ -107,7 +107,7 @@ export class OpcionComponent extends BaseComponent implements OnInit {
         this.showSuccessAlert(this.isUpdate ? "Se Actualizó Correctamente" : "Se Guardó Correctamente"); 
         this.limpiarFormulario();
         await this.cargarLista();
-        this.consolePadre?.cargarListaMenu();
+        this.consolePadre?.updateListaMenu();
       },
       showLoading: true, 
     });

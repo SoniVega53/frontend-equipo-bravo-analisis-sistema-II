@@ -97,7 +97,7 @@ export class HomeComponent extends BaseComponent implements OnInit {
     this.authService.logout();
   }
   toggleMobileMenu() {
-    this.isMobileMenuOpen = !this.isMobileMenuOpen;
+      this.isMobileMenuOpen = !this.isMobileMenuOpen;
   }
 
   onConfiguracionExitosa(event: string) {
