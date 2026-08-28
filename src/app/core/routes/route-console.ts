@@ -27,7 +27,7 @@ export const CONSOLE_ROUTES: Routes = [
   component: UsuarioComponent,
   },
   {
-  path: 'status-usuario/:code',
+  path: 'status_usuario/:code',
   component: StatusUsuarioComponent,
   },
   {
