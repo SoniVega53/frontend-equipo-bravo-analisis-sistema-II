@@ -39,10 +39,8 @@ export class AsignacionOpcionRoleComponent  extends BaseComponent implements OnI
   modelModulo:any = "";
 
   async ngOnInit() {
-    await this.onChangeViewURL(async () => {
-      await this.cargarListaModulo();
-    });
-    
+    await this.cargarPermisos();
+    await this.cargarListaModulo();
   }
 
   async cargarListaTabla() {
@@ -93,7 +91,7 @@ export class AsignacionOpcionRoleComponent  extends BaseComponent implements OnI
         this.updateTabla = [];
 
         this.showSuccessAlert(response);
-        this.consolePadre?.updateListaMenu();
+        this.consolePadre?.cargarListaMenu();
       },
     });
   }

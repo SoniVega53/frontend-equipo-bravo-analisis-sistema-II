@@ -1,0 +1,19 @@
+<div class="container-fluid px-0">
+  <div class="row layout-row m-0">
+    
+    <app-sidebar
+      class="col-md-3 col-lg-2 p-0"
+      [menuItems]="menuItems"
+      [isLoadingMenu]="isLoadingMenu"
+      [isMobileMenuOpen]="this.homeComponent.isMobileMenuOpen"
+      [activeItemId]="activeItemId"
+      (toggleMenu)="this.homeComponent.toggleMobileMenu()"
+      (navigate)="navigateHome($event)">
+    </app-sidebar>
+
+    <main class="col-md-9 col-lg-10 p-4 main-content ms-sm-auto">
+      <router-outlet></router-outlet>
+    </main>
+
+  </div>
+</div>
