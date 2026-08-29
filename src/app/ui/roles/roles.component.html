@@ -1,0 +1,101 @@
+<div class="roles-container">
+  <div class="roles-header">
+    <div>
+      <h2>Catálogo de Roles</h2>
+      <p>Administración de roles del sistema</p>
+    </div>
+  </div>
+
+  <div class="roles-content">
+    <div class="form-card">
+      <h3>{{ editando ? 'Editar rol' : 'Nuevo rol' }}</h3>
+
+      <div class="form-group">
+        <label for="nombre">Nombre</label>
+        <input
+          id="nombre"
+          type="text"
+          [(ngModel)]="roleModel.nombre"
+          placeholder="Ej. Admin, Usuario, Auditor"
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="descripcion">Descripción</label>
+        <textarea
+          id="descripcion"
+          [(ngModel)]="roleModel.descripcion"
+          placeholder="Descripción del rol"
+          rows="4"
+        ></textarea>
+      </div>
+
+      <div class="form-actions">
+        <button
+          type="button"
+          class="btn-primary"
+          (click)="guardar()"
+        >
+          {{ editando ? 'Actualizar' : 'Guardar' }}
+        </button>
+
+        <button
+          *ngIf="editando"
+          type="button"
+          class="btn-secondary"
+          (click)="limpiarFormulario()"
+        >
+          Cancelar
+        </button>
+      </div>
+    </div>
+
+    <div class="table-card">
+      <h3>Roles registrados</h3>
+
+      <div class="table-responsive">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Nombre</th>
+              <th>Descripción</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr *ngFor="let role of roles">
+              <td>{{ role.idRole }}</td>
+              <td>{{ role.nombre }}</td>
+              <td>{{ role.descripcion }}</td>
+              <td class="actions">
+                <button
+                  type="button"
+                  class="btn-edit"
+                  (click)="editar(role)"
+                >
+                  Editar
+                </button>
+
+                <button
+                  type="button"
+                  class="btn-delete"
+                  (click)="eliminar(role)"
+                >
+                  Eliminar
+                </button>
+              </td>
+            </tr>
+
+            <tr *ngIf="roles.length === 0">
+              <td colspan="4" class="empty">
+                No hay roles registrados.
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
