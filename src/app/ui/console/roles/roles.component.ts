@@ -3,7 +3,7 @@ import { Component, OnInit, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { BaseComponent } from '../../base.component';
 import { RoleService } from '../../../core/services/role.service';
-import { Role } from '../../../interface/role.interface';
+import { IRole } from '../../../interface/role.interface';
 
 
 @Component({
@@ -16,11 +16,10 @@ import { Role } from '../../../interface/role.interface';
 export class RolesComponent extends BaseComponent implements OnInit {
   private roleService = inject(RoleService);
 
-  roles: Role[] = [];
+  roles: IRole[] = [];
 
-  roleModel: Role = {
+  roleModel: IRole = {
     nombre: '',
-    descripcion: '',
   };
 
   editando = false;
@@ -42,7 +41,7 @@ export class RolesComponent extends BaseComponent implements OnInit {
   }
 
   async guardar() {
-    if (!this.roleModel.nombre.trim()) {
+    if (!this.roleModel?.nombre?.trim()) {
       return;
     }
 
@@ -62,17 +61,16 @@ export class RolesComponent extends BaseComponent implements OnInit {
     });
   }
 
-  editar(role: Role) {
+  editar(role: IRole) {
     this.roleModel = {
       idRole: role.idRole,
       nombre: role.nombre,
-      descripcion: role.descripcion || '',
     };
 
     this.editando = true;
   }
 
-  async eliminar(role: Role) {
+  async eliminar(role: IRole) {
     if (!role.idRole) {
       return;
     }
@@ -93,7 +91,6 @@ export class RolesComponent extends BaseComponent implements OnInit {
   limpiarFormulario() {
     this.roleModel = {
       nombre: '',
-      descripcion: '',
     };
 
     this.editando = false;
