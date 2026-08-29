@@ -1,9 +1,10 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { BaseComponent } from '../base.component';
-import { RoleService } from '../../core/services/role.service';
-import { Role } from '../../interface/role.interface';
+import { BaseComponent } from '../../base.component';
+import { RoleService } from '../../../core/services/role.service';
+import { Role } from '../../../interface/role.interface';
+
 
 @Component({
   selector: 'app-roles',
@@ -24,8 +25,11 @@ export class RolesComponent extends BaseComponent implements OnInit {
 
   editando = false;
 
-  ngOnInit(): void {
-    this.cargarRoles();
+  async ngOnInit(): Promise<void> {
+    await this.onChangeViewURL(async () => {
+      await this.cargarRoles();
+    });
+    
   }
 
   async cargarRoles() {
@@ -73,22 +77,17 @@ export class RolesComponent extends BaseComponent implements OnInit {
       return;
     }
 
-    const confirmar = window.confirm(
-      `¿Desea eliminar el rol "${role.nombre}"?`,
-    );
-
-    if (!confirmar) {
-      return;
-    }
-
-    await this.executeService({
-      callback: async () => {
-        await this.roleService.eliminar(role.idRole!);
-        this.showSuccessAlert('Rol eliminado correctamente');
-        this.limpiarFormulario();
-        await this.cargarRoles();
-      },
-    });
+     this.showDeleteConfirm(async () => {
+      await this.executeService({
+        callback: async () => {
+          await this.roleService.eliminar(role.idRole!);
+          this.showSuccessAlert('Rol eliminado correctamente');
+          this.limpiarFormulario();
+          await this.cargarRoles();
+        },
+      });
+    }, 'este rol');
+   
   }
 
   limpiarFormulario() {

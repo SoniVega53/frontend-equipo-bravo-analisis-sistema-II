@@ -7,6 +7,7 @@ import { UsuarioComponent } from '../../ui/console/usuario/usuario.component';
 import { AccesoDenegadoComponent } from '../../ui/acceso-denegado/acceso-denegado.component';
 import { NotFoundComponent } from '../../ui/not-found/not-found.component';
 import { AsignacionOpcionRoleComponent } from '../../ui/console/asignacion-opcion-role/asignacion-opcion-role.component';
+import { RolesComponent } from '../../ui/console/roles/roles.component';
 
 export const CONSOLE_ROUTES: Routes = [
   {
@@ -25,6 +26,10 @@ export const CONSOLE_ROUTES: Routes = [
   {
   path: 'usuario/:code',
   component: UsuarioComponent,
+  },
+  {
+    path: 'role/:code',
+    component: RolesComponent,
   },
   {
   path: 'status_usuario/:code',
