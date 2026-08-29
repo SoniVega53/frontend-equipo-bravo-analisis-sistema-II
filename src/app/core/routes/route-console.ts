@@ -12,6 +12,7 @@ import { RoleComponent } from '../../ui/console/role/role.component';
 import { ModuloComponent } from '../../ui/console/modulo/modulo.component';
 import { MenuComponent } from '../../ui/console/menu/menu.component';
 import { OpcionComponent } from '../../ui/console/opcion/opcion.component';
+import { RolesComponent } from '../../ui/console/roles/roles.component';
 
 export const CONSOLE_ROUTES: Routes = [
   {
@@ -41,7 +42,7 @@ export const CONSOLE_ROUTES: Routes = [
   },
   {
     path: 'role/:code',
-    component: RoleComponent,
+    component: RolesComponent,
   },
   {
     path: 'modulo/:code',
