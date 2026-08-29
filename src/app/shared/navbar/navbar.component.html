@@ -3,33 +3,39 @@
     class="container-fluid px-3 d-flex flex-row flex-nowrap justify-content-between align-items-center"
   >
     <div class="d-flex align-items-center text-truncate">
-      <button
-        class="btn border-0 me-2 d-md-none p-1 d-flex align-items-center justify-content-center flex-shrink-0"
-        type="button"
-        (click)="toggleMobileMenu()"
-        style="color: var(--text-heading)"
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="28"
-          height="28"
-          fill="currentColor"
-          viewBox="0 0 16 16"
+      @if (isMobile) {
+        <button
+          class="btn border-0 me-2 d-md-none p-1 d-flex align-items-center justify-content-center flex-shrink-0"
+          type="button"
+          (click)="toggleMobileMenu()"
+          style="color: var(--text-heading)"
         >
-          <path
-            fill-rule="evenodd"
-            d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z"
-          />
-        </svg>
-      </button>
-
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="28"
+            height="28"
+            fill="currentColor"
+            viewBox="0 0 16 16"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z"
+            />
+          </svg>
+        </button>
+      }
+    
       <!-- Logo -->
       <a
         class="navbar-brand fw-bold m-0 text-truncate"
         href="javascript:void(0)"
         (click)="navigateTo('/home')"
       >
-        <span class="brand-icon"><i class="bi bi-sourceforge"></i></span> Equipo
+        <span class="brand-icon"><img
+          src="../../../assets/icon-735.png"
+          alt="Logo"
+          class="brand-logo"
+          style="width: 18px; height: 18px"/></span> Equipo
         Bravo
       </a>
     </div>

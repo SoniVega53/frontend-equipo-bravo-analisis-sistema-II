@@ -10,6 +10,7 @@ import { UsuarioService } from '../../core/services/usuarios.service';
 import { BaseComponent } from '../base.component';
 import { GeneroService } from '../../core/services/genero.service';
 import { SelectOption } from '../../interface/select-option.interface';
+import { HomeComponent } from '../home/home.component';
 
 @Component({
   selector: 'app-perfil',
@@ -21,6 +22,7 @@ import { SelectOption } from '../../interface/select-option.interface';
 export class PerfilComponent extends BaseComponent implements OnInit, DoCheck {
   usuarioService = inject(UsuarioService);
   private generoService = inject(GeneroService);
+  homeComponent = inject(HomeComponent);
 
   hasChanges = false;
 
@@ -35,6 +37,7 @@ export class PerfilComponent extends BaseComponent implements OnInit, DoCheck {
 
   ngOnInit() {
     this.cargarPerfil();
+    this.homeComponent.isShowMobileMenu = false;
   }
 
   ngDoCheck() {
