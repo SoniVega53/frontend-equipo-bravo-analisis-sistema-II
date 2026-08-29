@@ -16,7 +16,7 @@ export class AvatarIconoComponent extends BaseComponent implements OnInit{
 
   @Input() idUsuario:string = '';
   @Input() nombre:string = '';
-  @Input() fotografia:string = '';
+  @Input() fotografia:string | undefined = '';
   @Input() eActiveAction:boolean = true;
   @Input() width:string = '120px';
   @Input() height:string = '120px';
@@ -25,7 +25,7 @@ export class AvatarIconoComponent extends BaseComponent implements OnInit{
 
 
   ngOnInit(): void {
-
+ console.log("Data:", this.fotografia)
   }
 
   abrirSelectorImagen(): void {
@@ -54,5 +54,9 @@ export class AvatarIconoComponent extends BaseComponent implements OnInit{
       this.isLoading = false;
       event.target.value = null; 
     }
+  }
+
+  printName(){
+    return this.idUsuario ? this.idUsuario : this.nombre;
   }
 }

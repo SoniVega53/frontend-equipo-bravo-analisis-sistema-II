@@ -7,7 +7,7 @@
         <avatar-icono 
           [idUsuario]="usuarioModel.idUsuario" 
           [nombre]="usuarioModel.nombre" 
-          [fotografia]="usuarioModel.fotografia" 
+          [fotografia]="usuarioModel?.fotografia ?? ''" 
           (updateFoto)="updateFoto($event)"
           >
         </avatar-icono>        

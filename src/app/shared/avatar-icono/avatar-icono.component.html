@@ -5,14 +5,14 @@
   class="avatar-wrapper me-4 position-relative"
   (click)="abrirSelectorImagen()"
 >
-  @if (fotografia) {
-    <img [src]="fotografia" alt="Avatar" class="avatar-img shadow-sm" />
+  @if (fotografia && fotografia.length > 0) {
+    <img [src]="fotografia" alt="Avatar" class="avatar-img shadow-sm"/>
   } @else {
     <div
       class="avatar-placeholder shadow-sm d-flex justify-content-center align-items-center"
     >
       <span class="w-bold text-white" [style.font-size]="fontSize">
-        {{ nombre?.charAt(0) || "U" }}
+        {{ printName()?.charAt(0) || "U" }}
       </span>
     </div>
   }

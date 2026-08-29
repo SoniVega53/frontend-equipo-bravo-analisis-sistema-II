@@ -53,7 +53,9 @@ export class PerfilComponent extends BaseComponent implements OnInit, DoCheck {
       callback: async () => {
         const respones = await this.usuarioService.getPerfil();
         if (respones) {
-          respones.fotografia = "data:image/jpeg;base64,"+respones.fotografia;
+          if (respones.fotografia) {
+            respones.fotografia = "data:image/jpeg;base64,"+respones.fotografia;
+          }
 
           this.usuarioOriginal = JSON.parse(JSON.stringify(respones));
           this.usuarioModel = JSON.parse(JSON.stringify(respones));
