@@ -42,6 +42,7 @@ export class AsignacionOpcionRoleComponent  extends BaseComponent implements OnI
     await this.onChangeViewURL(async () => {
       await this.cargarListaModulo();
     });
+    
   }
 
   async cargarListaTabla() {

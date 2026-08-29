@@ -1,26 +1,32 @@
 <div class="center-page">
   <div class="page-container position-relative">
-    <app-loader [isLoading]="isLoadingPage"></app-loader>
 
-    <h2 class="page-title">Usuarios</h2>
+    <app-loader
+      [isLoading]="isLoadingPage">
+    </app-loader>
+
+    <h2 class="page-title">
+      Usuarios
+    </h2>
 
     <collapsed-card [hidden]="hiddenFormulary()">
+
       <app-dynamic-form
-        [saveText]="isUpdate ? 'Actualizar' : 'Crear Nuevo'"
         [fields]="configuracionCampos"
         [model]="usuarioActual"
         [isLoading]="isLoading"
-        [showDelete]="showDeleteButton(usuarioActual?.idUsuario) && isUpdate"
-        [showSave]="showSaveButton(usuarioActual?.idUsuario)"
+        [showDelete]="showDeleteButton(usuarioActual.idUsuario)"
+        [showSave]="showSaveButton(usuarioActual.idUsuario)"
         [showCancel]="true"
-        (save)="guardar()"
-        (delete)="eliminar()"
-        (cancel)="limpiarFormulario()"
-      >
+        (save)="guardar($event)"
+        (delete)="eliminar(usuarioActual.idUsuario)"
+        (cancel)="limpiarFormulario()">
       </app-dynamic-form>
+
     </collapsed-card>
 
     @if (roleSecurity?.consultar) {
+
       <hr class="divider" />
 
       <app-dynamic-table
@@ -31,9 +37,10 @@
         [showPrint]="roleSecurity?.imprimir || false"
         [reportName]="'Reporte_Usuarios_Sistema'"
         [hiddenAccion]="hiddenAction()"
-        (actionSelect)="seleccionarParaEditar($event)"
-      >
+        (actionSelect)="seleccionarParaEditar($event)">
       </app-dynamic-table>
+
     }
+
   </div>
 </div>

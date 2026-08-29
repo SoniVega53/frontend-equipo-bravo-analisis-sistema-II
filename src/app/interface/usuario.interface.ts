@@ -85,3 +85,46 @@ export interface StatusUsuario {
   idStatusUsuario?: string;
   nombre?: string;
 }
+
+//
+export interface UsuarioCrud {
+  idUsuario?: string;
+  nombre: string;
+  apellido: string;
+  fechaNacimiento?: string;
+  correoElectronico: string;
+  telefonoMovil?: string;
+  idGenero: number;
+  idRole: number;
+  idStatusUsuario: number;
+  idSucursal: number;
+  password?: string;
+  pregunta?: string;
+  respuesta?: string;
+
+  intentosDeAcceso?: number;
+  requiereCambiarPassword?: number;
+  fechaCreacion?: string;
+  usuarioCreacion?: string;
+  fechaModificacion?: string;
+  usuarioModificacion?: string;
+}
+
+export interface UsuarioCrudResponse {
+  idUsuario: string;
+  nombre: string;
+  apellido: string;
+  fechaNacimiento?: string;
+  correoElectronico: string;
+  telefonoMovil?: string;
+  idGenero: number;
+  idRole: number;
+  idStatusUsuario: number;
+  idSucursal: number;
+  intentosDeAcceso?: number;
+  requiereCambiarPassword?: number;
+  fechaCreacion?: string;
+  usuarioCreacion?: string;
+  fechaModificacion?: string;
+  usuarioModificacion?: string;
+}

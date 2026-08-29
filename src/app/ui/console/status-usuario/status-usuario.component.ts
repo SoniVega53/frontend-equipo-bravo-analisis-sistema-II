@@ -1,117 +1,182 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { LoaderComponent } from "../../../shared/loader/loader.component";
-import { CollapsedCardComponent } from "../../../shared/collapsed-card/collapsed-card.component";
-import { DynamicFormComponent } from "../../../shared/dynamic-form/dynamic-form.component";
-import { DynamicTableComponent, TableColumn } from "../../../shared/dynamic-table/dynamic-table.component";
 import { BaseComponent } from '../../base.component';
+import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+
 import { StatusUsuarioService } from '../../../core/services/status-usuario.service';
-import { StatusUsuario } from '../../../interface/usuario.interface';
+import { StatusUsuario } from '../../../interface/status-usuario.interface';
+
+import {
+  DynamicTableComponent,
+  TableColumn,
+} from '../../../shared/dynamic-table/dynamic-table.component';
+
+import { DynamicFormComponent } from '../../../shared/dynamic-form/dynamic-form.component';
 import { DynamicField } from '../../../interface/dynamic-field.interface';
+
+import { LoaderComponent } from '../../../shared/loader/loader.component';
+import { CollapsedCardComponent } from '../../../shared/collapsed-card/collapsed-card.component';
 
 @Component({
   selector: 'app-status-usuario',
   standalone: true,
-  imports: [LoaderComponent, CollapsedCardComponent, DynamicFormComponent, DynamicTableComponent],
+  imports: [
+    CommonModule,
+    FormsModule,
+    DynamicTableComponent,
+    DynamicFormComponent,
+    LoaderComponent,
+    CollapsedCardComponent,
+  ],
   templateUrl: './status-usuario.component.html',
-  styleUrl: './status-usuario.component.css'
+  styleUrl: './status-usuario.component.css',
 })
 export class StatusUsuarioComponent extends BaseComponent implements OnInit {
+
   private statusUsuarioService = inject(StatusUsuarioService);
 
-  statusUsuarioList: StatusUsuario[] = [];
-  modelStatusUsuario: StatusUsuario = {};
+  statusUsuarios: StatusUsuario[] = [];
 
-  isUpdate: boolean = false;
+  statusUsuarioActual: StatusUsuario = {
+    nombre: '',
+  };
 
-  columnasTabla: TableColumn[] = [];
-  configuracionCampos: DynamicField[] = [];
+  columnasStatusUsuario: TableColumn[] = [];
+
+  configuracionCampos: DynamicField[] = [
+    {
+      name: 'idStatusUsuario',
+      label: 'ID Estatus Usuario',
+      type: 'text',
+      placeholder: 'idStatusUsuario',
+      disabled: true,
+      colSpan: 7,
+      hidden: true,
+    },
+    {
+      name: 'nombre',
+      label: 'Nombre del Estatus',
+      type: 'text',
+      placeholder: 'Ej: Activo',
+      required: true,
+      colSpan: 7,
+    },
+  ];
 
   async ngOnInit() {
     await this.onChangeViewURL(async () => {
-      this.configurarCampos();
-      await this.cargarLista(); 
-    });  
-  }
-
-  configurarCampos() {
-    this.configuracionCampos = [
-      {name: 'idStatusUsuario', label: 'ID Status Usuario', type: 'text', placeholder: 'idStatusUsuario', disabled: true, colSpan: 7, hidden: true},
-      { name: 'nombre', label: 'Nombre', type: 'text', required: true, colSpan: 7 },
-    ];
+      await this.cargarLista();
+    });
   }
 
   async cargarLista() {
     this.executeService({
       callback: async () => {
-        const data = await this.statusUsuarioService.getStatusUsuarios();
-        this.statusUsuarioList = Array.isArray(data) ? data : [];
-        this.columnasTabla = [
-          { field: 'idStatusUsuario', header: 'ID' },
-          { field: 'nombre', header: 'Nombre' },
+        const data: any =
+          await this.statusUsuarioService.getStatusUsuario();
+
+        this.statusUsuarios = Array.isArray(data) ? data : [];
+
+        this.columnasStatusUsuario = [
           {
-            field: 'fechaCreacion',
+            field: 'idStatusUsuario',
+            header: 'ID',
+          },
+          {
+            field: 'nombre',
+            header: 'Nombre',
+          },
+          {
+            field: 'creacion',
             header: 'Creación',
             type: 'audit',
             userField: 'usuarioCreacion',
             dateField: 'fechaCreacion',
           },
           {
-            field: 'fechaModificacion',
+            field: 'modificacion',
             header: 'Modificación',
             type: 'audit',
             userField: 'usuarioModificacion',
             dateField: 'fechaModificacion',
           },
         ];
-      }
+      },
     });
   }
 
-  async guardar() {
+  async guardar(data: any) {
+    if (!this.statusUsuarioActual.nombre) return;
+
     this.executeService({
       callback: async () => {
-        if (!this.modelStatusUsuario) return;
+        await this.statusUsuarioService.crearToActualizar(
+          this.statusUsuarioActual
+        );
 
-        await this.statusUsuarioService.crearToActualizar(this.modelStatusUsuario);
+        const update =
+          this.statusUsuarioActual.idStatusUsuario;
 
-        this.showSuccessAlert(this.isUpdate ? "Se Actualizó Correctamente" : "Se Guardó Correctamente");
+        this.showSuccessAlert(
+          update
+            ? 'Se Actualizó Correctamente'
+            : 'Se Guardó Correctamente'
+        );
+
         this.limpiarFormulario();
+
         await this.cargarLista();
       },
       showLoading: true,
     });
   }
 
-  async eliminar() {
-    if (!this.isUpdate || !this.modelStatusUsuario?.idStatusUsuario) return;
+  async eliminar(id?: number) {
+    if (!id) return;
 
     this.showDeleteConfirm(async () => {
       this.executeService({
         callback: async () => {
-          await this.statusUsuarioService.eliminar(this.modelStatusUsuario?.idStatusUsuario);
-          this.limpiarFormulario();
-          this.showSuccessAlert('El status de usuario ha sido eliminado correctamente.');
+          await this.statusUsuarioService.eliminar(id);
+
+          if (
+            this.statusUsuarioActual.idStatusUsuario === id
+          ) {
+            this.limpiarFormulario();
+          }
+
+          this.showSuccessAlert(
+            'El estatus de usuario ha sido eliminado correctamente.'
+          );
+
           await this.cargarLista();
         },
         showLoading: true,
       });
-    }, 'este status de usuario');
+    }, 'este estatus de usuario');
   }
 
-  seleccionarParaEditar(empresa: any) {
-    this.isUpdate = true;
-    this.modelStatusUsuario = { ...empresa };
+  seleccionarParaEditar(statusUsuario: StatusUsuario) {
+    this.statusUsuarioActual = {
+      ...statusUsuario,
+    };
 
-    if (this.modelStatusUsuario.idStatusUsuario) {
-      this.findToItemField(this.configuracionCampos,"idStatusUsuario").hidden = false;
+    if (this.statusUsuarioActual.idStatusUsuario) {
+      this.findToItemField(
+        this.configuracionCampos,
+        'idStatusUsuario'
+      ).hidden = false;
     }
   }
 
   limpiarFormulario() {
-    if (this.modelStatusUsuario.idStatusUsuario) {
-      this.findToItemField(this.configuracionCampos,"idStatusUsuario").hidden = true;
-    }
-    this.modelStatusUsuario = {};
-    this.isUpdate = false;
+    this.statusUsuarioActual = {
+      nombre: '',
+    };
+
+    this.findToItemField(
+      this.configuracionCampos,
+      'idStatusUsuario'
+    ).hidden = true;
   }
 }
