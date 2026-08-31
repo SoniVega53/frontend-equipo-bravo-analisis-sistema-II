@@ -6,7 +6,7 @@ import { StatusUsuario } from '../../interface/status-usuario.interface';
   providedIn: 'root',
 })
 export class StatusUsuarioService extends BaseService {
-  private readonly endpoint = 'status-usuario';
+  private readonly endpoint = 'console/status-usuario';
 
   async getStatusUsuario(id?: number): Promise<StatusUsuario> {
     const response: any = id

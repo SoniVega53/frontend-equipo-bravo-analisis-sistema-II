@@ -6,7 +6,7 @@ import { IRole } from '../../interface/role.interface';
   providedIn: 'root',
 })
 export class RoleService extends BaseService {
-  private readonly endpoint = 'roles';
+  private readonly endpoint = 'console/roles';
 
   async getRoles(id?: number): Promise<IRole[]> {
     const response: any = id
