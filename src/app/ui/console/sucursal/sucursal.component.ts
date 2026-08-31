@@ -37,11 +37,9 @@ export class SucursalComponent implements OnInit {
     this.cargarEmpresas();
   }
 
-  cargarSucursales(): void {
-    this.sucursalService.listarTodas().subscribe({
-      next: (data: Sucursal[]) => (this.sucursales = data),
-      error: (err: unknown) => console.error('Error al cargar sucursales:', err)
-    });
+  async cargarSucursales(): Promise<void> {
+    const data:Sucursal[] = await this.sucursalService.listarTodas(); 
+    this.sucursales = data;
   }
 
   cargarEmpresas(): void {
@@ -52,7 +50,6 @@ export class SucursalComponent implements OnInit {
   }
 
   guardar(): void {
-    // Mapear el ID de la empresa seleccionada y campos auditables
     const idEmpresaSeleccionada = this.sucursalActual.empresa?.idEmpresa || this.sucursalActual.idEmpresa;
 
     const payload: Sucursal = {
@@ -63,6 +60,8 @@ export class SucursalComponent implements OnInit {
     };
 
     if (this.modoEdicion && this.sucursalActual.idSucursal) {
+
+
       this.sucursalService.actualizar(this.sucursalActual.idSucursal, payload).subscribe({
         next: () => {
           this.limpiarFormulario();

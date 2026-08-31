@@ -37,14 +37,9 @@ export class EmpresaService extends BaseService {
   }
 
 
-  private getHeaders(): HttpHeaders {
-    const token = localStorage.getItem('token'); 
-    return new HttpHeaders({
-      'Authorization': `Bearer ${token}`
-    });
+  async listarTodas(): Promise<Empresa[]> {
+    const response: any = await this.get<any>('/empresas');
+    return response?.data || response || [];
   }
-  
-  listarTodas(): Observable<Empresa[]> {
-    return this.http.get<Empresa[]>(this.apiUrl + '/empresas', { headers: this.getHeaders() });
-  }
+
 }

@@ -1,36 +1,38 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { BaseService } from './base.service';
 import { Sucursal } from '../../interface/sucursal.interface';
 
+
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
-export class SucursalService {
-  private apiUrl = 'http://localhost:8080/api/sucursales';
+export class SucursalService extends BaseService {
+  private readonly endpoint = 'api/sucursales';
 
-  constructor(private http: HttpClient) {}
-
-  listarTodas(): Observable<Sucursal[]> {
-    return this.http.get<Sucursal[]>(this.apiUrl);
+  async listarTodas(): Promise<Sucursal[]> {
+    const response: any = await this.get<any>(this.endpoint);
+    return response?.data || response || [];
   }
 
-  obtenerPorId(id: number): Observable<Sucursal> {
-    return this.http.get<Sucursal>(`${this.apiUrl}/${id}`);
+  async obtenerPorId(id: number): Promise<Sucursal> {
+    const response: any = await this.get<any>(`${this.endpoint}/${id}`);
+    return response?.data || response || {};
   }
 
-  crear(sucursal: Sucursal): Observable<Sucursal> {
+  async crearToActualizar(sucursal: Sucursal): Promise<Sucursal> {
     const payload = this.prepararPayload(sucursal);
-    return this.http.post<Sucursal>(this.apiUrl, payload);
+    
+    const id = sucursal?.idSucursal; 
+
+    const response: any = id
+      ? await this.put<any>(`${this.endpoint}/${id}`, payload)
+      : await this.post<any>(this.endpoint, payload);
+      
+    return response?.data?.sucursal || response?.data || response || {};
   }
 
-  actualizar(id: number, sucursal: Sucursal): Observable<Sucursal> {
-    const payload = this.prepararPayload(sucursal);
-    return this.http.put<Sucursal>(`${this.apiUrl}/${id}`, payload);
-  }
-
-  eliminar(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/${id}`);
+  async eliminar(id: number): Promise<any> {
+    return this.delete<any>(`${this.endpoint}/${id}`);
   }
 
   private prepararPayload(sucursal: Sucursal): Sucursal {
