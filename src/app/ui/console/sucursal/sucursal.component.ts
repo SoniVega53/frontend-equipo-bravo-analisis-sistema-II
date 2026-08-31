@@ -1,134 +1,111 @@
-import { Component, inject, OnInit } from '@angular/core';
-import { BaseComponent } from '../../base.component';
-import { FormsModule } from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
-import { DynamicTableComponent, TableColumn } from '../../../shared/dynamic-table/dynamic-table.component';
-import { DynamicFormComponent } from '../../../shared/dynamic-form/dynamic-form.component';
-import { DynamicField } from '../../../interface/dynamic-field.interface';
-import { LoaderComponent } from "../../../shared/loader/loader.component";
-import { CollapsedCardComponent } from "../../../shared/collapsed-card/collapsed-card.component";
-import { SelectOption } from '../../../interface/select-option.interface';
+import { FormsModule } from '@angular/forms';
 import { SucursalService } from '../../../core/services/sucursal.service';
-import { ISucursal } from '../../../interface/sucursal.interface';
+import { EmpresaService } from '../../../core/services/empresa.service';
+import { Empresa } from '../../../interface/empresa.interface';
+import { Sucursal } from '../../../interface/sucursal.interface';
+
 
 @Component({
   selector: 'app-sucursal',
   standalone: true,
-  imports: [
-    CommonModule,
-    FormsModule,
-    DynamicTableComponent,
-    DynamicFormComponent,
-    LoaderComponent,
-    CollapsedCardComponent
-  ],
-  templateUrl: './sucursal.component.html',
-  styleUrl: './sucursal.component.css',
+  imports: [CommonModule, FormsModule],
+  templateUrl: './sucursal.component.html', 
+  styleUrls: ['./sucursal.component.css']
 })
-export class SucursalComponent extends BaseComponent implements OnInit {
-  private sucursalService = inject(SucursalService);
+export class SucursalComponent implements OnInit {
+  sucursales: Sucursal[] = [];
+  empresas: Empresa[] = [];
 
-  sucursales: ISucursal[] = [];
-  sucursalActual: ISucursal = {};
-  isUpdate: boolean = false;
+  sucursalActual: Sucursal = {
+    nombre: '',
+    direccion: '',
+    idEmpresa: undefined,
+    empresa: { idEmpresa: undefined, nombre: '', direccion: '', nit: '' } as unknown as Empresa
+  };
 
-  optionsEmpresa: SelectOption[] = [];
-  columnasSucursales: TableColumn[] = [];
-  configuracionCampos: DynamicField[] = [];
+  modoEdicion: boolean = false;
 
-  async ngOnInit() {
-    await this.onChangeViewURL(async () => {
-      await this.cargarCatalogosPrincipales();
-      await this.cargarLista();
-    });  
-  
+  constructor(
+    private sucursalService: SucursalService,
+    private empresaService: EmpresaService
+  ) {}
+
+  ngOnInit(): void {
+    this.cargarSucursales();
+    this.cargarEmpresas();
   }
 
-  async cargarCatalogosPrincipales() {
-    this.executeService({
-      callback: async () => {
-        const empresas: SelectOption[] = await this.catalogoService.getEmpresas();
-        this.optionsEmpresa = empresas;
-        this.configurarCampos();
-      }
+  cargarSucursales(): void {
+    this.sucursalService.listarTodas().subscribe({
+      next: (data: Sucursal[]) => (this.sucursales = data),
+      error: (err: unknown) => console.error('Error al cargar sucursales:', err)
     });
   }
 
-  configurarCampos() {
-    this.configuracionCampos = [
-      { name: 'idEmpresa', label: 'Empresa', type: 'dropdown', required: true, colSpan: 6, options: this.optionsEmpresa },
-      { name: 'nombre', label: 'Nombre', type: 'text', required: true, colSpan: 6 },
-      { name: 'direccion', label: 'Dirección', type: 'text', required: true, colSpan: 12 },
-    ];
-  }
-
-  async cargarLista() {
-    this.executeService({
-      callback: async () => {
-        const data = await this.sucursalService.getSucursales();
-        this.sucursales = Array.isArray(data) ? data : [];
-        this.columnasSucursales = [
-          { field: 'idSucursal', header: 'ID' },
-          { field: 'idEmpresa', header: 'ID Empresa' },
-          { field: 'nombre', header: 'Nombre' },
-          {
-            field: 'fechaCreacion',
-            header: 'Creación',
-            type: 'audit',
-            userField: 'usuarioCreacion',
-            dateField: 'fechaCreacion',
-          },
-          {
-            field: 'fechaModificacion',
-            header: 'Modificación',
-            type: 'audit',
-            userField: 'usuarioModificacion',
-            dateField: 'fechaModificacion',
-          },
-        ];
-      }
+  cargarEmpresas(): void {
+    this.empresaService.listarTodas().subscribe({
+      next: (data: Empresa[]) => (this.empresas = data),
+      error: (err: unknown) => console.error('Error al cargar empresas:', err)
     });
   }
 
-  async guardar() {
-    this.executeService({
-      callback: async () => {
-        if (!this.sucursalActual) return;
-        
-        await this.sucursalService.crearToActualizar(this.sucursalActual);
-        
-        this.showSuccessAlert(this.isUpdate ? "Se Actualizó Correctamente" : "Se Guardó Correctamente");
-        this.limpiarFormulario();
-        await this.cargarLista();
-      },
-      showLoading: true,
-    });
-  }
+  guardar(): void {
+    // Mapear el ID de la empresa seleccionada y campos auditables
+    const idEmpresaSeleccionada = this.sucursalActual.empresa?.idEmpresa || this.sucursalActual.idEmpresa;
 
-  async eliminar() {
-    if (!this.isUpdate || !this.sucursalActual?.idSucursal) return;
+    const payload: Sucursal = {
+      ...this.sucursalActual,
+      idEmpresa: idEmpresaSeleccionada,
+      usuarioCreacion: this.sucursalActual.usuarioCreacion || 'system',
+      fechaCreacion: this.sucursalActual.fechaCreacion || new Date().toISOString()
+    };
 
-    this.showDeleteConfirm(async () => {
-      this.executeService({
-        callback: async () => {
-          await this.sucursalService.eliminar(this.sucursalActual.idSucursal );
+    if (this.modoEdicion && this.sucursalActual.idSucursal) {
+      this.sucursalService.actualizar(this.sucursalActual.idSucursal, payload).subscribe({
+        next: () => {
           this.limpiarFormulario();
-          this.showSuccessAlert('La sucursal ha sido eliminada correctamente.');
-          await this.cargarLista();
+          this.cargarSucursales();
         },
-        showLoading: true,
+        error: (err: unknown) => console.error('Error al actualizar sucursal:', err)
       });
-    }, 'esta sucursal');
+    } else {
+      this.sucursalService.crear(payload).subscribe({
+        next: () => {
+          this.limpiarFormulario();
+          this.cargarSucursales();
+        },
+        error: (err: unknown) => console.error('Error al crear sucursal:', err)
+      });
+    }
   }
 
-  seleccionarParaEditar(sucursal: any) {
-    this.isUpdate = true;
+  editar(sucursal: Sucursal): void {
+    this.modoEdicion = true;
     this.sucursalActual = { ...sucursal };
   }
 
-  limpiarFormulario() {
-    this.sucursalActual = {};
-    this.isUpdate = false;
+  eliminar(id?: number): void {
+    if (id && confirm('¿Desea eliminar esta sucursal?')) {
+      this.sucursalService.eliminar(id).subscribe({
+        next: () => this.cargarSucursales(),
+        error: (err: unknown) => console.error('Error al eliminar sucursal:', err)
+      });
+    }
+  }
+
+  limpiarFormulario(): void {
+    this.modoEdicion = false;
+    this.sucursalActual = {
+      nombre: '',
+      direccion: '',
+      idEmpresa: undefined,
+      empresa: { idEmpresa: undefined, nombre: '', direccion: '', nit: '' } as unknown as Empresa
+    };
+  }
+
+  compararEmpresas(e1: Empresa, e2: Empresa): boolean {
+    return e1 && e2 ? e1.idEmpresa === e2.idEmpresa : e1 === e2;
   }
 }

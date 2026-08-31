@@ -1,39 +1,69 @@
-<div class="center-page">
-  <div class="page-container position-relative">
-    <app-loader [isLoading]="isLoadingPage"></app-loader> 
+<div class="container mt-4">
+  <h2>Gestión de Sucursales</h2>
 
-    <h2 class="page-title">Sucursales</h2>
+  <!-- Formulario -->
+  <div class="card my-3 p-3">
+    <h4>{{ modoEdicion ? 'Editar Sucursal' : 'Nueva Sucursal' }}</h4>
+    <form (ngSubmit)="guardar()">
+      <div class="row">
+        <div class="col-md-6 mb-3">
+          <label class="form-label">Empresa</label>
+          <select 
+            class="form-select" 
+            [(ngModel)]="sucursalActual.empresa" 
+            name="empresa" 
+            [compareWith]="compararEmpresas"
+            required>
+            <option [ngValue]="undefined" disabled>Seleccione una empresa</option>
+            <option *ngFor="let emp of empresas" [ngValue]="emp">
+              {{ emp.nombre }}
+            </option>
+          </select>
+        </div>
 
-    <collapsed-card [hidden]="hiddenFormulary()"> 
-      <app-dynamic-form
-        [saveText]="isUpdate ? 'Actualizar' : 'Crear Nueva'"
-        [fields]="configuracionCampos"
-        [model]="sucursalActual"
-        [isLoading]="isLoading"
-        [showDelete]="showDeleteButton(sucursalActual?.idSucursal) && isUpdate"
-        [showSave]="showSaveButton(sucursalActual?.idSucursal)"
-        [showCancel]="true"
-        (save)="guardar()"
-        (delete)="eliminar()"
-        (cancel)="limpiarFormulario()"
-      >
-      </app-dynamic-form>
-    </collapsed-card>
+        <div class="col-md-6 mb-3">
+          <label class="form-label">Nombre de Sucursal</label>
+          <input type="text" class="form-control" [(ngModel)]="sucursalActual.nombre" name="nombre" required>
+        </div>
 
-    @if (roleSecurity?.consultar) { 
-      <hr class="divider" />
+        <div class="col-md-12 mb-3">
+          <label class="form-label">Dirección</label>
+          <input type="text" class="form-control" [(ngModel)]="sucursalActual.direccion" name="direccion" required>
+        </div>
+      </div>
 
-      <app-dynamic-table
-        [columns]="columnasSucursales"
-        [data]="sucursales"
-        [isLoading]="isLoading"
-        [showExport]="roleSecurity?.exportar || false"
-        [showPrint]="roleSecurity?.imprimir || false"
-        [reportName]="'Reporte_Sucursales_Sistema'"
-        [hiddenAccion]="hiddenAction()"
-        (actionSelect)="seleccionarParaEditar($event)"
-      > 
-      </app-dynamic-table>
-    }
+      <button type="submit" class="btn btn-primary me-2">
+        {{ modoEdicion ? 'Actualizar' : 'Guardar' }}
+      </button>
+      <button type="button" class="btn btn-secondary" (click)="limpiarFormulario()">Cancelar</button>
+    </form>
   </div>
+
+  <!-- Tabla de Listado -->
+  <table class="table table-bordered table-striped mt-3">
+    <thead class="table-dark">
+      <tr>
+        <th>ID</th>
+        <th>Nombre</th>
+        <th>Dirección</th>
+        <th>Empresa</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let suc of sucursales">
+        <td>{{ suc.idSucursal }}</td>
+        <td>{{ suc.nombre }}</td>
+        <td>{{ suc.direccion }}</td>
+        <td>{{ suc.empresa?.nombre }}</td>
+        <td>
+          <button class="btn btn-warning btn-sm me-2" (click)="editar(suc)">Editar</button>
+          <button class="btn btn-danger btn-sm" (click)="eliminar(suc.idSucursal)">Eliminar</button>
+        </td>
+      </tr>
+      <tr *ngIf="sucursales.length === 0">
+        <td colspan="5" class="text-center">No hay sucursales registradas</td>
+      </tr>
+    </tbody>
+  </table>
 </div>
