@@ -5,7 +5,8 @@ import {
   UsuarioRequest,
   UsuarioResponse,
   UsuarioCrud,
-  UsuarioCrudResponse
+  UsuarioCrudResponse,
+  UsuarioSaveRequest
 } from '../../interface/usuario.interface';
 
 
@@ -126,10 +127,10 @@ export class UsuarioService extends BaseService {
   //   return response?.data || [];
   // }
 
-  // async guardarUsuario(payload: UsuarioSaveRequest): Promise<any> {
-  //   console.log('Payload enviado al servicio:', payload);
-  //   return await this.post<any>(`${this.endpoint}/console/guardar`, payload);
-  // }
+  async guardarUsuario(payload: UsuarioSaveRequest): Promise<any> {
+    console.log('Payload enviado al servicio:', payload);
+    return await this.post<any>(`${this.endpoint}/console/guardar`, payload);
+  }
 
   // async eliminarUsuario(idUsuario: string): Promise<any> {
   //   return await this.delete<any>(`${this.endpoint}/console/eliminar/${idUsuario}`);
