@@ -1,28 +1,44 @@
 import { Injectable } from '@angular/core';
-import { BaseService } from './base.service';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { Sucursal } from '../../interface/sucursal.interface';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
-export class SucursalService extends BaseService { 
-  private readonly endpoint = 'console/sucursal';
+export class SucursalService {
+  private apiUrl = 'http://localhost:8080/api/sucursales';
 
-  async getSucursales(id?: number): Promise<any> {
-    const response: any = id
-      ? await this.get<any>(`${this.endpoint}/${id}`)
-      : await this.get<any>(this.endpoint);
+  constructor(private http: HttpClient) {}
 
-    return response?.data || (id ? {} : []); 
+  listarTodas(): Observable<Sucursal[]> {
+    return this.http.get<Sucursal[]>(this.apiUrl);
   }
 
-  async crearToActualizar(sucursal: any): Promise<any> {
-    const response: any = sucursal?.idSucursal
-      ? await this.put<any>(`${this.endpoint}/${sucursal?.idSucursal}`, sucursal)
-      : await this.post<any>(this.endpoint, sucursal);
-    return response?.data?.sucursal || {}; 
+  obtenerPorId(id: number): Observable<Sucursal> {
+    return this.http.get<Sucursal>(`${this.apiUrl}/${id}`);
   }
 
-  async eliminar(id?: number): Promise<any> {
-    return this.delete<any>(`${this.endpoint}/${id}`); 
+  crear(sucursal: Sucursal): Observable<Sucursal> {
+    const payload = this.prepararPayload(sucursal);
+    return this.http.post<Sucursal>(this.apiUrl, payload);
+  }
+
+  actualizar(id: number, sucursal: Sucursal): Observable<Sucursal> {
+    const payload = this.prepararPayload(sucursal);
+    return this.http.put<Sucursal>(`${this.apiUrl}/${id}`, payload);
+  }
+
+  eliminar(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${id}`);
+  }
+
+  private prepararPayload(sucursal: Sucursal): Sucursal {
+    return {
+      ...sucursal,
+      idEmpresa: sucursal.empresa?.idEmpresa || sucursal.idEmpresa,
+      usuarioCreacion: sucursal.usuarioCreacion || 'system',
+      fechaCreacion: sucursal.fechaCreacion || new Date().toISOString()
+    };
   }
 }

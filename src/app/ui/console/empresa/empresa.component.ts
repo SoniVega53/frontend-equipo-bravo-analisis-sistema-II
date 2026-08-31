@@ -3,13 +3,20 @@ import { BaseComponent } from '../../base.component';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
-import { DynamicTableComponent, TableColumn } from '../../../shared/dynamic-table/dynamic-table.component';
-import { DynamicFormComponent } from '../../../shared/dynamic-form/dynamic-form.component';
-import { DynamicField } from '../../../interface/dynamic-field.interface';
-import { LoaderComponent } from "../../../shared/loader/loader.component";
-import { CollapsedCardComponent } from "../../../shared/collapsed-card/collapsed-card.component";
 import { EmpresaService } from '../../../core/services/empresa.service';
-import { IEmpresa } from '../../../interface/empresa.interface';
+import { Empresa } from '../../../interface/empresa.interface';
+
+import {
+  DynamicTableComponent,
+  TableColumn,
+} from '../../../shared/dynamic-table/dynamic-table.component';
+
+import { DynamicFormComponent } from '../../../shared/dynamic-form/dynamic-form.component';
+
+import { DynamicField } from '../../../interface/dynamic-field.interface';
+
+import { LoaderComponent } from '../../../shared/loader/loader.component';
+import { CollapsedCardComponent } from '../../../shared/collapsed-card/collapsed-card.component';
 
 @Component({
   selector: 'app-empresa',
@@ -21,110 +28,231 @@ import { IEmpresa } from '../../../interface/empresa.interface';
     DynamicFormComponent,
     LoaderComponent,
     CollapsedCardComponent
-  ], 
+  ],
   templateUrl: './empresa.component.html',
   styleUrl: './empresa.component.css',
 })
-export class EmpresaComponent extends BaseComponent implements OnInit { 
-  private empresaService = inject(EmpresaService); 
+export class EmpresaComponent extends BaseComponent implements OnInit {
 
-  empresas: IEmpresa[] = [];
-  empresaActual: IEmpresa = {};
-  isUpdate: boolean = false;
+  private empresaService = inject(EmpresaService);
+
+  empresas: Empresa[] = [];
+
+  empresaActual: Empresa = {
+    nombre: '',
+    direccion: '',
+    nit: ''
+  };
 
   columnasEmpresas: TableColumn[] = [];
-  configuracionCampos: DynamicField[] = [];
+
+  configuracionCampos: DynamicField[] = [
+
+    {
+      name: 'idEmpresa',
+      label: 'ID Empresa',
+      type: 'text',
+      placeholder: 'idEmpresa',
+      disabled: true,
+      colSpan: 7,
+      hidden: true
+    },
+
+    {
+      name: 'nombre',
+      label: 'Nombre de la Empresa',
+      type: 'text',
+      placeholder: 'Ej: Empresa ABC',
+      required: true,
+      colSpan: 7
+    },
+
+    {
+      name: 'direccion',
+      label: 'Dirección',
+      type: 'text',
+      placeholder: 'Ej: Ciudad de Guatemala',
+      required: true,
+      colSpan: 7
+    },
+
+    {
+      name: 'nit',
+      label: 'NIT',
+      type: 'text',
+      placeholder: 'Ej: 1234567-8',
+      required: true,
+      colSpan: 7
+    }
+  ];
 
   async ngOnInit() {
-    await this.onChangeViewURL(async () => {
-      this.configurarCampos();
-      await this.cargarLista();     
-    });
-   
-  }
 
-  configurarCampos() {
-    this.configuracionCampos = [
-      { name: 'nombre', label: 'Nombre', type: 'text', required: true, colSpan: 4 }, 
-      { name: 'nit', label: 'NIT', type: 'number', required: true, colSpan: 4 },
-      { name: 'direccion', label: 'Dirección', type: 'text', required: true, colSpan: 12 },
-      { name: 'passwordLargo', label: 'Largo Mínimo Contraseña', type: 'number', required: false, colSpan: 3 },
-      { name: 'passwordCantidadMayusculas', label: 'Min. Mayúsculas', type: 'number', required: false, colSpan: 3 },
-      { name: 'passwordCantidadMinusculas', label: 'Min. Minúsculas', type: 'number', required: false, colSpan: 3 },
-      { name: 'passwordCantidadNumeros', label: 'Min. Números', type: 'number', required: false, colSpan: 3 },
-      { name: 'passwordCantidadCaracteresEspeciales', label: 'Min. Caracteres Esp.', type: 'number', required: false, colSpan: 3 },
-      { name: 'passwordCantidadCaducidadDias', label: 'Días Caducidad', type: 'number', required: false, colSpan: 3 },
-      { name: 'passwordIntentosAntesDeBloquear', label: 'Intentos Antes Bloqueo', type: 'number', required: false, colSpan: 3 },
-      { name: 'passwordCantidadPreguntasValidar', label: 'Cantidad Preguntas', type: 'number', required: false, colSpan: 3 },
-    ];
+    await this.cargarPermisos();
+
+    await this.cargarLista();
   }
 
   async cargarLista() {
-    this.executeService({ 
+
+    this.executeService({
+
       callback: async () => {
-        const data = await this.empresaService.getEmpresas();
-        this.empresas = Array.isArray(data) ? data : [];
+
+        const data: any =
+          await this.empresaService.getEmpresas();
+
+        this.empresas =
+          Array.isArray(data) ? data : [];
+
         this.columnasEmpresas = [
-          { field: 'idEmpresa', header: 'ID' },
-          { field: 'nombre', header: 'Nombre' },
-          { field: 'nit', header: 'NIT' },
-          { 
-            field: 'fechaCreacion',
+
+          {
+            field: 'idEmpresa',
+            header: 'ID'
+          },
+
+          {
+            field: 'nombre',
+            header: 'Nombre'
+          },
+
+          {
+            field: 'direccion',
+            header: 'Dirección'
+          },
+
+          {
+            field: 'nit',
+            header: 'NIT'
+          },
+
+          {
+            field: 'creacion',
             header: 'Creación',
             type: 'audit',
             userField: 'usuarioCreacion',
-            dateField: 'fechaCreacion',
+            dateField: 'fechaCreacion'
           },
-          { 
-            field: 'fechaModificacion',
+
+          {
+            field: 'modificacion',
             header: 'Modificación',
             type: 'audit',
             userField: 'usuarioModificacion',
-            dateField: 'fechaModificacion',
-          },
+            dateField: 'fechaModificacion'
+          }
+
         ];
       }
+
     });
   }
 
-  async guardar() {
-    this.executeService({ 
+  async guardar(data: any) {
+
+    if (
+      !this.empresaActual.nombre ||
+      !this.empresaActual.direccion ||
+      !this.empresaActual.nit
+    ) {
+      return;
+    }
+
+    this.executeService({
+
       callback: async () => {
-        if (!this.empresaActual) return;
-        
-        await this.empresaService.crearToActualizar(this.empresaActual);
-        
-        this.showSuccessAlert(this.isUpdate ? "Se Actualizó Correctamente" : "Se Guardó Correctamente"); 
+
+        const actualizar =
+          this.empresaActual.idEmpresa;
+
+        await this.empresaService.crearToActualizar(
+          this.empresaActual
+        );
+
+        this.showSuccessAlert(
+          actualizar
+            ? 'La empresa se actualizó correctamente.'
+            : 'La empresa se creó correctamente.'
+        );
+
         this.limpiarFormulario();
+
         await this.cargarLista();
       },
-      showLoading: true, 
+
+      showLoading: true
+
     });
   }
 
-  async eliminar() {
-    if (!this.isUpdate || !this.empresaActual?.idEmpresa) return; 
+  async eliminar(id?: number) {
 
-    this.showDeleteConfirm(async () => { 
-      this.executeService({
-        callback: async () => {
-          await this.empresaService.eliminar(this.empresaActual.idEmpresa);
-          this.limpiarFormulario();
-          this.showSuccessAlert('La empresa ha sido eliminada correctamente.');
-          await this.cargarLista();
-        },
-        showLoading: true,
-      });
-    }, 'esta empresa');
+    if (!id) {
+      return;
+    }
+
+    this.showDeleteConfirm(
+
+      async () => {
+
+        this.executeService({
+
+          callback: async () => {
+
+            await this.empresaService.eliminar(id);
+
+            if (
+              this.empresaActual.idEmpresa === id
+            ) {
+              this.limpiarFormulario();
+            }
+
+            this.showSuccessAlert(
+              'La empresa ha sido eliminada correctamente.'
+            );
+
+            await this.cargarLista();
+          },
+
+          showLoading: true
+
+        });
+
+      },
+
+      'esta empresa'
+
+    );
   }
 
-  seleccionarParaEditar(empresa: any) {
-    this.isUpdate = true; 
-    this.empresaActual = { ...empresa };
+  seleccionarParaEditar(empresa: Empresa) {
+
+    this.empresaActual = {
+      ...empresa
+    };
+
+    if (this.empresaActual.idEmpresa) {
+
+      this.findToItemField(
+        this.configuracionCampos,
+        'idEmpresa'
+      ).hidden = false;
+
+    }
   }
 
   limpiarFormulario() {
-    this.empresaActual = {}; 
-    this.isUpdate = false;
+
+    this.empresaActual = {
+      nombre: '',
+      direccion: '',
+      nit: ''
+    };
+
+    this.findToItemField(
+      this.configuracionCampos,
+      'idEmpresa'
+    ).hidden = true;
   }
 }

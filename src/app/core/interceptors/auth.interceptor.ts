@@ -13,7 +13,10 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
 
   const token = authService.getToken();
 
-  if (token) {
+  // Excluir Auth y esChangePassword de llevar Token
+  const isAuthReq = req.url.includes('/api/auth/') || req.url.includes('/api/usuarios/esChangePassword');
+
+  if (token && !isAuthReq) {
     const clonedReq = req.clone({
       setHeaders: {
         Authorization: `Bearer ${token}`

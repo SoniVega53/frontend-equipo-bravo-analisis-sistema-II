@@ -1,20 +1,12 @@
-export interface IEmpresa {
+export interface Empresa {
   idEmpresa?: number;
-  nombre?: string;
-  direccion?: string;
-  nit?: string;
-  
-  passwordCantidadMayusculas?: number;
-  passwordCantidadMinusculas?: number;
-  passwordCantidadCaracteresEspeciales?: number;
-  passwordCantidadCaducidadDias?: number;
-  passwordLargo?: number;
-  passwordIntentosAntesDeBloquear?: number;
-  passwordCantidadNumeros?: number;
-  passwordCantidadPreguntasValidar?: number;
+  nombre: string;
+  direccion: string;
+  nit: string;
 
-  fechaCreacion?: string;
   usuarioCreacion?: string;
-  fechaModificacion?: string;
+  fechaCreacion?: string;
+
   usuarioModificacion?: string;
+  fechaModificacion?: string;
 }

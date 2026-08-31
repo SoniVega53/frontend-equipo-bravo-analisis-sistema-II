@@ -1,28 +1,36 @@
 import { Injectable } from '@angular/core';
 import { BaseService } from './base.service';
+import { Empresa } from '../../interface/empresa.interface';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
-export class EmpresaService extends BaseService { 
-  private readonly endpoint = 'console/empresa';
+export class EmpresaService extends BaseService {
 
-  async getEmpresas(id?: number): Promise<any> {
-    const response: any = id
-      ? await this.get<any>(`${this.endpoint}/${id}`)
-      : await this.get<any>(this.endpoint);
-
-    return response?.data || (id ? {} : []); 
+  async getEmpresas(): Promise<Empresa[]> {
+    return await this.get<Empresa[]>('empresa');
   }
 
-  async crearToActualizar(empresa: any): Promise<any> {
-    const response: any = empresa?.idEmpresa
-      ? await this.put<any>(`${this.endpoint}/${empresa?.idEmpresa}`, empresa)
-      : await this.post<any>(this.endpoint, empresa);
-    return response?.data?.empresa || {}; 
+  async getEmpresa(id: number): Promise<Empresa> {
+    return await this.get<Empresa>(`empresa/${id}`);
   }
 
-  async eliminar(id?: number): Promise<any> {
-    return this.delete<any>(`${this.endpoint}/${id}`); 
+  async crearToActualizar(empresa: Empresa): Promise<any> {
+
+    if (empresa.idEmpresa) {
+      return await this.put<Empresa>(
+        `empresa/${empresa.idEmpresa}`,
+        empresa
+      );
+    }
+
+    return await this.post<Empresa>(
+      'empresa',
+      empresa
+    );
+  }
+
+  async eliminar(id: number): Promise<any> {
+    return await this.delete<any>(`empresa/${id}`);
   }
 }

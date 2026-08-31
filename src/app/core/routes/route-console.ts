@@ -21,6 +21,10 @@ export const CONSOLE_ROUTES: Routes = [
     pathMatch: 'full',
   },
   {
+    path: 'sucursal/:code',
+    component: SucursalComponent,
+  },
+  {
     path: 'empresa/:code',
     component: EmpresaComponent,
   },
