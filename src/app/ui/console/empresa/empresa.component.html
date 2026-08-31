@@ -1,35 +1,47 @@
-<div class="p-4" style="max-width: 800px; margin: auto">
-  <div class="row gap-4">
-    <div class="col-12 col-md-5">
-      <app-dropdown-select
-        label="Sucursal"
-        placeholder="Elija una sucursal..."
-        iconLeft="bi-building"
-        [options]="sucursales"
-        [(ngModel)]="sucursalSeleccionada"
+<div class="center-page">
+
+  <div class="page-container position-relative">
+
+    <app-loader [isLoading]="isLoadingPage"></app-loader>
+
+    <h2 class="page-title">Empresas</h2>
+
+    <collapsed-card [hidden]="hiddenFormulary()">
+
+      <app-dynamic-form
+        [fields]="configuracionCampos"
+        [model]="empresaActual"
+        [isLoading]="isLoading"
+        [showDelete]="showDeleteButton(empresaActual.idEmpresa)"
+        [showSave]="showSaveButton(empresaActual.idEmpresa)"
+        [showCancel]="true"
+        (save)="guardar($event)"
+        (delete)="eliminar(empresaActual.idEmpresa)"
+        (cancel)="limpiarFormulario()"
       >
-      </app-dropdown-select>
+      </app-dynamic-form>
 
-      <div class="mt-3 p-3 bg-light border rounded">
-        <strong>Modelo actual (Dropdown):</strong>
-        <pre class="mb-0 mt-2">{{ sucursalSeleccionada | json }}</pre>
-      </div>
-    </div>
+    </collapsed-card>
 
-    <div class="col-12 col-md-5">
-      <app-multi-combo-box
-        label="Roles Asignados"
-        placeholder="Seleccione uno o más roles..."
-        iconLeft="bi-person-badge"
-        [options]="roles"
-        [(ngModel)]="rolesSeleccionados"
+
+    @if (roleSecurity?.consultar) {
+
+      <hr class="divider" />
+
+      <app-dynamic-table
+        [columns]="columnasEmpresas"
+        [data]="empresas"
+        [isLoading]="isLoading"
+        [showExport]="roleSecurity?.exportar || false"
+        [showPrint]="roleSecurity?.imprimir || false"
+        [reportName]="'Reporte_Empresas_Sistema'"
+        [hiddenAccion]="hiddenAction()"
+        (actionSelect)="seleccionarParaEditar($event)"
       >
-      </app-multi-combo-box>
+      </app-dynamic-table>
 
-      <div class="mt-3 p-3 bg-light border rounded">
-        <strong>Modelo actual (Multi Combo Box):</strong>
-        <pre class="mb-0 mt-2">{{ rolesSeleccionados | json }}</pre>
-      </div>
-    </div>
+    }
+
   </div>
+
 </div>

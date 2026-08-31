@@ -1,25 +1,36 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { BaseService } from './base.service';
 import { Empresa } from '../../interface/empresa.interface';
 
 @Injectable({
   providedIn: 'root'
 })
-export class EmpresaService {
-  private apiUrl = 'http://localhost:8080/api/empresas';
+export class EmpresaService extends BaseService {
 
-  constructor(private http: HttpClient) {}
-
-  private getHeaders(): HttpHeaders {
-    // Recupera el token guardado tras el login (ajusta 'token' si usas otra clave como 'jwt' o 'auth_token')
-    const token = localStorage.getItem('token'); 
-    return new HttpHeaders({
-      'Authorization': `Bearer ${token}`
-    });
+  async getEmpresas(): Promise<Empresa[]> {
+    return await this.get<Empresa[]>('empresa');
   }
 
-  listarTodas(): Observable<Empresa[]> {
-    return this.http.get<Empresa[]>(this.apiUrl, { headers: this.getHeaders() });
+  async getEmpresa(id: number): Promise<Empresa> {
+    return await this.get<Empresa>(`empresa/${id}`);
+  }
+
+  async crearToActualizar(empresa: Empresa): Promise<any> {
+
+    if (empresa.idEmpresa) {
+      return await this.put<Empresa>(
+        `empresa/${empresa.idEmpresa}`,
+        empresa
+      );
+    }
+
+    return await this.post<Empresa>(
+      'empresa',
+      empresa
+    );
+  }
+
+  async eliminar(id: number): Promise<any> {
+    return await this.delete<any>(`empresa/${id}`);
   }
 }
