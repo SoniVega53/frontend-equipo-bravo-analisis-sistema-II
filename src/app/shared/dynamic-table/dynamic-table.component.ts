@@ -70,7 +70,7 @@ export class DynamicTableComponent {
   }
 
   scrollToTop() {
-    const mainContainer = document.querySelector('.main-content');
+   const mainContainer = document.querySelector('.main-content');
     
     if (mainContainer) {
       mainContainer.scrollTo({
@@ -78,6 +78,11 @@ export class DynamicTableComponent {
         behavior: 'smooth'
       });
     }
+
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
   }
 
   exportarExcel() {

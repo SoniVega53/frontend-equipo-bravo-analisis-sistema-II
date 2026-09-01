@@ -34,7 +34,7 @@
         </thead>
         <tbody>
           @for (row of paginatedData; track row) {
-            <tr>
+            <tr (dblclick)="onSelect(row)">
               @for (col of columns; track col.field) {
                 <td>
                   @if (col.type === "audit") {
