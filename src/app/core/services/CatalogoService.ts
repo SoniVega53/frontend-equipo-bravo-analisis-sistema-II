@@ -43,6 +43,11 @@ export class CatalogoService extends BaseService {
         return response?.data || [];
     }
 
+    async getMenusIdModule(id:number): Promise<SelectOption[]> {
+        const response: any = await this.get<any>(`${this.endpoint}/menus/${id}`);
+        return response?.data || [];
+    }
+
     async getModulos(): Promise<SelectOption[]> {
         const response: any = await this.get<any>(`${this.endpoint}/modulos`);
         return response?.data || [];

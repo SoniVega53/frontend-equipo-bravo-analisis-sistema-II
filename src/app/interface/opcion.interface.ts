@@ -1,6 +1,7 @@
 export interface IOpcion {
   idOpcion?: number;
   idMenu?: number;
+  idModulo?: number;
   nombre?: string;
   ordenMenu?: number;
   pagina?: string;

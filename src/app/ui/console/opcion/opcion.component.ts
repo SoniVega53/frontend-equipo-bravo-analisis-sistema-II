@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, EventEmitter, inject, OnInit } from '@angular/core';
 import { BaseComponent } from '../../base.component';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -37,6 +37,7 @@ export class OpcionComponent extends BaseComponent implements OnInit {
   isUpdate: boolean = false;
 
   optionsMenu: SelectOption[] = [];
+  optionsModulo: SelectOption[] = [];
   columnasOpciones: TableColumn[] = [];
   configuracionCampos: DynamicField[] = [];
 
@@ -51,16 +52,39 @@ export class OpcionComponent extends BaseComponent implements OnInit {
   async cargarCatalogosPrincipales() {
     this.executeService({
       callback: async () => {
-        const menus: SelectOption[] = await this.catalogoService.getMenus();
-        this.optionsMenu = menus;
+        const modulo: SelectOption[] = await this.catalogoService.getModulos();
+        this.optionsModulo = modulo;
         this.configurarCampos();
       }
     });
   }
 
+
+  async cargarCatalogosMenuIdModulo(id:number) {
+    if (!id) return;
+
+    this.executeService({
+      callback: async () => {
+        const menus: SelectOption[] = await this.catalogoService.getMenusIdModule(id);
+        this.optionsMenu = menus;
+        this.findToItemField(this.configuracionCampos, "idMenu").options = this.optionsMenu;
+      }
+    });
+  }
+
   configurarCampos() {
+    const empresaChangeEvent = new EventEmitter<any>();
+
+    empresaChangeEvent.subscribe((id: any) => {
+      console.log('seleccionada:', id);
+      this.cargarCatalogosMenuIdModulo(id);
+    });
+
     this.configuracionCampos = [
-      { name: 'idMenu', label: 'Menú', type: 'dropdown', required: true, colSpan: 6, options: this.optionsMenu },
+      { name: 'idModulo', label: 'Modulo', type: 'dropdown', required: true, colSpan: 6, options: this.optionsModulo,
+        onChange: empresaChangeEvent
+      },
+      { name: 'idMenu', label: 'Menú', type: 'dropdown', required: true, colSpan: 6, options:[] },
       { name: 'nombre', label: 'Nombre de Opción', type: 'text', required: true, colSpan: 6 },
       { name: 'pagina', label: 'Ruta/Página', type: 'text', required: true, colSpan: 6 },
       { name: 'ordenMenu', label: 'Orden', type: 'number', required: true, colSpan: 6 }
@@ -132,6 +156,11 @@ export class OpcionComponent extends BaseComponent implements OnInit {
   seleccionarParaEditar(opcion: any) {
     this.isUpdate = true; 
     this.opcionActual = { ...opcion };
+
+    if (this.opcionActual.idModulo) {
+      this.cargarCatalogosMenuIdModulo(this.opcionActual.idModulo);
+    }
+
   }
 
   limpiarFormulario() {
