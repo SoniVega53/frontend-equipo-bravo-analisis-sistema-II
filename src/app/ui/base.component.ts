@@ -4,13 +4,15 @@ import { NavigationService } from '../core/services/navigation.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '../core/services/auth.service';
 import { ApiErrorResponse } from '../interface/api-error-response';
-import { RoleOpciones } from '../interface/rolo-opciones.interface';
+import { CODE_ERROR_PERMIT, RoleOpciones } from '../interface/rolo-opciones.interface';
 import { RoleOpcionService } from '../core/services/role-opcion.service';
 import { APP_CONSTANTS } from '../shared/app.constants';
 import { SelectOption } from '../interface/select-option.interface';
 import { SecurityService } from '../core/services/security.service';
 import { DynamicField } from '../interface/dynamic-field.interface';
+import { CatalogoService } from '../core/services/CatalogoService';
 import { Subscription } from 'rxjs';
+import { ConsoleComponent } from './console/console.component';
 
 export interface ExecuteServiceOptions {
   callback?: () => void | Promise<void>;
@@ -27,6 +29,7 @@ export abstract class BaseComponent {
   protected roleOpService = inject(RoleOpcionService);
   protected navigationService = inject(NavigationService);
   protected securityService = inject(SecurityService);
+  protected catalogoService = inject(CatalogoService);
   protected rutaActual: string = '';
   private paramsSub!: Subscription;
 
@@ -178,8 +181,19 @@ export abstract class BaseComponent {
         ]);
       }
     } catch (error: unknown) {
-      //console.error(error);
+      console.error(error);
       const apiError = error as ApiErrorResponse;
+      if (apiError.codigoNumerico == 4001 && isLoggedIn) {
+        return;
+      }
+
+      if (CODE_ERROR_PERMIT[apiError.codigoNumerico] && isLoggedIn) {
+        const tipo = CODE_ERROR_PERMIT[apiError.codigoNumerico];
+        if (tipo) {
+          this.roleSecurity[tipo] = false;
+        }
+      }
+
       if (apiError.codigoTexto === 'SESION_INVALIDA') {
         this.showErrorAlert(
           apiError?.mensaje || 'Ocurrió un error al procesar la solicitud.',
@@ -193,6 +207,21 @@ export abstract class BaseComponent {
         this.showErrorAlert(
           apiError?.mensaje || 'Ocurrió un error al procesar la solicitud.',
         );
+        return;
+      }
+
+      if ((apiError.codigoTexto === "AUTH_USER_BLOCKED" || apiError.codigoTexto === "AUTH_USER_INACTIVE") && !isLoggedIn) {
+        this.showErrorAlert(
+          apiError?.mensaje || 'Ocurrió un error al procesar la solicitud.',
+        );
+        setTimeout(() => {  
+          this.navigateTo('/login');
+        },1000);
+        return;
+      }
+
+      if ((apiError.codigoTexto === 'NETWORK_ERROR' || apiError.codigoNumerico == 500) && isLoggedIn) {
+        this.showErrorAlert( 'Ocurrió un error al procesar la solicitud.');
         return;
       }
 

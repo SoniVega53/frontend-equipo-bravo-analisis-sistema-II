@@ -1,0 +1,33 @@
+.avatar-wrapper {
+  overflow: hidden;
+  border-radius: 50%;
+}
+
+.avatar-img,
+.avatar-placeholder {
+  width: 100%;
+  height: 100%;
+  border: 4px solid #fff;
+  border-radius: 50%;
+}
+
+.avatar-img {
+  object-fit: cover;
+}
+
+.avatar-placeholder {
+  background: linear-gradient(135deg, #0d6efd 0%, #0a58ca 100%);
+}
+
+.avatar-edit-overlay {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  border-radius: 50%;
+  background-color: rgba(0, 0, 0, 0.4);
+  transition: opacity 0.3s ease-in-out;
+}
+
+.avatar-wrapper:hover .avatar-edit-overlay {
+  opacity: 1;
+}

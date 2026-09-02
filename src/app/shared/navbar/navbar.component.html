@@ -51,9 +51,17 @@
           aria-expanded="false"
           style="cursor: pointer"
         >
-          <div class="user-avatar">
-            {{ nombreUsuario.charAt(0) }}
-          </div>
+        <div class="user-avatar">
+          <avatar-icono 
+            [nombre]="nombreUsuario" 
+            [fotografia]="fotografia" 
+            [eActiveAction]="false"
+            width="35px"
+            height="35px"
+            fontSize="1.1rem"
+            >
+          </avatar-icono>
+        </div>
 
           <span class="user-name d-none d-sm-block">{{ nombreUsuario }}</span>
         </a>

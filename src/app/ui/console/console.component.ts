@@ -37,6 +37,19 @@ export class ConsoleComponent extends BaseComponent implements OnInit, OnDestroy
     this.homeComponent.isShowMobileMenu = true;
   }
 
+  async updateListaMenu() {
+    this.isLoadingMenu = true;
+    await this.executeService({
+      callback: async () => {
+        const responseMenu = await this.menuService.getMenuList();
+        if (responseMenu) {
+          this.menuItems = responseMenu;
+        }
+      },
+    });
+    this.isLoadingMenu = false;
+  }
+
   async cargarListaMenu() {
     this.isLoadingMenu = true;
     await this.executeService({
