@@ -352,4 +352,31 @@ export abstract class BaseComponent {
       this.paramsSub.unsubscribe();
     }
   }
+
+  ordenarGenerico(lista: any[], campoGrupo: string, campoOrden: string, campoNombre: string): any[] {
+    if (!lista || lista.length === 0) return [];
+
+    return lista.sort((a, b) => {
+      if (campoGrupo) {
+        const grupoA = a[campoGrupo];
+        const grupoB = b[campoGrupo];
+
+        if (grupoA !== grupoB) {
+          return grupoA < grupoB ? -1 : 1;
+        }
+      }
+
+      const ordenA = a[campoOrden] != null ? a[campoOrden] : 99999;
+      const ordenB = b[campoOrden] != null ? b[campoOrden] : 99999;
+
+      if (ordenA !== ordenB) {
+        return ordenA - ordenB;
+      }
+
+      const nombreA = a[campoNombre] ? String(a[campoNombre]).toLowerCase() : '';
+      const nombreB = b[campoNombre] ? String(b[campoNombre]).toLowerCase() : '';
+
+      return nombreA.localeCompare(nombreB);
+    });
+  }
 }
