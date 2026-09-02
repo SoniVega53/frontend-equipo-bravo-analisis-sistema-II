@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { BaseService } from './base.service';
 import { NavigationService } from './navigation.service';
+import { PreguntaSeguridadResponse } from '../../interface/usuario.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -78,5 +79,31 @@ export class AuthService extends BaseService {
     }
 
     return !this.isTokenExpired();
+  }
+
+  async obtenerPreguntaSeguridad(idUsuario: string): Promise<PreguntaSeguridadResponse> {
+    const response: any = await this.get<any>(`auth/recuperacion/pregunta/${idUsuario}`);
+    return response?.data || {};
+  }
+
+  async validarRespuestaSeguridad(idUsuario: string, respuesta: string): Promise<any> {
+    const payload = {
+      idUsuario: idUsuario,
+      respuesta: respuesta
+    };
+    
+    const response: any = await this.post<any>(`auth/recuperacion/validar-respuesta`, payload);
+    return response;
+  }
+
+  async cambiarPasswordRecuperacion(idUsuario: string, password: string,respuesta:string): Promise<any> {
+    const payload = {
+      idUsuario: idUsuario,
+      password: password,
+      respuesta: respuesta
+    };
+    
+    const response: any = await this.post<any>(`auth/recuperacion/cambiar-password`, payload);
+    return response;
   }
 }

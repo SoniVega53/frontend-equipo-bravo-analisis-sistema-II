@@ -27,10 +27,42 @@ export class DynamicTableComponent {
   @Input() showPrint: boolean = true;
   @Input() hiddenAccion: boolean = false;
   @Input() reportName: string = 'Reporte';
+  @Input() pageSize: number = 8;
 
   @Output() actionSelect = new EventEmitter<any>();
 
   @ViewChild('printZone') printZone!: ElementRef;
+
+  currentPage: number = 1;
+
+  get totalPages(): number {
+    return Math.ceil(this.data.length / this.pageSize);
+  }
+
+  get paginatedData(): any[] {
+    const startIndex = (this.currentPage - 1) * this.pageSize;
+    return this.data.slice(startIndex, startIndex + this.pageSize);
+  }
+
+  get pages(): number[] {
+    return Array.from({ length: this.totalPages }, (_, i) => i + 1);
+  }
+
+  nextPage() {
+    if (this.currentPage < this.totalPages) {
+      this.currentPage++;
+    }
+  }
+
+  previousPage() {
+    if (this.currentPage > 1) {
+      this.currentPage--;
+    }
+  }
+
+  goToPage(page: number) {
+    this.currentPage = page;
+  }
 
   onSelect(item: any) {
     this.scrollToTop();
@@ -38,7 +70,7 @@ export class DynamicTableComponent {
   }
 
   scrollToTop() {
-    const mainContainer = document.querySelector('.main-content');
+   const mainContainer = document.querySelector('.main-content');
     
     if (mainContainer) {
       mainContainer.scrollTo({
@@ -46,6 +78,11 @@ export class DynamicTableComponent {
         behavior: 'smooth'
       });
     }
+
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
   }
 
   exportarExcel() {
@@ -107,7 +144,6 @@ export class DynamicTableComponent {
                 background-color: #f8f9fa; 
                 font-weight: bold; 
               }
-              /* Ocultar la columna de acciones al imprimir */
               .no-print { 
                 display: none !important; 
               }

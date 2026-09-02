@@ -1,5 +1,5 @@
 import { PasswordPolicy } from './../../interface/password-policy';
-import { Component, OnDestroy, OnInit, inject } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { BaseComponent } from '../base.component';
 import { NavbarComponent } from '../../shared/navbar/navbar.component';
@@ -35,12 +35,15 @@ export interface MenuItem {
   styleUrl: './home.component.css',
 })
 export class HomeComponent extends BaseComponent implements OnInit {
+  @ViewChild('navbarComponent') navbarComponent?:NavbarComponent;
+
   menuService = inject(MenuOpcionService);
   usuarioService = inject(UsuarioService);
 
   activeItemId: number = -1;
   isMobileMenuOpen: boolean = false;
   isLoadingMenu: boolean = true;
+  isShowMobileMenu: boolean = true;
 
   esPrimerIngreso = false;
   textoIngresoPassword = '';
@@ -50,6 +53,12 @@ export class HomeComponent extends BaseComponent implements OnInit {
 
   constructor() {
     super();
+  }
+
+  updateFotografia(fotografia:string){
+    if (this.navbarComponent) {
+      this.navbarComponent.fotografia = fotografia;
+    }
   }
 
   async ngOnInit(): Promise<void> {
@@ -88,7 +97,7 @@ export class HomeComponent extends BaseComponent implements OnInit {
     this.authService.logout();
   }
   toggleMobileMenu() {
-    this.isMobileMenuOpen = !this.isMobileMenuOpen;
+      this.isMobileMenuOpen = !this.isMobileMenuOpen;
   }
 
   onConfiguracionExitosa(event: string) {

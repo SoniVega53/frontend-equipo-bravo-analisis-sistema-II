@@ -2,7 +2,7 @@
   <div class="table-card position-relative">
     <app-loader [isLoading]="isLoading"></app-loader>
 
-    <div class="d-flex justify-content-end gap-2 mb-3">
+    <div class="d-flex flex-wrap justify-content-end gap-2 mb-3">
       @if (showExport) {
         <button 
           class="btn btn-outline-success btn-sm" 
@@ -33,8 +33,8 @@
           </tr>
         </thead>
         <tbody>
-          @for (row of data; track row) {
-            <tr>
+          @for (row of paginatedData; track row) {
+            <tr (dblclick)="onSelect(row)">
               @for (col of columns; track col.field) {
                 <td>
                   @if (col.type === "audit") {
@@ -67,5 +67,31 @@
         </tbody>
       </table>
     </div>
+
+    @if (data.length > pageSize) {
+      <div class="d-flex flex-column flex-md-row justify-content-between align-items-center gap-3 mt-3 no-print">
+        <span class="text-muted small text-center text-md-start">
+          Mostrando {{ (currentPage - 1) * pageSize + 1 }} a 
+          {{ (currentPage * pageSize) > data.length ? data.length : (currentPage * pageSize) }} 
+          de {{ data.length }} registros
+        </span>
+        <nav>
+          <ul class="pagination pagination-sm mb-0 flex-wrap justify-content-center">
+            <li class="page-item" [class.disabled]="currentPage === 1">
+              <button class="page-link" (click)="previousPage()">Anterior</button>
+            </li>
+            @for (page of pages; track page) {
+              <li class="page-item" [class.active]="page === currentPage">
+                <button class="page-link" (click)="goToPage(page)">{{ page }}</button>
+              </li>
+            }
+            <li class="page-item" [class.disabled]="currentPage === totalPages">
+              <button class="page-link" (click)="nextPage()">Siguiente</button>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    }
+
   </div>
 </div>
