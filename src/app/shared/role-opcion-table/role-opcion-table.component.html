@@ -33,6 +33,7 @@
             <th class="text-center">Cambio</th>
             <th class="text-center">Imprimir</th>
             <th class="text-center">Exportar</th>
+            <th class="text-center">Todas</th>
           </tr>
         </thead>
         <tbody>
@@ -57,12 +58,18 @@
               <td class="text-center">
                 <input class="form-check-input" type="checkbox" [checked]="row.exportar === 1" (change)="onToggle(row, 'exportar', $event)">
               </td>
+              <td class="text-center bg-light">
+                <input class="form-check-input" type="checkbox" 
+                       [checked]="isRowAllChecked(row)" 
+                       (change)="toggleEntireRow(row, $event)"
+                       title="Seleccionar toda la fila">
+              </td>
             </tr>
           }
 
           @if (data.length === 0 && !isLoading) {
             <tr>
-              <td colspan="7" class="text-center py-4 text-muted">
+              <td colspan="8" class="text-center py-4 text-muted">
                 No hay registros disponibles.
               </td>
             </tr>

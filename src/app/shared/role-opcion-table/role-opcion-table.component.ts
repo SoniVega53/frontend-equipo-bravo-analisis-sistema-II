@@ -45,6 +45,37 @@ export class RoleOpcionTableComponent {
     this.dataChange.emit(this.dataUpdate);
   }
 
+  isRowAllChecked(row: RoleOpcionTabla): boolean {
+    return (
+      row.consultar === 1 &&
+      row.alta === 1 &&
+      row.baja === 1 &&
+      row.cambio === 1 &&
+      row.imprimir === 1 &&
+      row.exportar === 1
+    );
+  }
+
+  toggleEntireRow(row: RoleOpcionTabla, event: Event) {
+    const isChecked = (event.target as HTMLInputElement).checked;
+    const value = isChecked ? 1 : 0;
+
+    row.consultar = value;
+    row.alta = value;
+    row.baja = value;
+    row.cambio = value;
+    row.imprimir = value;
+    row.exportar = value;
+
+    const findUpdate = this.dataUpdate.some(
+      (res) => res.idRole == row.idRole && res.idOpcion == row.idOpcion,
+    );
+    if (!findUpdate) {
+      this.dataUpdate.push(row);
+    }
+    this.dataChange.emit(this.dataUpdate);
+  }
+
   clearDataUpdate() {
     this.dataUpdate = [];
   }
