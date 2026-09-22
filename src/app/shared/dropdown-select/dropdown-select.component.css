@@ -98,6 +98,29 @@
   z-index: 1060;
 }
 
+.search-container {
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--border-color);
+  position: sticky;
+  top: 0;
+  background-color: var(--bg-surface);
+  z-index: 2;
+}
+
+.search-input {
+  font-size: 0.9rem;
+  padding: 8px 12px;
+  border-color: var(--border-color);
+  color: var(--text-body);
+  background-color: var(--bg-app);
+}
+
+.search-input:focus {
+  border-color: var(--color-primary);
+  box-shadow: none;
+  outline: none;
+}
+
 .dropdown-item {
   padding: 10px 16px;
   cursor: pointer;

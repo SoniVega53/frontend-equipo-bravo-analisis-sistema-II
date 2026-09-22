@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
   selector: 'collapsed-card',
@@ -12,7 +12,11 @@ export class CollapsedCardComponent {
   @Input() isFormCollapsed = false;
   @Input() hidden = false;
 
+  @Output() onFormCollapsed = new EventEmitter<boolean>();
+
   toggleForm() {
     this.isFormCollapsed = !this.isFormCollapsed;
+
+    this.onFormCollapsed.emit(this.isFormCollapsed);
   }
 }
