@@ -24,13 +24,23 @@
     </button>
 
     <div class="custom-dropdown-menu shadow" *ngIf="isOpen && !disabled">
+      
+      <div class="search-container" *ngIf="showSearch">
+        <input 
+          type="text" 
+          class="form-control search-input" 
+          placeholder="Buscar..." 
+          [(ngModel)]="searchTerm"
+          (click)="onSearchClick($event)">
+      </div>
+
       <div class="dropdown-item d-flex align-items-center gap-2"
-           *ngFor="let opt of options"
+           *ngFor="let opt of filteredOptions"
            (click)="selectOption(opt, $event)"
            [class.selected]="isSelected(opt)">
         <span class="text-truncate">{{ opt.valor }}</span>
       </div>
-      <div class="dropdown-item text-muted text-center" *ngIf="options?.length === 0">
+      <div class="dropdown-item text-muted text-center" *ngIf="filteredOptions?.length === 0">
         No hay opciones
       </div>
     </div>

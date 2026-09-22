@@ -16,7 +16,7 @@ import { SidebarComponent } from "../../shared/sidebar/sidebar.component";
   templateUrl: './console.component.html',
   styleUrl: './console.component.css',
 })
-export class ConsoleComponent extends BaseComponent implements OnInit, OnDestroy  {
+export class ConsoleComponent extends BaseComponent implements OnInit, OnDestroy {
   menuService = inject(MenuOpcionService);
   homeComponent = inject(HomeComponent);
 
@@ -43,11 +43,37 @@ export class ConsoleComponent extends BaseComponent implements OnInit, OnDestroy
       callback: async () => {
         const responseMenu = await this.menuService.getMenuList();
         if (responseMenu) {
-          this.menuItems = responseMenu;
+          this.menuItems = this.ordenarMenu(responseMenu);
         }
       },
     });
     this.isLoadingMenu = false;
+  }
+
+  ordenarMenu(menuList: MenuItem[]): MenuItem[] {
+    if (!menuList || menuList.length === 0) return [];
+
+    menuList.sort((a, b) => {
+      const orderA = a.order !== undefined && a.order !== null ? a.order : 99999;
+      const orderB = b.order !== undefined && b.order !== null ? b.order : 99999;
+
+      if (orderA !== orderB) {
+        return orderA - orderB;
+      }
+
+      const labelA = a.label ? a.label.toLowerCase() : '';
+      const labelB = b.label ? b.label.toLowerCase() : '';
+
+      return labelA.localeCompare(labelB);
+    });
+
+    menuList.forEach(item => {
+      if (item.children && item.children.length > 0) {
+        item.children = this.ordenarMenu(item.children);
+      }
+    });
+
+    return menuList;
   }
 
   async cargarListaMenu() {
@@ -56,7 +82,7 @@ export class ConsoleComponent extends BaseComponent implements OnInit, OnDestroy
       callback: async () => {
         const responseMenu = await this.menuService.getMenuList();
         if (responseMenu) {
-          this.menuItems = responseMenu;
+          this.menuItems = this.ordenarMenu(responseMenu);
         }
 
         this.syncMenuWithUrl(this.router.url);
@@ -111,7 +137,7 @@ export class ConsoleComponent extends BaseComponent implements OnInit, OnDestroy
     const rutaPermitida = findAndExpand(this.menuItems, []);
 
     if (!rutaPermitida) {
-      this.router.navigate([this.urlBase2 || '/home/console']); 
+      this.router.navigate([this.urlBase2 || '/home/console']);
     }
   }
 

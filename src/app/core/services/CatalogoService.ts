@@ -52,4 +52,55 @@ export class CatalogoService extends BaseService {
         const response: any = await this.get<any>(`${this.endpoint}/modulos`);
         return response?.data || [];
     }
+
+
+    async getEstadosCiviles(): Promise<SelectOption[]> {
+        const response: any = await this.get<any>(`${this.endpoint}/estados-civiles`);
+        return response?.data || [];
+    }
+
+    async getStatusEmpleados(): Promise<SelectOption[]> {
+        const response: any = await this.get<any>(`${this.endpoint}/status-empleados`);
+        return response?.data || [];
+    }
+
+    async getTiposDocumentos(): Promise<SelectOption[]> {
+        const response: any = await this.get<any>(`${this.endpoint}/tipos-documentos`);
+        return response?.data || [];
+    }
+
+    async getDepartamentos(): Promise<SelectOption[]> {
+        const response: any = await this.get<any>(`${this.endpoint}/departamentos`);
+        return response?.data || [];
+    }
+
+    async getPuestos(): Promise<SelectOption[]> {
+        const response: any = await this.get<any>(`${this.endpoint}/puestos`);
+        return response?.data || [];
+    }
+
+    async getPuestosDepartamento(idDepartamento: number): Promise<SelectOption[]> {
+        const response: any = await this.get<any>(`${this.endpoint}/puestos/departamento/${idDepartamento}`);
+        return response?.data || [];
+    }
+
+    async getPersonas(): Promise<SelectOption[]> {
+        const response: any = await this.get<any>(`${this.endpoint}/personas`);
+        return response?.data || [];
+    }
+
+    async getBancos(): Promise<SelectOption[]> {
+        const response: any = await this.get<any>(`${this.endpoint}/bancos`);
+        return response?.data || [];
+    }
+
+    async getEmpleados(): Promise<SelectOption[]> {
+        const response: any = await this.get<any>(`${this.endpoint}/empleados`);
+        return response?.data || [];
+    }
+
+    async getPeriodosPlanilla(): Promise<SelectOption[]> {
+        const response: any = await this.get<any>(`${this.endpoint}/periodos-planilla`);
+        return response?.data || [];
+    }
 }

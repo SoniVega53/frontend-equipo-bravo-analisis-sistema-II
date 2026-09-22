@@ -13,6 +13,7 @@ import { ModuloComponent } from '../../ui/console/modulo/modulo.component';
 import { MenuComponent } from '../../ui/console/menu/menu.component';
 import { OpcionComponent } from '../../ui/console/opcion/opcion.component';
 import { RolesComponent } from '../../ui/console/roles/roles.component';
+import { InasistenciaComponent } from '../../ui/console/inasistencia/inasistencia.component';
 
 export const CONSOLE_ROUTES: Routes = [
   {
@@ -59,6 +60,10 @@ export const CONSOLE_ROUTES: Routes = [
   {
     path: 'asignacion_opcion_role/:code',
     component: AsignacionOpcionRoleComponent,
+  },
+  {
+    path: 'inasistencia/:code',
+    component: InasistenciaComponent,
   },
   {
     path: '403',

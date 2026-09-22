@@ -54,7 +54,11 @@ export class ModuloComponent extends BaseComponent implements OnInit {
     this.executeService({ 
       callback: async () => {
         const data = await this.moduloService.getModulos();
-        this.modulos = Array.isArray(data) ? data : [];
+        const dataArray = Array.isArray(data) ? data : [];
+        this.modulos = this.ordenarGenerico(dataArray, '', 'ordenMenu', 'nombre');
+
+
+
         this.columnasModulos = [
           { field: 'idModulo', header: 'ID' },
           { field: 'nombre', header: 'Nombre' },

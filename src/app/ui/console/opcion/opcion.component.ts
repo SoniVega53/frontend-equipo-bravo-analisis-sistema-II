@@ -95,7 +95,9 @@ export class OpcionComponent extends BaseComponent implements OnInit {
     this.executeService({ 
       callback: async () => {
         const data = await this.opcionService.getOpciones();
-        this.opciones = Array.isArray(data) ? data : [];
+        const dataArray = Array.isArray(data) ? data : [];
+        this.opciones = this.ordenarGenerico(dataArray, 'idMenu', 'ordenMenu', 'nombre');
+
         this.columnasOpciones = [
           { field: 'idOpcion', header: 'ID' },
           { field: 'idMenu', header: 'ID Menú' },

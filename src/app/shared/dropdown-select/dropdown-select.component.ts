@@ -25,11 +25,13 @@ export class DropdownSelectComponent implements ControlValueAccessor {
   @Input() required: boolean = false;
   @Input() id: string = "";
   @Input() options: SelectOption[] = [];
+  @Input() showSearch: boolean = false;
   
   @Output() selectionChange = new EventEmitter<any>();
 
   isOpen: boolean = false;
   value: any = null;
+  searchTerm: string = '';
 
   onChange = (value: any) => {};
   onTouched = () => {};
@@ -40,13 +42,25 @@ export class DropdownSelectComponent implements ControlValueAccessor {
   clickout(event: Event) {
     if (!this.eRef.nativeElement.contains(event.target)) {
       this.isOpen = false;
+      this.searchTerm = '';
     }
+  }
+
+  get filteredOptions(): SelectOption[] {
+    if (!this.searchTerm) {
+      return this.options;
+    }
+    const term = this.searchTerm.toLowerCase();
+    return this.options.filter(opt => opt.valor.toLowerCase().includes(term));
   }
 
   toggleDropdown() {
     if (!this.disabled) {
       this.isOpen = !this.isOpen;
-      if (!this.isOpen) this.onTouched();
+      if (!this.isOpen) {
+        this.onTouched();
+        this.searchTerm = '';
+      }
     }
   }
 
@@ -56,6 +70,7 @@ export class DropdownSelectComponent implements ControlValueAccessor {
 
     this.value = option.codigo;
     this.isOpen = false;
+    this.searchTerm = '';
     
     this.onChange(this.value);
     this.selectionChange.emit(this.value);
@@ -94,5 +109,9 @@ export class DropdownSelectComponent implements ControlValueAccessor {
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
+  }
+
+  onSearchClick(event: Event) {
+    event.stopPropagation();
   }
 }

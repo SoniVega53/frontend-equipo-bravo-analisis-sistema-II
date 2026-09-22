@@ -68,7 +68,9 @@ export class MenuComponent extends BaseComponent implements OnInit {
     this.executeService({ 
       callback: async () => {
         const data = await this.menuService.getMenus();
-        this.menus = Array.isArray(data) ? data : [];
+        const dataArray = Array.isArray(data) ? data : [];
+        this.menus = this.ordenarGenerico(dataArray, 'idModulo', 'ordenMenu', 'nombre');
+
         this.columnasMenus = [
           { field: 'idMenu', header: 'ID' },
           { field: 'idModulo', header: 'ID Módulo' },

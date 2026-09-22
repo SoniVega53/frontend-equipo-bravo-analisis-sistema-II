@@ -1,0 +1,59 @@
+<div class="center-page">
+  <div class="page-container position-relative">
+    <app-loader [isLoading]="isLoadingPage"></app-loader>
+
+    <h2 class="page-title">Inasistencias de Empleados</h2>
+
+    <div class="selector-info">
+      <app-dropdown-select
+        [showSearch]="true"
+        [id]="fieldEmpleado.name"
+        [label]="fieldEmpleado.label"
+        [placeholder]="fieldEmpleado.placeholder || 'Seleccione...'"
+        [iconLeft]="fieldEmpleado.iconLeft || ''"
+        [disabled]="fieldEmpleado.disabled || isLoading"
+        [options]="fieldEmpleado.options || []"
+        [(ngModel)]="modelEmpleado"
+        [required]="fieldEmpleado.required || false"
+        (selectionChange)="selectionChange($event)"
+        [name]="fieldEmpleado.name">
+      </app-dropdown-select>
+    </div>
+
+    <hr class="divider" />
+
+    @if (this.modelEmpleado) {
+      <collapsed-card [hidden]="hiddenFormulary()" [isFormCollapsed]="isFormCollapsed" (onFormCollapsed)="onFormCollapsed($event)">
+       <app-dynamic-form
+            [saveText]="isUpdate ? 'Actualizar' : 'Crear Nuevo'"
+            [fields]="configuracionCampos"
+            [model]="inasistenciaActual"
+            [isLoading]="isLoading"
+            [showDelete]="showDeleteButton(inasistenciaActual.idInasistencia) && isUpdate"
+            [showSave]="showSaveButton(inasistenciaActual.idInasistencia)"
+            [showCancel]="true"
+            (save)="guardar()"
+            (delete)="eliminar()"
+            (cancel)="limpiarFormulario()"
+          >
+        </app-dynamic-form>
+      </collapsed-card>
+    }
+
+    @if (roleSecurity?.consultar && this.modelEmpleado) {
+      <hr class="divider" *ngIf="!hiddenFormulary()"/>
+
+      <app-dynamic-table
+        [columns]="columnasInasistencias"
+        [data]="inasistencias"
+        [isLoading]="isLoading"
+        [showExport]="roleSecurity?.exportar || false"
+        [showPrint]="roleSecurity?.imprimir || false"
+        [reportName]="'Reporte_Inasistencias_Empleado'"
+        [hiddenAccion]="hiddenAction()"
+        (actionSelect)="seleccionarParaEditar($event)"
+      >
+      </app-dynamic-table>
+    }
+  </div>
+</div>

@@ -16,6 +16,7 @@ export interface MenuItem {
   code: number;
   label: string;
   url?: string;
+  order?:number;
   parametros?: RoleOpciones;
   children?: MenuItem[];
   expanded?: boolean;
