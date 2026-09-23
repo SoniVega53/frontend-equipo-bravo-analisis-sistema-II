@@ -14,6 +14,7 @@ import { MenuComponent } from '../../ui/console/menu/menu.component';
 import { OpcionComponent } from '../../ui/console/opcion/opcion.component';
 import { RolesComponent } from '../../ui/console/roles/roles.component';
 import { InasistenciaComponent } from '../../ui/console/inasistencia/inasistencia.component';
+import { CalculoPlanillaComponent } from '../../ui/console/calculo-planilla/calculo-planilla.component';
 
 export const CONSOLE_ROUTES: Routes = [
   {
@@ -64,6 +65,10 @@ export const CONSOLE_ROUTES: Routes = [
   {
     path: 'inasistencia/:code',
     component: InasistenciaComponent,
+  },
+  {
+    path: 'calculo_planilla/:code',
+    component: CalculoPlanillaComponent,
   },
   {
     path: '403',

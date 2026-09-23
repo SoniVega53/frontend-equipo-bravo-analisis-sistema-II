@@ -145,6 +145,13 @@ export class InasistenciaComponent extends BaseComponent implements OnInit {
         this.inasistenciaActual.idEmpleado = this.modelEmpleado;
 
         if (this.isUpdate && this.inasistenciaActual.idInasistencia) {
+
+          
+          if (this.inasistenciaActual.procesado) {
+            this.showErrorAlert('No se puede eliminar una inasistencia que ya ha sido procesada en la planilla.');
+            return;
+          }
+
           await this.inasistenciaService.actualizarInasistencia(
             this.inasistenciaActual.idInasistencia,
             this.inasistenciaActual
@@ -184,10 +191,10 @@ export class InasistenciaComponent extends BaseComponent implements OnInit {
   }
 
   seleccionarParaEditar(item: Inasistencia) {
-    if (item.procesado) {
-      this.showWarningAlert('Esta inasistencia ya fue procesada en planilla y no puede ser modificada.');
-      return;
-    }
+    // if (item.procesado) {
+    //   this.showWarningAlert('Esta inasistencia ya fue procesada en planilla y no puede ser modificada.');
+    //   return;
+    // }
 
     this.findToItemField(this.configuracionCampos,'fechaProcesado').hidden = false;
 
