@@ -2,6 +2,8 @@ export interface PlanillaRequest {
   anio?: number;
   mes?: number;
   forzarRecalculo?: boolean;
+  isUpdate?: boolean;
+  isFind?: boolean;
 }
 
 export interface PlanillaDetalle {
