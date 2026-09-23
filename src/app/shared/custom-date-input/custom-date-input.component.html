@@ -49,6 +49,10 @@
       <i class="bi bi-calendar"></i>
     </button>
 
-    <mat-datepicker #picker></mat-datepicker>
+    <mat-datepicker 
+      #picker 
+      [startView]="isMonthPicker ? 'multi-year' : 'month'"
+      (monthSelected)="isMonthPicker ? onMonthSelected($event, picker) : null"
+    ></mat-datepicker>
   </div>
 </div>

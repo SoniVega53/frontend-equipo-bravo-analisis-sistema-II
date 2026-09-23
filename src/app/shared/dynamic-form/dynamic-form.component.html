@@ -4,7 +4,7 @@
       <ng-container [ngSwitch]="field.type">
         
         <custom-input
-          *ngSwitchCase="field.type === 'dropdown' || field.type === 'multiselect' || field.type === 'date' || field.type === 'password-policy' ? ''  : field.type"
+          *ngSwitchCase="field.type === 'dropdown' || field.type === 'multiselect' || field.type === 'date' || field.type === 'month' || field.type === 'password-policy' ? ''   : field.type"
           [id]="field.name"
           [type]="field?.type"
           [label]="field.label"
@@ -46,7 +46,7 @@
         </app-multi-combo-box>
 
         <custom-date-input
-          *ngSwitchCase="'date'"
+          *ngSwitchCase="field.type === 'date' || field.type === 'month' ? field.type : null"
           [id]="field.name"
           [label]="field.label"
           [placeholder]="field.placeholder || 'YYYY-MM-DD'"
@@ -54,6 +54,7 @@
           [disabled]="field.disabled || isLoading"
           [(ngModel)]="model[field.name]"
           [name]="field.name"
+          [isMonthPicker]="field.type === 'month'"
           [required]="field.required || false">
         </custom-date-input>
 
