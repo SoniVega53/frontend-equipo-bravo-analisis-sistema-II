@@ -26,6 +26,7 @@ export class DynamicTableComponent {
   @Input() showExport: boolean = true;
   @Input() showPrint: boolean = true;
   @Input() hiddenAccion: boolean = false;
+  @Input() scrollTop: boolean = true;
   @Input() reportName: string = 'Reporte';
   @Input() pageSize: number = 8;
 
@@ -33,7 +34,9 @@ export class DynamicTableComponent {
 
   @ViewChild('printZone') printZone!: ElementRef;
 
-  currentPage: number = 1;
+  @Input() currentPage: number = 1;
+
+  @Output() currentPageChange = new EventEmitter<number>();
 
   get totalPages(): number {
     return Math.ceil(this.data.length / this.pageSize);
@@ -51,17 +54,20 @@ export class DynamicTableComponent {
   nextPage() {
     if (this.currentPage < this.totalPages) {
       this.currentPage++;
+      this.currentPageChange.emit(this.currentPage);
     }
   }
 
   previousPage() {
     if (this.currentPage > 1) {
       this.currentPage--;
+      this.currentPageChange.emit(this.currentPage);
     }
   }
 
   goToPage(page: number) {
     this.currentPage = page;
+    this.currentPageChange.emit(this.currentPage);
   }
 
   onSelect(item: any) {
@@ -70,6 +76,7 @@ export class DynamicTableComponent {
   }
 
   scrollToTop() {
+   if (!this.scrollTop) return;
    const mainContainer = document.querySelector('.main-content');
     
     if (mainContainer) {

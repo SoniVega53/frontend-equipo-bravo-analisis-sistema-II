@@ -1,5 +1,5 @@
-import { MatDatepickerModule } from '@angular/material/datepicker';
-import { Component, Input, forwardRef } from '@angular/core';
+import { MatDatepickerModule, MatDatepicker } from '@angular/material/datepicker';
+import { Component, EventEmitter, Input, Output, forwardRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { MatNativeDateModule } from '@angular/material/core';
@@ -30,6 +30,9 @@ export class CustomDateInputComponent implements ControlValueAccessor {
   @Input() disabled: boolean = false;
   @Input() required: boolean = false;
   @Input() id: string = "";
+  @Input() isMonthPicker: boolean = false;
+
+  @Output() actionMonthSelected = new EventEmitter<string>();
 
   value: string = '';
   parsedDate: Date | null = null;
@@ -40,8 +43,13 @@ export class CustomDateInputComponent implements ControlValueAccessor {
   writeValue(value: any): void {
     this.value = value || '';
     if (this.value) {
-      const [year, month, day] = this.value.split('-').map(Number);
-      this.parsedDate = new Date(year, month - 1, day);
+      const parts = this.value.split('-').map(Number);
+      if (parts.length >= 2) {
+        const year = parts[0];
+        const month = parts[1];
+        const day = parts.length === 3 ? parts[2] : 1;
+        this.parsedDate = new Date(year, month - 1, day);
+      }
     } else {
       this.parsedDate = null;
     }
@@ -60,6 +68,8 @@ export class CustomDateInputComponent implements ControlValueAccessor {
   }
 
   onDateChange(event: any) {
+    if (this.isMonthPicker) return;
+    
     if (event.value) {
       const d = event.value;
       const year = d.getFullYear();
@@ -73,5 +83,20 @@ export class CustomDateInputComponent implements ControlValueAccessor {
     
     this.onChange(this.value);
     this.onTouched();
+  }
+
+  onMonthSelected(event: any, picker: MatDatepicker<any>) {
+    if (!this.isMonthPicker) return;
+    
+    const d = event;
+    const year = d.getFullYear();
+    const month = ('0' + (d.getMonth() + 1)).slice(-2);
+    
+    this.value = `${year}-${month}`;
+    this.parsedDate = d;
+    this.onChange(this.value);
+    this.onTouched();
+    this.actionMonthSelected.emit(this.value);
+    picker.close();
   }
 }

@@ -2,7 +2,7 @@ import { EventEmitter } from '@angular/core';
 import { SelectOption } from './select-option.interface';
 import { PasswordPolicy } from './password-policy';
 
-export type DynamicFieldType = 'text' | 'textarea' | 'password' | 'email' | 'number' | 'dropdown' | 'multiselect' | 'email' | 'number' | 'date' | 'password-policy';
+export type DynamicFieldType = 'text' | 'textarea' | 'password' | 'email' | 'number' | 'dropdown' | 'multiselect' | 'email' | 'number' | 'date' | 'password-policy' | 'month';
 
 export interface DynamicField {
   name: string;
