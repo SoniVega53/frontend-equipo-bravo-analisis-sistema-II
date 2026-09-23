@@ -6,13 +6,13 @@ import { DynamicTableComponent, TableColumn } from '../../../shared/dynamic-tabl
 import { CollapsedCardComponent } from '../../../shared/collapsed-card/collapsed-card.component';
 import { LoaderComponent } from '../../../shared/loader/loader.component';
 import { DynamicField } from '../../../interface/dynamic-field.interface';
-import { CalculoPlanillaService } from '../../../core/services/calculo-planilla.service';
-import { PlanillaRequest, PlanillaResponse, PlanillaDetalle } from '../../../interface/calculo-planilla.interface';
 import { CustomDateInputComponent } from '../../../shared/custom-date-input/custom-date-input.component';
 import { DropdownSelectComponent } from '../../../shared/dropdown-select/dropdown-select.component';
+import { ReportePlanillaService } from '../../../core/services/reporte-planilla.service';
+import { PlanillaDetalle, PlanillaResponse, ReportePlanillaRequest } from '../../../interface/reporte-planilla.interface';
 
 @Component({
-  selector: 'app-calculo-planilla',
+  selector: 'app-reporte-planilla',
   standalone: true,
   imports: [
     CommonModule,
@@ -22,22 +22,18 @@ import { DropdownSelectComponent } from '../../../shared/dropdown-select/dropdow
     LoaderComponent,
     CustomDateInputComponent,
     DropdownSelectComponent
-],
-  templateUrl: './calculo-planilla.component.html',
-  styleUrl: './calculo-planilla.component.css'
+  ],
+  templateUrl: './reporte-planilla.component.html',
+  styleUrl: './reporte-planilla.component.css'
 })
-export class CalculoPlanillaComponent extends BaseComponent implements OnInit {
-  private calculoPlanillaService = inject(CalculoPlanillaService);
+export class ReportePlanillaComponent extends BaseComponent implements OnInit {
+  private reportePlanillaService = inject(ReportePlanillaService);
 
- // modeloFormulario: any = {};
   modeloDate: any;
   searchTerm: any;
   resumenPlanilla: PlanillaResponse | null = null;
   detallesPlanilla: PlanillaDetalle[] = [];
 
-  isProcesar: boolean = false;
-  isActualizar: boolean = false;
-  textButton: string = '';
   currentPage: number = 1;
 
   fieldDate: DynamicField = {
@@ -67,15 +63,16 @@ export class CalculoPlanillaComponent extends BaseComponent implements OnInit {
     });
   }
 
-  actionMonthSelected(event:string){
-    console.log(event);
-    this.procesar(false,false,true);
+  actionMonthSelected(event: string) {
+    this.consultarReporte();
   }
 
   configurarColumnas() {
     this.columnasDetalle = [
       { field: 'idEmpleado', header: 'ID Empleado' },
       { field: 'nombres', header: 'Nombre Empleado' },
+      { field: 'puesto', header: 'Puesto' },
+      { field: 'status', header: 'Estado' },
       { field: 'ingresoSueldoBase', header: 'Base' },
       { field: 'ingresoBonificacionDecreto', header: 'Bono' },
       { field: 'ingresoOtrosIngresos', header: 'Otros' },
@@ -86,77 +83,102 @@ export class CalculoPlanillaComponent extends BaseComponent implements OnInit {
     ];
   }
 
-  onClickAction(isUpdate: boolean) {
-    this.procesar(true,isUpdate);
-  }
-
-  onSearchChange(){
+  onSearchChange() {
     this.currentPage = 1;
-    console.log(this.currentPage)
   }
 
   get filteredOptions(): PlanillaDetalle[] {
     if (!this.searchTerm) {
       return this.detallesPlanilla;
     }
-    
     const term = this.searchTerm.toLowerCase();
     return this.detallesPlanilla.filter(opt => opt?.nombres?.toLowerCase().includes(term));
   }
 
-  async procesar(forzarRecalculo:boolean, isUpdate: boolean = false,isFind: boolean = false) {
-    this.isActualizar = false;
-    this.isProcesar = false;
+  async consultarReporte() {
     this.executeService({
       callback: async () => {
         if (!this.modeloDate) return;
 
         const [anioStr, mesStr] = this.modeloDate.split('-');
-        
-        const request: PlanillaRequest = {
+        const request: ReportePlanillaRequest = {
           anio: parseInt(anioStr, 10),
-          mes: parseInt(mesStr, 10),
-          forzarRecalculo: forzarRecalculo,
-          isUpdate: isUpdate,
-          isFind: isFind
+          mes: parseInt(mesStr, 10)
         };
 
-        const response = await this.calculoPlanillaService.procesarOObtenerPlanilla(request);
+        const response = await this.reportePlanillaService.generarReporte(request);
         this.resumenPlanilla = response;
-
-        this.detallesPlanilla =  this.ordenarGenerico(response.detalles || [], '', 'idEmpleado', 'nombres');
-        
-        if (forzarRecalculo) {
-          this.showSuccessAlert('La planilla se procesó/consultó correctamente.');
-        }
-        this.isActualizar = true;
-        this.textButton = 'Actualizar Planilla';
+        this.detallesPlanilla = this.ordenarGenerico(response.detalles || [], '', 'idEmpleado', 'nombres');
       },
       callbackError: async (error) => {
-        this.limpiarError();
-        if (error.codigoNumerico == 1400) {
-          this.isProcesar = true;
-          this.textButton = 'Procesar Planilla';
-          return;
-        }
+        this.limpiarFormulario();
+        this.showErrorAlert(error?.mensaje || 'No hay planilla procesada para el periodo seleccionado.');
+      },
+      showLoading: true
+    });
+  }
 
-        this.showErrorAlert(
-          error?.mensaje || 'Ocurrió un error al procesar la solicitud.',
-        );
+  async descargarPdf() {
+    this.executeService({
+      callback: async () => {
+        if (!this.modeloDate) return;
+
+        const [anioStr, mesStr] = this.modeloDate.split('-');
+        const request: ReportePlanillaRequest = {
+          anio: parseInt(anioStr, 10),
+          mes: parseInt(mesStr, 10)
+        };
+
+        const blob = await this.reportePlanillaService.generarPdf(request);
+        
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `reporte_planilla_${request.anio}_${request.mes}.pdf`;
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(a);
+      },
+      callbackError: async (error) => {
+        this.showErrorAlert('Ocurrió un error al generar el PDF.');
+      },
+      showLoading: true
+    });
+  }
+
+  async imprimirPdf() {
+    this.executeService({
+      callback: async () => {
+        if (!this.modeloDate) return;
+
+        const [anioStr, mesStr] = this.modeloDate.split('-');
+        const request: ReportePlanillaRequest = {
+          anio: parseInt(anioStr, 10),
+          mes: parseInt(mesStr, 10)
+        };
+
+        const blob = await this.reportePlanillaService.generarPdf(request);
+        const url = window.URL.createObjectURL(blob);
+        
+        const iframe = document.createElement('iframe');
+        iframe.style.display = 'none';
+        iframe.src = url;
+        document.body.appendChild(iframe);
+        
+        iframe.onload = () => {
+          iframe.contentWindow?.print();
+        };
+      },
+      callbackError: async (error) => {
+        this.showErrorAlert('Ocurrió un error al preparar el documento para impresión.');
       },
       showLoading: true
     });
   }
 
   limpiarFormulario() {
-    this.modeloDate = null;
     this.resumenPlanilla = null;
     this.detallesPlanilla = [];
   }
-
-  limpiarError() {
-    this.resumenPlanilla = null;
-    this.detallesPlanilla = [];
-  }
-
 }

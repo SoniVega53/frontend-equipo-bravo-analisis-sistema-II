@@ -5,10 +5,12 @@
     <div class="d-flex flex-wrap justify-content-end gap-2 mb-3">
       @if (showExport) {
         <button 
-          class="btn btn-outline-success btn-sm" 
-          (click)="exportarExcel()" 
-          [disabled]="isLoading || data.length === 0">
-          Exportar a Excel
+          class="btn btn-outline-danger btn-sm" 
+          (click)="exportarPdf()" 
+          [disabled]="isLoading || isExporting || isPrinting || data.length === 0">
+          <i class="bi bi-file-earmark-pdf-fill me-1" *ngIf="!isExporting"></i>
+          <span *ngIf="isExporting" class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
+          {{ isExporting ? 'Generando...' : 'Exportar a PDF' }}
         </button>
       }
       
@@ -16,8 +18,10 @@
         <button 
           class="btn btn-outline-secondary btn-sm" 
           (click)="imprimir()" 
-          [disabled]="isLoading || data.length === 0">
-          Imprimir Tabla
+          [disabled]="isLoading || isExporting || isPrinting || data.length === 0">
+          <i class="bi bi-printer-fill me-1" *ngIf="!isPrinting"></i>
+          <span *ngIf="isPrinting" class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
+          {{ isPrinting ? 'Preparando...' : 'Imprimir Tabla' }}
         </button>
       }
     </div>
