@@ -1,7 +1,9 @@
-import { Component, Input, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
+import { Component, Input, Output, EventEmitter, ViewChild, ElementRef, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { LoaderComponent } from "../loader/loader.component";
 import * as XLSX from 'xlsx';
+import { GenericPdfRequest, PdfExportService } from '../../core/services/pdf-export.service';
+import Swal from 'sweetalert2';
 
 export interface TableColumn {
   header: string;
@@ -19,6 +21,8 @@ export interface TableColumn {
   styleUrls: ['./dynamic-table.component.css']
 })
 export class DynamicTableComponent {
+  private pdfExportService = inject(PdfExportService);
+
   @Input() columns: TableColumn[] = [];
   @Input() data: any[] = [];
   @Input() isLoading: boolean = false;
@@ -37,6 +41,9 @@ export class DynamicTableComponent {
   @Input() currentPage: number = 1;
 
   @Output() currentPageChange = new EventEmitter<number>();
+
+  isExporting: boolean = false;
+  isPrinting: boolean = false;
 
   get totalPages(): number {
     return Math.ceil(this.data.length / this.pageSize);
@@ -92,77 +99,81 @@ export class DynamicTableComponent {
     });
   }
 
-  exportarExcel() {
-    if (!this.data || this.data.length === 0) return;
-
+  private buildPdfRequest(): GenericPdfRequest {
     const exportData = this.data.map(row => {
       const rowData: any = {};
-      
       this.columns.forEach(col => {
         if (col.type === 'audit') {
           const user = row[col.userField!] || 'N/A';
           const date = row[col.dateField!] ? new Date(row[col.dateField!]).toLocaleDateString() : '-';
-          rowData[col.header] = `${user} (${date})`;
+          rowData[col.field] = `${user} (${date})`;
         } else {
-          rowData[col.header] = row[col.field];
+          rowData[col.field] = String(row[col.field] || '');
         }
       });
-      
       return rowData;
     });
 
-    const worksheet = XLSX.utils.json_to_sheet(exportData);
-    const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, 'Datos');
-
-    XLSX.writeFile(workbook, `${this.reportName}.xlsx`);
+    return {
+      titulo: this.reportName,
+      columnas: this.columns.map(c => ({ header: c.header, field: c.field })),
+      datos: exportData
+    };
   }
 
-  imprimir() {
-    if (!this.printZone) return;
+  async exportarPdf() {
+    if (!this.data || this.data.length === 0) return;
 
-    const printContents = this.printZone.nativeElement.innerHTML;
-    
-    const printWindow = window.open('', '_blank', 'top=0,left=0,height=100%,width=auto');
-    
-    if (printWindow) {
-      printWindow.document.write(`
-        <html>
-          <head>
-            <title>${this.reportName}</title>
-            <style>
-              body { 
-                font-family: Arial, sans-serif; 
-                padding: 20px; 
-                color: #333;
-              }
-              h2 { text-align: center; margin-bottom: 20px; }
-              table { 
-                width: 100%; 
-                border-collapse: collapse; 
-              }
-              th, td { 
-                border: 1px solid #ddd; 
-                padding: 10px; 
-                text-align: left; 
-                font-size: 14px;
-              }
-              th { 
-                background-color: #f8f9fa; 
-                font-weight: bold; 
-              }
-              .no-print { 
-                display: none !important; 
-              }
-            </style>
-          </head>
-          <body onload="window.print(); window.close();">
-            <h2>${this.reportName}</h2>
-            ${printContents}
-          </body>
-        </html>
-      `);
-      printWindow.document.close();
+    this.isExporting = true;
+    const request = this.buildPdfRequest();
+
+    try {
+      const blob = await this.pdfExportService.generarPdfTabla(request);
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `${this.reportName}.pdf`;
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+    } catch (error) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Ocurrió un error al generar el PDF de la tabla.',
+      });
+    } finally {
+      this.isExporting = false;
+    }
+  }
+
+  async imprimir() {
+    if (!this.data || this.data.length === 0) return;
+
+    this.isPrinting = true;
+    const request = this.buildPdfRequest();
+
+    try {
+      const blob = await this.pdfExportService.generarPdfTabla(request);
+      const url = window.URL.createObjectURL(blob);
+      
+      const iframe = document.createElement('iframe');
+      iframe.style.display = 'none';
+      iframe.src = url;
+      document.body.appendChild(iframe);
+      
+      iframe.onload = () => {
+        iframe.contentWindow?.print();
+      };
+    } catch (error) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Ocurrió un error al preparar el documento para impresión.',
+      });
+    } finally {
+      this.isPrinting = false;
     }
   }
 }
