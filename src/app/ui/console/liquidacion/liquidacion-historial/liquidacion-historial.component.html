@@ -1,0 +1,61 @@
+<div class="search-container mb-3 border rounded">
+  <input type="text" class="form-control search-input border-0" placeholder="Buscar empleado en el historial..." [(ngModel)]="searchTerm">
+</div>
+
+<app-dynamic-table
+  [columns]="columnasTabla"
+  [data]="filteredOptions"
+  [showExport]="roleSecurity.exportar ?? false"
+  [showPrint]="roleSecurity.imprimir ?? false"
+  [reportName]="'Historial_General_Liquidaciones'"
+  [hiddenAccion]="!roleSecurity.consultar"
+  [pageSize]="10"
+  (actionSelect)="abrirModal($event)">
+</app-dynamic-table>
+
+<!-- Modal de Detalle/Edición -->
+<div class="modal fade show d-block" tabindex="-1" *ngIf="showModal" style="background: rgba(0,0,0,0.6); z-index: 1050;">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header bg-light">
+        <div class="d-flex align-items-center gap-2">
+          <div class="section-indicator"></div>
+            <!-- <h5 class="modal-title fw-bold">Detalle de Liquidación: </h5> -->
+            <h5 class="modal-subtitle fw-bold">Empleado: {{ modeloSeleccionado.nombreEmpleado }}</h5>
+        </div>
+        <button type="button" class="btn-close" aria-label="Close" (click)="cerrarModal()"></button>
+      </div>
+      <div class="modal-body">
+        
+        <div class="d-flex justify-content-end mb-3" *ngIf="modeloSeleccionado.idLiquidacion && (roleSecurity.exportar || roleSecurity.imprimir)">
+            <div>
+              <button class="btn custom-btn-primary" (click)="exportarPdf()" *ngIf="roleSecurity.exportar ?? false">
+                <i class="bi bi-file-earmark-pdf-fill me-2"></i> Descargar Boleta PDF
+              </button>
+
+              <button class="btn custom-btn-primary" (click)="imprimir()" *ngIf="roleSecurity.imprimir ?? false">
+                <i class="bi bi-printer-fill me-2"></i> Imprimir Boleta
+              </button>
+            </div>
+          </div>
+
+          <app-kpi-cards 
+            title="Resultados de la Liquidación" 
+            [items]="kpisLiquidacion">
+          </app-kpi-cards>
+
+          <app-dynamic-form
+            [saveText]="modeloSeleccionado.idLiquidacion ? 'Actualizar Liquidación' : 'Procesar Liquidación'"
+            [fields]="configuracionCampos"
+            [model]="modeloSeleccionado"
+            [showDelete]="false"
+            [showSave]="showSaveButton(modeloSeleccionado.idLiquidacion)"
+            [showCancel]="true"
+            (save)="actualizarLiquidacion()"
+            (cancel)="cerrarModal()">
+          </app-dynamic-form>
+
+      </div>
+    </div>
+  </div>
+</div>

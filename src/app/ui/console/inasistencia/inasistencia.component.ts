@@ -63,7 +63,7 @@ export class InasistenciaComponent extends BaseComponent implements OnInit {
       callback: async () => {
         const empleados: SelectOption[] = await this.catalogoService.getEmpleados();
         this.optionsEmpleado = empleados;
-        this.fieldEmpleado.options = empleados;
+        this.fieldEmpleado.options = this.ordenarGenerico(empleados, '', 'codigo', 'valor');
         this.configurarCampos();
       }
     });
