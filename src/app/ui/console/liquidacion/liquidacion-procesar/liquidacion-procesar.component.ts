@@ -38,6 +38,7 @@ export class LiquidacionProcesarComponent extends BaseComponent implements OnIni
 
   configuracionCampos: DynamicField[] = [
     { name: 'nombrePuesto', label: 'Puesto', type: 'text', required: true, colSpan: 12, disabled: true },
+    { name: 'idStatusEmpleado', label: 'Estado', type: 'dropdown', required: true, colSpan: 12, options: []},
     { name: 'fechaContratacion', label: 'Fecha Contratación', type: 'date', required: true, colSpan: 4 },
     { name: 'fechaEgreso', label: 'Fecha Egreso', type: 'date', required: true, colSpan: 4 },
     { name: 'fechaLiquidacion', label: 'Fecha Proceso', type: 'date', required: true, colSpan: 4 },
@@ -70,7 +71,10 @@ export class LiquidacionProcesarComponent extends BaseComponent implements OnIni
     this.executeService({
       callback: async () => {
         const empleados = await this.catalogoService.getEmpleados();
+        const statusEmpleados = await this.catalogoService.getStatusEmpleados();
         this.campoEmpleado.options = this.ordenarGenerico(empleados, '', 'codigo', 'valor');
+
+        this.findToItemField(this.configuracionCampos, 'idStatusEmpleado').options = this.ordenarGenerico(statusEmpleados, '', 'codigo', 'valor');
       }
     });
   }

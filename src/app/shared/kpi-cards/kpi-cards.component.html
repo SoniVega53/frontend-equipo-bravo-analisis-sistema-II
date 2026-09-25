@@ -14,10 +14,14 @@
                             {{ item.title }}
                         </span>
                         <h3 class="mb-0 fw-bold mt-1 kpi-value" [ngClass]="'text-' + item.colorClass">
-                            @if (item.currency) {
+                            @if (item.type === 'text') {
+                               {{ item.value }}
+                            }@else {
+                                @if (item.currency) {
                                 <span class="kpi-currency">{{ item.currency }}</span>
+                                }
+                                {{ item.value | number:'1.2-2' }}
                             }
-                            {{ item.value | number:'1.2-2' }}
                         </h3>
                     </div>
                 </div>

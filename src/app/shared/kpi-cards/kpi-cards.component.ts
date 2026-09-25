@@ -3,7 +3,8 @@ import { CommonModule } from '@angular/common';
 
 export interface KpiCard {
   title: string;
-  value: number;
+  value: number | string;
+  type?: 'text' | 'currency';
   currency?: string;
   icon: string;
   colorClass: 'success' | 'danger' | 'primary' | 'info' | 'warning' | 'secondary' | 'dark';
