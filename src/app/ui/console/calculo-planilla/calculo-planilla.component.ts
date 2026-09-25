@@ -87,7 +87,13 @@ export class CalculoPlanillaComponent extends BaseComponent implements OnInit {
   }
 
   onClickAction(isUpdate: boolean) {
-    this.procesar(true,isUpdate);
+     if(isUpdate) {
+        this.showAlertConfirm(() => {
+          this.procesar(true,isUpdate);
+        }, 'Estas seguro de actualizar la planilla?', 'Confirmar Actualización');
+        return;
+      }
+      this.procesar(true,isUpdate);
   }
 
   onSearchChange(){
@@ -127,7 +133,7 @@ export class CalculoPlanillaComponent extends BaseComponent implements OnInit {
         this.detallesPlanilla =  this.ordenarGenerico(response.detalles || [], '', 'idEmpleado', 'nombres');
         
         if (forzarRecalculo) {
-          this.showSuccessAlert('La planilla se procesó/consultó correctamente.');
+          this.showSuccessAlert('La planilla se procesó correctamente.');
         }
         this.isActualizar = true;
         this.textButton = 'Actualizar Planilla';

@@ -1,0 +1,68 @@
+<collapsed-card>
+  <div class="mb-4">
+    <app-dropdown-select
+      [id]="campoEmpleado.name"
+      [label]="campoEmpleado.label"
+      [placeholder]="'Seleccione un empleado...'"
+      [options]="campoEmpleado.options || []"
+      [(ngModel)]="empleadoSeleccionado"
+      (selectionChange)="onEmpleadoSelected($event)"
+      [name]="campoEmpleado.name">
+    </app-dropdown-select>
+  </div>
+
+  @if (empleadoSeleccionado) {
+    <div class="d-flex justify-content-end mb-3" *ngIf="modeloFormulario.idLiquidacion && (roleSecurity.exportar || roleSecurity.imprimir)">
+      <div>
+        <button class="btn custom-btn-primary" (click)="exportarPdf()" *ngIf="roleSecurity.exportar ?? false">
+          <i class="bi bi-file-earmark-pdf-fill me-2"></i> Descargar Boleta PDF
+        </button>
+
+        <button class="btn custom-btn-primary" (click)="imprimir()" *ngIf="roleSecurity.imprimir ?? false">
+          <i class="bi bi-printer-fill me-2"></i> Imprimir Boleta
+        </button>
+      </div>
+    </div>
+
+    <app-dynamic-form
+      [saveText]="modeloFormulario.idLiquidacion ? 'Actualizar Liquidación' : 'Procesar Liquidación'"
+      [fields]="configuracionCampos"
+      [model]="modeloFormulario"
+      [showDelete]="false"
+      [showSave]="showSaveButton(modeloFormulario.idLiquidacion)"
+      [showCancel]="true"
+      (save)="procesarLiquidacion()"
+      (cancel)="limpiarFormulario()">
+    </app-dynamic-form>
+
+    <app-kpi-cards 
+      title="Resultados de la Liquidación" 
+      [items]="kpisLiquidacion">
+    </app-kpi-cards>
+  }
+</collapsed-card>
+
+@if (historialEmpleado.length > 0) {
+  <div class="mt-4">
+      <div class="d-flex align-items-center gap-2 mb-3">
+        <div class="section-indicator"></div>
+        <h5 class="text-dark fw-bold m-0">Historial de Liquidaciones </h5>
+      </div>
+
+      <app-dynamic-table
+        [scrollTop]="true"
+        [currentPage]="currentPage"
+        (currentPageChange)="currentPage = $event"
+        [columns]="columnasTabla"
+        [data]="historialEmpleado"
+        [isLoading]="isLoading"
+        [showExport]="roleSecurity.exportar ?? false"
+        [showPrint]="roleSecurity.imprimir ?? false"
+        [reportName]="'Historial_Liquidaciones'"
+        [hiddenAccion]="!roleSecurity.consultar"
+        [pageSize]="10"
+        (actionSelect)="seleccionarRegistro($event)"
+      >
+      </app-dynamic-table>
+    </div>
+}
