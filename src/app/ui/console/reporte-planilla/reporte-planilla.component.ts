@@ -10,6 +10,7 @@ import { CustomDateInputComponent } from '../../../shared/custom-date-input/cust
 import { DropdownSelectComponent } from '../../../shared/dropdown-select/dropdown-select.component';
 import { ReportePlanillaService } from '../../../core/services/reporte-planilla.service';
 import { PlanillaDetalle, PlanillaResponse, ReportePlanillaRequest } from '../../../interface/reporte-planilla.interface';
+import { KpiCard, KpiCardsComponent } from '../../../shared/kpi-cards/kpi-cards.component';
 
 @Component({
   selector: 'app-reporte-planilla',
@@ -21,8 +22,9 @@ import { PlanillaDetalle, PlanillaResponse, ReportePlanillaRequest } from '../..
     CollapsedCardComponent,
     LoaderComponent,
     CustomDateInputComponent,
-    DropdownSelectComponent
-  ],
+    DropdownSelectComponent,
+    KpiCardsComponent
+],
   templateUrl: './reporte-planilla.component.html',
   styleUrl: './reporte-planilla.component.css'
 })
@@ -35,6 +37,7 @@ export class ReportePlanillaComponent extends BaseComponent implements OnInit {
   detallesPlanilla: PlanillaDetalle[] = [];
 
   currentPage: number = 1;
+  kpisLiquidacion: KpiCard[] = [];
 
   fieldDate: DynamicField = {
     name: 'periodoSeleccionado',
@@ -109,6 +112,7 @@ export class ReportePlanillaComponent extends BaseComponent implements OnInit {
         const response = await this.reportePlanillaService.generarReporte(request);
         this.resumenPlanilla = response;
         this.detallesPlanilla = this.ordenarGenerico(response.detalles || [], '', 'idEmpleado', 'nombres');
+        this.actualizarKpis();
       },
       callbackError: async (error) => {
         this.limpiarFormulario();
@@ -116,6 +120,41 @@ export class ReportePlanillaComponent extends BaseComponent implements OnInit {
       },
       showLoading: true
     });
+  }
+
+  actualizarKpis() {
+    this.kpisLiquidacion = [
+      {
+        title: 'Empleados',
+        value: this.detallesPlanilla.length || 0,
+        currency: '',
+        icon: 'bi-people-fill',
+        type: 'text',
+        colorClass: 'success'
+      },
+      {
+        title: 'Total Ingresos',
+        value: this.resumenPlanilla?.totalIngresos || 0,
+        currency: 'Q',
+        icon: 'bi-graph-up-arrow',
+        colorClass: 'success'
+      },
+      {
+        title: 'Total Descuentos',
+        value: this.resumenPlanilla?.totalDescuentos || 0,
+        currency: 'Q',
+        icon: 'bi-graph-down-arrow',
+        colorClass: 'danger'
+      },
+      {
+        title: 'Salario Neto',
+        value: this.resumenPlanilla?.salarioNeto || 0,
+        currency: 'Q',
+        icon: 'bi-wallet2',
+        colorClass: 'primary',
+        isHighlight: true
+      }
+    ];
   }
 
   async descargarPdf() {

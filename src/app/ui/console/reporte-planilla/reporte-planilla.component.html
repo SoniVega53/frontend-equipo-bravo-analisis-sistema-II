@@ -32,66 +32,10 @@
             </button>
         </div>
 
-        <div class="row g-3 mb-4">
-            <div class="section-indicator"></div>
-            <h5 class="text-dark fw-bold m-0">Resumen Planilla</h5>
-
-            <div class="kpi-container mb-4">
-                <div class="card kpi-card border-0 shadow-sm">
-                    <div class="card-body p-3 d-flex align-items-center">
-                        <div class="kpi-icon-wrapper bg-primary-subtle text-primary rounded-3 me-2 me-sm-3">
-                            <i class="bi bi-people-fill"></i>
-                        </div>
-                        <div class="flex-grow-1 overflow-hidden">
-                            <span class="text-muted small fw-semibold text-uppercase tracking-wide d-block text-truncate">Empleados</span>
-                            <h3 class="mb-0 fw-bold text-dark mt-1 kpi-value">{{ detallesPlanilla.length }}</h3>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="card kpi-card border-0 shadow-sm">
-                    <div class="card-body p-3 d-flex align-items-center">
-                        <div class="kpi-icon-wrapper bg-success-subtle text-success rounded-3 me-2 me-sm-3">
-                            <i class="bi bi-graph-up-arrow"></i>
-                        </div>
-                        <div class="flex-grow-1 overflow-hidden">
-                            <span class="text-muted small fw-semibold text-uppercase tracking-wide d-block text-truncate">Ingresos Totales</span>
-                            <h3 class="mb-0 fw-bold text-success mt-1 kpi-value">
-                                <span class="kpi-currency">Q</span>{{ resumenPlanilla.totalIngresos | number:'1.2-2' }}
-                            </h3>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="card kpi-card border-0 shadow-sm">
-                    <div class="card-body p-3 d-flex align-items-center">
-                        <div class="kpi-icon-wrapper bg-danger-subtle text-danger rounded-3 me-2 me-sm-3">
-                            <i class="bi bi-graph-down-arrow"></i>
-                        </div>
-                        <div class="flex-grow-1 overflow-hidden">
-                            <span class="text-muted small fw-semibold text-uppercase tracking-wide d-block text-truncate">Descuentos Totales</span>
-                            <h3 class="mb-0 fw-bold text-danger mt-1 kpi-value">
-                                <span class="kpi-currency">Q</span>{{ resumenPlanilla.totalDescuentos | number:'1.2-2' }}
-                            </h3>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="card kpi-card border-0 shadow-sm kpi-highlight">
-                    <div class="card-body p-3 d-flex align-items-center">
-                        <div class="kpi-icon-wrapper bg-info-subtle text-info rounded-3 me-2 me-sm-3">
-                            <i class="bi bi-wallet2"></i>
-                        </div>
-                        <div class="flex-grow-1 overflow-hidden">
-                            <span class="text-muted small fw-semibold text-uppercase tracking-wide d-block text-truncate">Salario Neto</span>
-                            <h3 class="mb-0 fw-bold text-info mt-1 kpi-value">
-                                <span class="kpi-currency">Q</span>{{ resumenPlanilla.salarioNeto | number:'1.2-2' }}
-                            </h3>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <app-kpi-cards 
+            title="Resumen Planilla" 
+            [items]="kpisLiquidacion">
+        </app-kpi-cards>
 
         <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3 pb-2 border-bottom">
             <div class="d-flex align-items-center gap-2">

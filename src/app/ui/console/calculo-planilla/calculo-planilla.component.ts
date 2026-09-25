@@ -10,6 +10,7 @@ import { CalculoPlanillaService } from '../../../core/services/calculo-planilla.
 import { PlanillaRequest, PlanillaResponse, PlanillaDetalle } from '../../../interface/calculo-planilla.interface';
 import { CustomDateInputComponent } from '../../../shared/custom-date-input/custom-date-input.component';
 import { DropdownSelectComponent } from '../../../shared/dropdown-select/dropdown-select.component';
+import { KpiCard, KpiCardsComponent } from '../../../shared/kpi-cards/kpi-cards.component';
 
 @Component({
   selector: 'app-calculo-planilla',
@@ -21,7 +22,8 @@ import { DropdownSelectComponent } from '../../../shared/dropdown-select/dropdow
     CollapsedCardComponent,
     LoaderComponent,
     CustomDateInputComponent,
-    DropdownSelectComponent
+    DropdownSelectComponent,
+    KpiCardsComponent
 ],
   templateUrl: './calculo-planilla.component.html',
   styleUrl: './calculo-planilla.component.css'
@@ -34,6 +36,8 @@ export class CalculoPlanillaComponent extends BaseComponent implements OnInit {
   searchTerm: any;
   resumenPlanilla: PlanillaResponse | null = null;
   detallesPlanilla: PlanillaDetalle[] = [];
+
+  kpisLiquidacion: KpiCard[] = [];
 
   isProcesar: boolean = false;
   isActualizar: boolean = false;
@@ -87,7 +91,13 @@ export class CalculoPlanillaComponent extends BaseComponent implements OnInit {
   }
 
   onClickAction(isUpdate: boolean) {
-    this.procesar(true,isUpdate);
+     if(isUpdate) {
+        this.showAlertConfirm(() => {
+          this.procesar(true,isUpdate);
+        }, 'Estas seguro de actualizar la planilla?', 'Confirmar Actualización');
+        return;
+      }
+      this.procesar(true,isUpdate);
   }
 
   onSearchChange(){
@@ -102,6 +112,41 @@ export class CalculoPlanillaComponent extends BaseComponent implements OnInit {
     
     const term = this.searchTerm.toLowerCase();
     return this.detallesPlanilla.filter(opt => opt?.nombres?.toLowerCase().includes(term));
+  }
+
+   actualizarKpis() {
+    this.kpisLiquidacion = [
+      {
+        title: 'Empleados',
+        value: this.detallesPlanilla.length || 0,
+        currency: '',
+        icon: 'bi-people-fill',
+        type: 'text',
+        colorClass: 'success'
+      },
+      {
+        title: 'Total Ingresos',
+        value: this.resumenPlanilla?.totalIngresos || 0,
+        currency: 'Q',
+        icon: 'bi-graph-up-arrow',
+        colorClass: 'success'
+      },
+      {
+        title: 'Total Descuentos',
+        value: this.resumenPlanilla?.totalDescuentos || 0,
+        currency: 'Q',
+        icon: 'bi-graph-down-arrow',
+        colorClass: 'danger'
+      },
+      {
+        title: 'Salario Neto',
+        value: this.resumenPlanilla?.salarioNeto || 0,
+        currency: 'Q',
+        icon: 'bi-wallet2',
+        colorClass: 'primary',
+        isHighlight: true
+      }
+    ];
   }
 
   async procesar(forzarRecalculo:boolean, isUpdate: boolean = false,isFind: boolean = false) {
@@ -127,10 +172,11 @@ export class CalculoPlanillaComponent extends BaseComponent implements OnInit {
         this.detallesPlanilla =  this.ordenarGenerico(response.detalles || [], '', 'idEmpleado', 'nombres');
         
         if (forzarRecalculo) {
-          this.showSuccessAlert('La planilla se procesó/consultó correctamente.');
+          this.showSuccessAlert('La planilla se procesó correctamente.');
         }
         this.isActualizar = true;
         this.textButton = 'Actualizar Planilla';
+        this.actualizarKpis();
       },
       callbackError: async (error) => {
         this.limpiarError();

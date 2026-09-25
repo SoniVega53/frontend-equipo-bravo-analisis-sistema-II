@@ -16,6 +16,7 @@ import { RolesComponent } from '../../ui/console/roles/roles.component';
 import { InasistenciaComponent } from '../../ui/console/inasistencia/inasistencia.component';
 import { CalculoPlanillaComponent } from '../../ui/console/calculo-planilla/calculo-planilla.component';
 import { ReportePlanillaComponent } from '../../ui/console/reporte-planilla/reporte-planilla.component';
+import { LiquidacionComponent } from '../../ui/console/liquidacion/liquidacion.component';
 
 export const CONSOLE_ROUTES: Routes = [
   {
@@ -74,6 +75,10 @@ export const CONSOLE_ROUTES: Routes = [
   {
     path: 'reporte_planilla/:code',
     component: ReportePlanillaComponent,
+  },
+  {
+    path: 'liquidacion/:code',
+    component: LiquidacionComponent,
   },
   {
     path: '403',

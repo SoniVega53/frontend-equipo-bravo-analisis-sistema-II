@@ -113,6 +113,27 @@ export abstract class BaseComponent {
     });
   }
 
+  protected showAlertConfirm(
+    callback: () => void | Promise<void>,
+    message: string, title: string = 'Atención',
+  ) {
+    return Swal.fire({
+      title: title,
+      text: message,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: 'var(--color-danger)',
+      cancelButtonColor: 'var(--text-muted, #6c757d)',
+      confirmButtonText: 'Continuar',
+      cancelButtonText: 'Cancelar',
+      reverseButtons: true,
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        await callback();
+      }
+    });
+  }
+
   protected showDeleteConfirm(
     callback: () => void | Promise<void>,
     itemName: string = 'este registro',

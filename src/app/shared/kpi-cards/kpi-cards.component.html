@@ -1,0 +1,31 @@
+<div class="row g-3 mt-4 pt-4 border-top fade-in" *ngIf="items && items.length > 0">
+    <h5 class="text-dark fw-bold m-0 mb-3">{{ title }}</h5>
+
+    <div class="kpi-container mb-4">
+        @for (item of items; track item.title) {
+            <div class="card kpi-card border-0 shadow-sm" [class.kpi-highlight]="item.isHighlight">
+                <div class="card-body p-3 d-flex align-items-center">
+                    <div class="kpi-icon-wrapper rounded-3 me-2 me-sm-3" 
+                         [ngClass]="'bg-' + item.colorClass + '-subtle text-' + item.colorClass">
+                        <i class="bi" [ngClass]="item.icon"></i>
+                    </div>
+                    <div class="flex-grow-1 overflow-hidden">
+                        <span class="text-muted small fw-semibold text-uppercase tracking-wide d-block text-truncate">
+                            {{ item.title }}
+                        </span>
+                        <h3 class="mb-0 fw-bold mt-1 kpi-value" [ngClass]="'text-' + item.colorClass">
+                            @if (item.type === 'text') {
+                               {{ item.value }}
+                            }@else {
+                                @if (item.currency) {
+                                <span class="kpi-currency">{{ item.currency }}</span>
+                                }
+                                {{ item.value | number:'1.2-2' }}
+                            }
+                        </h3>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
