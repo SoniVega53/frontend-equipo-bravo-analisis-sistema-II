@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { BaseComponent } from '../../../base.component';
@@ -11,6 +11,7 @@ import { DynamicField } from '../../../../interface/dynamic-field.interface';
 import { EmpleadoBase, Liquidacion } from '../../../../interface/liquidacion.interface';
 import { KpiCard, KpiCardsComponent } from '../../../../shared/kpi-cards/kpi-cards.component';
 import Swal from 'sweetalert2';
+import { LiquidacionComponent } from '../liquidacion.component';
 
 @Component({
   selector: 'app-liquidacion-procesar',
@@ -19,7 +20,10 @@ import Swal from 'sweetalert2';
   templateUrl: './liquidacion-procesar.component.html'
 })
 export class LiquidacionProcesarComponent extends BaseComponent implements OnInit {
+  @ViewChild('collapseCard') collapseCard!: CollapsedCardComponent;
+
   private liquidacionService = inject(LiquidacionService);
+  private myApp = inject(LiquidacionComponent);
 
   modeloFormulario: any = {};
   historialEmpleado: Liquidacion[] = [];
@@ -35,35 +39,13 @@ export class LiquidacionProcesarComponent extends BaseComponent implements OnIni
     name: 'idEmpleado', label: 'Seleccionar Empleado', type: 'dropdown', required: true, options: []
   };
 
-
-  configuracionCampos: DynamicField[] = [
-    { name: 'nombrePuesto', label: 'Puesto', type: 'text', required: true, colSpan: 12, disabled: true },
-    { name: 'idStatusEmpleado', label: 'Estado', type: 'dropdown', required: true, colSpan: 12, options: []},
-    { name: 'fechaContratacion', label: 'Fecha Contratación', type: 'date', required: true, colSpan: 4 },
-    { name: 'fechaEgreso', label: 'Fecha Egreso', type: 'date', required: true, colSpan: 4 },
-    { name: 'fechaLiquidacion', label: 'Fecha Proceso', type: 'date', required: true, colSpan: 4 },
-    { name: 'motivoEgreso', label: 'Motivo de Egreso', type: 'text', required: true, colSpan: 12 },
-    { name: 'ingresoSueldoBase', label: 'Sueldo Base (Q)', type: 'number', required: true, colSpan: 4 },
-    { name: 'ingresoBonificacionDecreto', label: 'Bono Decreto (Q)', type: 'number', required: true, colSpan: 4 },
-    { name: 'ingresoOtrosIngresos', label: 'Otros Ingresos (Q)', type: 'number', required: false, colSpan: 4 },
-    { name: 'descuentoIgss', label: 'Desc. IGSS (Q)', type: 'number', required: false, colSpan: 4 },
-    { name: 'descuentoIsr', label: 'Desc. ISR (Q)', type: 'number', required: false, colSpan: 4 },
-    { name: 'descuentoInasistencias', label: 'Faltas (Q)', type: 'number', required: false, colSpan: 4 }
-  ];
+  configuracionCampos: DynamicField[] = [];
 
   async ngOnInit() {
+    this.columnasTabla = [...this.myApp.columnasTabla];
+    this.configuracionCampos = [...this.myApp.configuracionCampos];
+
     await this.cargarPermisos(false);
-    this.columnasTabla = [
-      { field: 'idLiquidacion', header: 'ID' },
-      { field: 'fechaContratacion', header: 'F. Contratación' },
-      { field: 'fechaEgreso', header: 'F. Egreso' },
-      { field: 'fechaLiquidacion', header: 'F. Liquidación' },
-      { field: 'motivoEgreso', header: 'Motivo' },
-      { field: 'totalIngresos', header: 'Total Ingresos (Q)' },
-      { field: 'totalDescuentos', header: 'Total Descuentos (Q)' },
-      { field: 'totalNeto', header: 'Total Neto (Q)' },
-      { field: 'salarioNeto', header: 'Salario Neto (Q)' }
-    ];
     this.cargarEmpleados();
   }
 
@@ -75,6 +57,7 @@ export class LiquidacionProcesarComponent extends BaseComponent implements OnIni
         this.campoEmpleado.options = this.ordenarGenerico(empleados, '', 'codigo', 'valor');
 
         this.findToItemField(this.configuracionCampos, 'idStatusEmpleado').options = this.ordenarGenerico(statusEmpleados, '', 'codigo', 'valor');
+        this.findToItemField(this.configuracionCampos, 'nombreEmpleado').hidden = true;
       }
     });
   }
@@ -137,7 +120,7 @@ export class LiquidacionProcesarComponent extends BaseComponent implements OnIni
   }
 
   seleccionarRegistro(item: Liquidacion) {
-    console.log('Registro seleccionado:', item);
+    this.collapseCard.isFormCollapsed = false;
     this.empleadoSeleccionado = item.idEmpleado;
     this.modeloFormulario = { ...item };
     this.actualizarKpis();
