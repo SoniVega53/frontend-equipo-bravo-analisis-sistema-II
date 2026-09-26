@@ -79,7 +79,15 @@ export class CalculoPlanillaComponent extends BaseComponent implements OnInit {
   configurarColumnas() {
     this.columnasDetalle = [
       { field: 'idEmpleado', header: 'ID Empleado' },
-      { field: 'nombres', header: 'Nombre Empleado' },
+      {
+        field: 'nombres',
+        header: 'Empleado/Fecha Contratación',
+        type: 'audit',
+        userField: 'nombres',
+        dateField: 'fechaContratacion',
+      },
+      { field: 'puesto', header: 'Puesto' },
+      { field: 'status', header: 'Estado' },
       { field: 'ingresoSueldoBase', header: 'Base' },
       { field: 'ingresoBonificacionDecreto', header: 'Bono' },
       { field: 'ingresoOtrosIngresos', header: 'Otros' },
