@@ -1,4 +1,4 @@
-<collapsed-card>
+<collapsed-card #collapseCard>
   <div class="mb-4">
     <app-dropdown-select
       [id]="campoEmpleado.name"
@@ -6,6 +6,7 @@
       [placeholder]="'Seleccione un empleado...'"
       [options]="campoEmpleado.options || []"
       [(ngModel)]="empleadoSeleccionado"
+      [showSearch]="true"
       (selectionChange)="onEmpleadoSelected($event)"
       [name]="campoEmpleado.name">
     </app-dropdown-select>
@@ -24,7 +25,13 @@
       </div>
     </div>
 
+    <app-kpi-cards 
+      title="Resultados de la Liquidación" 
+      [items]="kpisLiquidacion">
+    </app-kpi-cards>
+
     <app-dynamic-form
+      #dynamicForm
       [saveText]="modeloFormulario.idLiquidacion ? 'Actualizar Liquidación' : 'Procesar Liquidación'"
       [fields]="configuracionCampos"
       [model]="modeloFormulario"
@@ -35,10 +42,6 @@
       (cancel)="limpiarFormulario()">
     </app-dynamic-form>
 
-    <app-kpi-cards 
-      title="Resultados de la Liquidación" 
-      [items]="kpisLiquidacion">
-    </app-kpi-cards>
   }
 </collapsed-card>
 
