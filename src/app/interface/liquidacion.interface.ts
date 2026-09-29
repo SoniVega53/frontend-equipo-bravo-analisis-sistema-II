@@ -43,4 +43,16 @@ export interface Liquidacion {
   totalDescuentos?: number;
   totalNeto?: number;
   fechaCreacion?: string;
+
+  // Campos calculados en tiempo de ejecución (Desglose Guatemala)
+  diasLaboradosTotal?: number;
+  montoIndemnizacion?: number;
+  diasProporcionalesAguinaldo?: number;
+  montoAguinaldo?: number;
+  diasProporcionalesBono14?: number;
+  montoBono14?: number;
+  diasProporcionalesVacaciones?: number;
+  montoVacaciones?: number;
+  diasPendientesPago?: number;
+  montoSalarioPendiente?: number;
 }

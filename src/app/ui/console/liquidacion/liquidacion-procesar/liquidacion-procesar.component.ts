@@ -33,7 +33,7 @@ export class LiquidacionProcesarComponent extends BaseComponent implements OnIni
 
   currentPage: number = 1;
   kpisLiquidacion: KpiCard[] = [];
-
+  kpisDesglose: KpiCard[] = [];
 
   campoEmpleado: DynamicField = {
     name: 'idEmpleado', label: 'Seleccionar Empleado', type: 'dropdown', required: true, options: []
@@ -75,9 +75,9 @@ export class LiquidacionProcesarComponent extends BaseComponent implements OnIni
         const historial = await this.liquidacionService.obtenerPorEmpleadoHistorial(id);
 
         this.empleadoBase = empleado;
+        this.historialEmpleado = this.ordenarGenerico(historial, '', 'idLiquidacion', 'nombreEmpleado');
         if (!isSlect) {
           this.modeloFormulario = {...empleado};
-          this.historialEmpleado = this.ordenarGenerico(historial, '', 'idLiquidacion', 'nombreEmpleado');
         }
         
       },
@@ -117,6 +117,14 @@ export class LiquidacionProcesarComponent extends BaseComponent implements OnIni
         isHighlight: true
       }
     ];
+
+    this.kpisDesglose = [
+      { title: 'Indemnización', value: this.modeloFormulario.montoIndemnizacion || 0, currency: 'Q', icon: 'bi-shield-check', colorClass: 'info' },
+      { title: 'Aguinaldo', value: this.modeloFormulario.montoAguinaldo || 0, currency: 'Q', icon: 'bi-gift', colorClass: 'info' },
+      { title: 'Bono 14', value: this.modeloFormulario.montoBono14 || 0, currency: 'Q', icon: 'bi-calendar-check', colorClass: 'info' },
+      { title: 'Vacaciones', value: this.modeloFormulario.montoVacaciones || 0, currency: 'Q', icon: 'bi-sun', colorClass: 'info' },
+      { title: 'Salario Pendiente', value: this.modeloFormulario.montoSalarioPendiente || 0, currency: 'Q', icon: 'bi-clock-history', colorClass: 'warning' }
+    ];
   }
 
   seleccionarRegistro(item: Liquidacion) {
@@ -130,13 +138,12 @@ export class LiquidacionProcesarComponent extends BaseComponent implements OnIni
   async procesarLiquidacion() {
     this.executeService({
       callback: async () => {
-        // if(!this.modeloFormulario.idLiquidacion && this.historialEmpleado.length > 0) {
-        //   this.showErrorAlert('Ya tiene una liquidación procesada para este empleado. No se puede procesar otra liquidación.');
-        //   return;
-        // }
-        await this.liquidacionService.procesarLiquidacion({ ...this.modeloFormulario });
+        const result = await this.liquidacionService.procesarLiquidacion({ ...this.modeloFormulario });
+        this.modeloFormulario = { ...result };
+        this.actualizarKpis();
         this.showSuccessAlert('Liquidación procesada correctamente.');
-        this.onEmpleadoSelected(this.empleadoSeleccionado!);
+        // Refresh history
+        this.onEmpleadoSelected(this.empleadoSeleccionado!, true);
       },
       showLoading: true
     });
