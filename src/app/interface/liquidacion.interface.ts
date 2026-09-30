@@ -55,4 +55,10 @@ export interface Liquidacion {
   montoVacaciones?: number;
   diasPendientesPago?: number;
   montoSalarioPendiente?: number;
+
+  calcularSalarioPendiente?: boolean | string;
+  calcularAguinaldo?: boolean | string;
+  calcularBono14?: boolean | string;
+  calcularVacaciones?: boolean | string;
+  calcularIndemnizacion?: boolean | string;
 }

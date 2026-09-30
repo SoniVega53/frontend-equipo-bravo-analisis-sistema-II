@@ -10,6 +10,7 @@ export class LiquidacionService extends BaseService {
 
   async procesarLiquidacion(request: Liquidacion): Promise<Liquidacion> {
     console.log('Request to process liquidation:', request);
+
     const response: any = await this.post<any>(`${this.endpoint}/procesar`, request);
     return response?.data;
   }

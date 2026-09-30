@@ -32,7 +32,7 @@
 
     <div class="mt-3">
       <app-kpi-cards 
-        title="Desglose de Liquidación (Guatemala)" 
+        title="Desglose de Liquidación" 
         [items]="kpisDesglose">
       </app-kpi-cards>
     </div>
@@ -46,7 +46,7 @@
       [showSave]="showSaveButton(modeloFormulario.idLiquidacion)"
       [showCancel]="true"
       (save)="procesarLiquidacion()"
-      (cancel)="limpiarFormulario()">
+      (cancel)="cancelar()">
     </app-dynamic-form>
 
   }

@@ -64,6 +64,11 @@ export class CatalogoService extends BaseService {
         return response?.data || [];
     }
 
+    async getStatusLiquidacion(): Promise<SelectOption[]> {
+        const response: any = await this.get<any>(`${this.endpoint}/status-liquidacion`);
+        return response?.data || [];
+    }
+
     async getTiposDocumentos(): Promise<SelectOption[]> {
         const response: any = await this.get<any>(`${this.endpoint}/tipos-documentos`);
         return response?.data || [];

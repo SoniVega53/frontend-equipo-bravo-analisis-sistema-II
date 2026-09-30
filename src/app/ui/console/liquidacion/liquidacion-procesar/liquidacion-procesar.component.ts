@@ -35,6 +35,14 @@ export class LiquidacionProcesarComponent extends BaseComponent implements OnIni
   kpisLiquidacion: KpiCard[] = [];
   kpisDesglose: KpiCard[] = [];
 
+  calcular: any = {
+      calcularIndemnizacion: true,
+      calcularSalarioPendiente: true,
+      calcularAguinaldo: true,
+      calcularBono14: true,
+      calcularVacaciones: false,
+  }
+
   campoEmpleado: DynamicField = {
     name: 'idEmpleado', label: 'Seleccionar Empleado', type: 'dropdown', required: true, options: []
   };
@@ -53,7 +61,7 @@ export class LiquidacionProcesarComponent extends BaseComponent implements OnIni
     this.executeService({
       callback: async () => {
         const empleados = await this.catalogoService.getEmpleados();
-        const statusEmpleados = await this.catalogoService.getStatusEmpleados();
+        const statusEmpleados = await this.catalogoService.getStatusLiquidacion();
         this.campoEmpleado.options = this.ordenarGenerico(empleados, '', 'codigo', 'valor');
 
         this.findToItemField(this.configuracionCampos, 'idStatusEmpleado').options = this.ordenarGenerico(statusEmpleados, '', 'codigo', 'valor');
@@ -65,8 +73,8 @@ export class LiquidacionProcesarComponent extends BaseComponent implements OnIni
   onEmpleadoSelected(id: number,isSlect: boolean = false) {
     console.log('Empleado seleccionado:', id);
     this.empleadoSeleccionado = id;
+    this.limpiarFormulario();
     if (!id) {
-      this.limpiarFormulario();
       return;
     }
     this.executeService({
@@ -75,9 +83,12 @@ export class LiquidacionProcesarComponent extends BaseComponent implements OnIni
         const historial = await this.liquidacionService.obtenerPorEmpleadoHistorial(id);
 
         this.empleadoBase = empleado;
+        console.log('Empleado base:', empleado);
         this.historialEmpleado = this.ordenarGenerico(historial, '', 'idLiquidacion', 'nombreEmpleado');
         if (!isSlect) {
-          this.modeloFormulario = {...empleado};
+          this.modeloFormulario = {
+            ...empleado
+          };
         }
         
       },
@@ -119,15 +130,16 @@ export class LiquidacionProcesarComponent extends BaseComponent implements OnIni
     ];
 
     this.kpisDesglose = [
-      { title: 'Indemnización', value: this.modeloFormulario.montoIndemnizacion || 0, currency: 'Q', icon: 'bi-shield-check', colorClass: 'info' },
-      { title: 'Aguinaldo', value: this.modeloFormulario.montoAguinaldo || 0, currency: 'Q', icon: 'bi-gift', colorClass: 'info' },
-      { title: 'Bono 14', value: this.modeloFormulario.montoBono14 || 0, currency: 'Q', icon: 'bi-calendar-check', colorClass: 'info' },
-      { title: 'Vacaciones', value: this.modeloFormulario.montoVacaciones || 0, currency: 'Q', icon: 'bi-sun', colorClass: 'info' },
-      { title: 'Salario Pendiente', value: this.modeloFormulario.montoSalarioPendiente || 0, currency: 'Q', icon: 'bi-clock-history', colorClass: 'warning' }
+      { title: 'Indemnización', value: this.modeloFormulario.montoIndemnizacion || 0, currency: 'Q', icon: 'bi-shield-check', colorClass: 'info', hidden: !this.calcular.calcularIndemnizacion },
+      { title: 'Aguinaldo', value: this.modeloFormulario.montoAguinaldo || 0, currency: 'Q', icon: 'bi-gift', colorClass: 'info', hidden: !this.calcular.calcularAguinaldo },
+      { title: 'Bono 14', value: this.modeloFormulario.montoBono14 || 0, currency: 'Q', icon: 'bi-calendar-check', colorClass: 'info', hidden: !this.calcular.calcularBono14 },
+      { title: 'Vacaciones', value: this.modeloFormulario.montoVacaciones || 0, currency: 'Q', icon: 'bi-sun', colorClass: 'info', hidden: !this.calcular.calcularVacaciones},
+      { title: 'Salario Pendiente', value: this.modeloFormulario.montoSalarioPendiente || 0, currency: 'Q', icon: 'bi-clock-history', colorClass: 'warning', hidden: !this.calcular.calcularSalarioPendiente }
     ];
   }
 
   seleccionarRegistro(item: Liquidacion) {
+    console.log('Registro seleccionado:', item);
     this.collapseCard.isFormCollapsed = false;
     this.empleadoSeleccionado = item.idEmpleado;
     this.modeloFormulario = { ...item };
@@ -138,12 +150,15 @@ export class LiquidacionProcesarComponent extends BaseComponent implements OnIni
   async procesarLiquidacion() {
     this.executeService({
       callback: async () => {
-        const result = await this.liquidacionService.procesarLiquidacion({ ...this.modeloFormulario });
+        const request = { ...this.modeloFormulario, ...this.calcular };
+        
+
+        const result = await this.liquidacionService.procesarLiquidacion(request);
         this.modeloFormulario = { ...result };
         this.actualizarKpis();
         this.showSuccessAlert('Liquidación procesada correctamente.');
         // Refresh history
-        this.onEmpleadoSelected(this.empleadoSeleccionado!, true);
+        this.onEmpleadoSelected(this.empleadoSeleccionado!);
       },
       showLoading: true
     });
@@ -190,6 +205,16 @@ export class LiquidacionProcesarComponent extends BaseComponent implements OnIni
   limpiarFormulario() {
     this.modeloFormulario = {};
     this.historialEmpleado = [];
+    this.kpisLiquidacion = [];
+    this.kpisDesglose = [];
+  }
+
+  cancelar() {
+    this.modeloFormulario = {
+      ...this.empleadoBase
+    };
+    this.kpisLiquidacion = [];
+    this.kpisDesglose = [];
   }
 
    onSearchChange() {
