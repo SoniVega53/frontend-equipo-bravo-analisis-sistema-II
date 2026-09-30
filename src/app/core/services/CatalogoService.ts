@@ -74,6 +74,11 @@ export class CatalogoService extends BaseService {
         return response?.data || [];
     }
 
+    async getMotivosEgreso(): Promise<SelectOption[]> {
+        const response: any = await this.get<any>(`${this.endpoint}/motivos-egreso`);
+        return response?.data || [];
+    }
+
     async getDepartamentos(): Promise<SelectOption[]> {
         const response: any = await this.get<any>(`${this.endpoint}/departamentos`);
         return response?.data || [];

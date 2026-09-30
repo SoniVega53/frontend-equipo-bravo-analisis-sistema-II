@@ -35,7 +35,7 @@ export class LiquidacionComponent extends BaseComponent implements OnInit {
     { name: 'fechaContratacion', label: 'Fecha Contratación', type: 'date', required: true, colSpan: 4 },
     { name: 'fechaEgreso', label: 'Fecha Egreso', type: 'date', required: true, colSpan: 4 },
     { name: 'fechaLiquidacion', label: 'Fecha Liquidación', type: 'date', required: true, colSpan: 4 },
-    { name: 'motivoEgreso', label: 'Motivo de Egreso', type: 'text', required: true, colSpan: 12 },
+    { name: 'motivoEgreso', label: 'Motivo de Egreso', type: 'dropdown', required: true, colSpan: 12, options: [] },
     { name: 'ingresoSueldoBase', label: 'Sueldo Base (Q)', type: 'number', required: true, colSpan: 4 },
     { name: 'ingresoBonificacionDecreto', label: 'Bono Decreto (Q)', type: 'number', required: true, colSpan: 4 },
     { name: 'ingresoOtrosIngresos', label: 'Otros Ingresos (Q)', type: 'number', required: false, colSpan: 4 },

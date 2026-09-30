@@ -40,7 +40,7 @@ export class LiquidacionProcesarComponent extends BaseComponent implements OnIni
       calcularSalarioPendiente: true,
       calcularAguinaldo: true,
       calcularBono14: true,
-      calcularVacaciones: false,
+      calcularVacaciones: true,
   }
 
   campoEmpleado: DynamicField = {
@@ -62,9 +62,11 @@ export class LiquidacionProcesarComponent extends BaseComponent implements OnIni
       callback: async () => {
         const empleados = await this.catalogoService.getEmpleados();
         const statusEmpleados = await this.catalogoService.getStatusLiquidacion();
+        const motivosEgreso = await this.catalogoService.getMotivosEgreso();
         this.campoEmpleado.options = this.ordenarGenerico(empleados, '', 'codigo', 'valor');
 
         this.findToItemField(this.configuracionCampos, 'idStatusEmpleado').options = this.ordenarGenerico(statusEmpleados, '', 'codigo', 'valor');
+        this.findToItemField(this.configuracionCampos, 'motivoEgreso').options = this.ordenarGenerico(motivosEgreso, '', 'codigo', 'valor');
         this.findToItemField(this.configuracionCampos, 'nombreEmpleado').hidden = true;
       }
     });
