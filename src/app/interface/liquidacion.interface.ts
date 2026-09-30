@@ -25,7 +25,7 @@ export interface Liquidacion {
   fechaContratacion?: string;
   fechaEgreso?: string;
   fechaLiquidacion?: string;
-  motivoEgreso?: string;
+  motivoEgreso?: string | number;
   idPuesto?: number;
   nombrePuesto?: string;
   idDepartamento?: number;
@@ -43,4 +43,22 @@ export interface Liquidacion {
   totalDescuentos?: number;
   totalNeto?: number;
   fechaCreacion?: string;
+
+  // Campos calculados en tiempo de ejecución (Desglose Guatemala)
+  diasLaboradosTotal?: number;
+  montoIndemnizacion?: number;
+  diasProporcionalesAguinaldo?: number;
+  montoAguinaldo?: number;
+  diasProporcionalesBono14?: number;
+  montoBono14?: number;
+  diasProporcionalesVacaciones?: number;
+  montoVacaciones?: number;
+  diasPendientesPago?: number;
+  montoSalarioPendiente?: number;
+
+  calcularSalarioPendiente?: boolean | string;
+  calcularAguinaldo?: boolean | string;
+  calcularBono14?: boolean | string;
+  calcularVacaciones?: boolean | string;
+  calcularIndemnizacion?: boolean | string;
 }

@@ -35,13 +35,33 @@ export class LiquidacionComponent extends BaseComponent implements OnInit {
     { name: 'fechaContratacion', label: 'Fecha Contratación', type: 'date', required: true, colSpan: 4 },
     { name: 'fechaEgreso', label: 'Fecha Egreso', type: 'date', required: true, colSpan: 4 },
     { name: 'fechaLiquidacion', label: 'Fecha Liquidación', type: 'date', required: true, colSpan: 4 },
-    { name: 'motivoEgreso', label: 'Motivo de Egreso', type: 'text', required: true, colSpan: 12 },
+    { name: 'motivoEgreso', label: 'Motivo de Egreso', type: 'dropdown', required: true, colSpan: 12, options: [] },
     { name: 'ingresoSueldoBase', label: 'Sueldo Base (Q)', type: 'number', required: true, colSpan: 4 },
     { name: 'ingresoBonificacionDecreto', label: 'Bono Decreto (Q)', type: 'number', required: true, colSpan: 4 },
     { name: 'ingresoOtrosIngresos', label: 'Otros Ingresos (Q)', type: 'number', required: false, colSpan: 4 },
     { name: 'descuentoIgss', label: 'Desc. IGSS (Q)', type: 'number', required: false, colSpan: 4 },
     { name: 'descuentoIsr', label: 'Desc. ISR (Q)', type: 'number', required: false, colSpan: 4 },
-    { name: 'descuentoInasistencias', label: 'Faltas (Q)', type: 'number', required: false, colSpan: 4 }
+    { name: 'descuentoInasistencias', label: 'Faltas (Q)', type: 'number', required: false, colSpan: 4 },
+
+    // // Configuración de Cálculo Automático
+    // { name: 'calcularSalarioPendiente', label: 'Calcular Salario Autom.', type: 'dropdown', required: false, colSpan: 3, options: [{codigo: 'true', valor: 'Sí'}, {codigo: 'false', valor: 'No'}] },
+    // { name: 'calcularAguinaldo', label: 'Calcular Aguinaldo Autom.', type: 'dropdown', required: false, colSpan: 3, options: [{codigo: 'true', valor: 'Sí'}, {codigo: 'false', valor: 'No'}] },
+    // { name: 'calcularBono14', label: 'Calcular Bono 14 Autom.', type: 'dropdown', required: false, colSpan: 3, options: [{codigo: 'true', valor: 'Sí'}, {codigo: 'false', valor: 'No'}] },
+    // { name: 'calcularVacaciones', label: 'Calcular Vacaciones Autom.', type: 'dropdown', required: false, colSpan: 3, options: [{codigo: 'true', valor: 'Sí'}, {codigo: 'false', valor: 'No'}] },
+    
+    // // Campos de Desglose - Días
+    // { name: 'diasLaboradosTotal', label: 'Días Laborados', type: 'number', required: false, colSpan: 4, disabled: true },
+    // { name: 'diasProporcionalesAguinaldo', label: 'Días Aguinaldo', type: 'number', required: false, colSpan: 4, disabled: true },
+    // { name: 'diasProporcionalesBono14', label: 'Días Bono 14', type: 'number', required: false, colSpan: 4, disabled: true },
+    // { name: 'diasProporcionalesVacaciones', label: 'Días Vacaciones', type: 'number', required: false, colSpan: 4, disabled: true },
+    // { name: 'diasPendientesPago', label: 'Días Salario Pend.', type: 'number', required: false, colSpan: 4, disabled: true },
+
+    // // Campos de Desglose - Montos
+    // { name: 'montoIndemnizacion', label: 'Indemnización (Q)', type: 'number', required: false, colSpan: 4, disabled: true },
+    // { name: 'montoAguinaldo', label: 'Aguinaldo (Q)', type: 'number', required: false, colSpan: 4, disabled: true },
+    // { name: 'montoBono14', label: 'Bono 14 (Q)', type: 'number', required: false, colSpan: 4, disabled: true },
+    // { name: 'montoVacaciones', label: 'Vacaciones (Q)', type: 'number', required: false, colSpan: 4, disabled: true },
+    // { name: 'montoSalarioPendiente', label: 'Salario Pend. (Q)', type: 'number', required: false, colSpan: 4, disabled: true }
   ];
 
 

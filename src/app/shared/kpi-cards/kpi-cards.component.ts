@@ -9,6 +9,7 @@ export interface KpiCard {
   icon: string;
   colorClass: 'success' | 'danger' | 'primary' | 'info' | 'warning' | 'secondary' | 'dark';
   isHighlight?: boolean;
+  hidden?: boolean;
 }
 
 @Component({
