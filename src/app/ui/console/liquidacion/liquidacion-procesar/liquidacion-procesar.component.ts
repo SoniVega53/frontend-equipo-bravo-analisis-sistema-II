@@ -62,7 +62,7 @@ export class LiquidacionProcesarComponent extends BaseComponent implements OnIni
   cargarEmpleados() {
     this.executeService({
       callback: async () => {
-        const empleados = await this.catalogoService.getEmpleados();
+        const empleados = await this.catalogoService.getEmpleados(false);
         const statusEmpleados = await this.catalogoService.getStatusLiquidacion();
         this.motivosEgreso = await this.catalogoService.getMotivosEgreso();
         this.campoEmpleado.options = this.ordenarGenerico(empleados, '', 'codigo', 'valor');
