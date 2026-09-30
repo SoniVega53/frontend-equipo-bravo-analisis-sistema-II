@@ -30,6 +30,13 @@
       [items]="kpisLiquidacion">
     </app-kpi-cards>
 
+    <div class="mt-3">
+      <app-kpi-cards 
+        title="Desglose de Liquidación" 
+        [items]="kpisDesglose">
+      </app-kpi-cards>
+    </div>
+
     <app-dynamic-form
       #dynamicForm
       [saveText]="modeloFormulario.idLiquidacion ? 'Actualizar Liquidación' : 'Procesar Liquidación'"
@@ -39,7 +46,7 @@
       [showSave]="showSaveButton(modeloFormulario.idLiquidacion)"
       [showCancel]="true"
       (save)="procesarLiquidacion()"
-      (cancel)="limpiarFormulario()">
+      (cancel)="cancelar()">
     </app-dynamic-form>
 
   }
