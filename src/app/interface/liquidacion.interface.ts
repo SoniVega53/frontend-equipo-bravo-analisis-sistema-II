@@ -25,7 +25,7 @@ export interface Liquidacion {
   fechaContratacion?: string;
   fechaEgreso?: string;
   fechaLiquidacion?: string;
-  motivoEgreso?: string;
+  motivoEgreso?: string | number;
   idPuesto?: number;
   nombrePuesto?: string;
   idDepartamento?: number;

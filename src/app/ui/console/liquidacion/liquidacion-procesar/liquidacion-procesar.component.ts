@@ -12,6 +12,7 @@ import { EmpleadoBase, Liquidacion } from '../../../../interface/liquidacion.int
 import { KpiCard, KpiCardsComponent } from '../../../../shared/kpi-cards/kpi-cards.component';
 import Swal from 'sweetalert2';
 import { LiquidacionComponent } from '../liquidacion.component';
+import { SelectOption } from '../../../../interface/select-option.interface';
 
 @Component({
   selector: 'app-liquidacion-procesar',
@@ -27,6 +28,7 @@ export class LiquidacionProcesarComponent extends BaseComponent implements OnIni
 
   modeloFormulario: any = {};
   historialEmpleado: Liquidacion[] = [];
+  motivosEgreso: SelectOption[] = [];
   empleadoBase: EmpleadoBase | null = null;
   columnasTabla: TableColumn[] = [];
   empleadoSeleccionado: number | null = null;
@@ -62,11 +64,11 @@ export class LiquidacionProcesarComponent extends BaseComponent implements OnIni
       callback: async () => {
         const empleados = await this.catalogoService.getEmpleados();
         const statusEmpleados = await this.catalogoService.getStatusLiquidacion();
-        const motivosEgreso = await this.catalogoService.getMotivosEgreso();
+        this.motivosEgreso = await this.catalogoService.getMotivosEgreso();
         this.campoEmpleado.options = this.ordenarGenerico(empleados, '', 'codigo', 'valor');
 
         this.findToItemField(this.configuracionCampos, 'idStatusEmpleado').options = this.ordenarGenerico(statusEmpleados, '', 'codigo', 'valor');
-        this.findToItemField(this.configuracionCampos, 'motivoEgreso').options = this.ordenarGenerico(motivosEgreso, '', 'codigo', 'valor');
+        this.findToItemField(this.configuracionCampos, 'motivoEgreso').options = this.ordenarGenerico(this.motivosEgreso, '', 'codigo', 'valor');
         this.findToItemField(this.configuracionCampos, 'nombreEmpleado').hidden = true;
       }
     });
@@ -141,7 +143,10 @@ export class LiquidacionProcesarComponent extends BaseComponent implements OnIni
   }
 
   seleccionarRegistro(item: Liquidacion) {
-    console.log('Registro seleccionado:', item);
+    
+    const code = this.motivosEgreso.find(m => m.valor.toString() === item.motivoEgreso)?.codigo;
+    item.motivoEgreso = code || item.motivoEgreso;
+
     this.collapseCard.isFormCollapsed = false;
     this.empleadoSeleccionado = item.idEmpleado;
     this.modeloFormulario = { ...item };
