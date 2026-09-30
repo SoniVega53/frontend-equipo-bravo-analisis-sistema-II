@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, ViewChild } from '@angular/core';
+import { Component, EventEmitter, inject, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { BaseComponent } from '../../../base.component';
@@ -67,11 +67,47 @@ export class LiquidacionProcesarComponent extends BaseComponent implements OnIni
         this.motivosEgreso = await this.catalogoService.getMotivosEgreso();
         this.campoEmpleado.options = this.ordenarGenerico(empleados, '', 'codigo', 'valor');
 
-        this.findToItemField(this.configuracionCampos, 'idStatusEmpleado').options = this.ordenarGenerico(statusEmpleados, '', 'codigo', 'valor');
+        const fieldStatus = this.findToItemField(this.configuracionCampos, 'idStatusEmpleado');
+        fieldStatus.options = this.ordenarGenerico(statusEmpleados, '', 'codigo', 'valor');
+        
+        // Asignar EventEmitter para detectar cambios en idStatusEmpleado
+        if (!fieldStatus.onChange) {
+          fieldStatus.onChange = new EventEmitter<any>();
+          fieldStatus.onChange.subscribe((idEstado: any) => {
+             this.alCambiarEstado(idEstado, statusEmpleados);
+          });
+        }
+
         this.findToItemField(this.configuracionCampos, 'motivoEgreso').options = this.ordenarGenerico(this.motivosEgreso, '', 'codigo', 'valor');
         this.findToItemField(this.configuracionCampos, 'nombreEmpleado').hidden = true;
       }
     });
+  }
+
+  alCambiarEstado(idEstado: any, statusEmpleados: SelectOption[], isLoad: boolean = false) {
+    const statusObj = statusEmpleados.find(s => s.codigo == idEstado);
+    const nombreStatus = statusObj ? statusObj.valor.toUpperCase() : '';
+
+    const fieldMotivo = this.findToItemField(this.configuracionCampos, 'motivoEgreso');
+    
+    if (nombreStatus === 'BAJA') {
+      const renuncia = this.motivosEgreso.find(m => m.valor.toUpperCase().includes('RENUNCIA'));
+      fieldMotivo.options = this.ordenarGenerico(this.motivosEgreso, '', 'codigo', 'valor');
+      fieldMotivo.disabled = true;
+      if (renuncia && !isLoad) {
+        this.modeloFormulario.motivoEgreso = renuncia.codigo;
+      }
+    } else if (nombreStatus === 'DESPEDIDO' || nombreStatus === 'DESPIDO') {
+      const permitidos = this.motivosEgreso.filter(m => m.valor.toUpperCase().includes('JUBILACI') || m.valor.toUpperCase().includes('DESPIDO'));
+      fieldMotivo.options = this.ordenarGenerico(permitidos, '', 'codigo', 'valor');
+      fieldMotivo.disabled = false;
+      if (!isLoad) {
+        this.modeloFormulario.motivoEgreso = null; 
+      }
+    } else {
+      fieldMotivo.options = this.ordenarGenerico(this.motivosEgreso, '', 'codigo', 'valor');
+      fieldMotivo.disabled = false;
+    }
   }
 
   onEmpleadoSelected(id: number,isSlect: boolean = false) {
@@ -93,6 +129,12 @@ export class LiquidacionProcesarComponent extends BaseComponent implements OnIni
           this.modeloFormulario = {
             ...empleado
           };
+          
+          const statusEmpleados = this.findToItemField(this.configuracionCampos, 'idStatusEmpleado').options || [];
+          if (empleado.idStatusEmpleado) {
+            // Pasamos isLoad = false para forzar la autoselección del motivo según el estado base del empleado
+            this.alCambiarEstado(empleado.idStatusEmpleado, statusEmpleados, false);
+          }
         }
         
       },
@@ -150,6 +192,12 @@ export class LiquidacionProcesarComponent extends BaseComponent implements OnIni
     this.collapseCard.isFormCollapsed = false;
     this.empleadoSeleccionado = item.idEmpleado;
     this.modeloFormulario = { ...item };
+
+    const statusEmpleados = this.findToItemField(this.configuracionCampos, 'idStatusEmpleado').options || [];
+    if (item.idStatusEmpleado) {
+      this.alCambiarEstado(item.idStatusEmpleado, statusEmpleados, true);
+    }
+
     this.actualizarKpis();
     //this.onEmpleadoSelected(item.idEmpleado,true);
   }
@@ -214,6 +262,12 @@ export class LiquidacionProcesarComponent extends BaseComponent implements OnIni
     this.historialEmpleado = [];
     this.kpisLiquidacion = [];
     this.kpisDesglose = [];
+
+    const fieldMotivo = this.findToItemField(this.configuracionCampos, 'motivoEgreso');
+    if (fieldMotivo && this.motivosEgreso.length > 0) {
+      fieldMotivo.options = this.ordenarGenerico(this.motivosEgreso, '', 'codigo', 'valor');
+      fieldMotivo.disabled = false;
+    }
   }
 
   cancelar() {
@@ -222,6 +276,11 @@ export class LiquidacionProcesarComponent extends BaseComponent implements OnIni
     };
     this.kpisLiquidacion = [];
     this.kpisDesglose = [];
+
+    const statusEmpleados = this.findToItemField(this.configuracionCampos, 'idStatusEmpleado').options || [];
+    if (this.empleadoBase?.idStatusEmpleado) {
+      this.alCambiarEstado(this.empleadoBase.idStatusEmpleado, statusEmpleados, false);
+    }
   }
 
    onSearchChange() {

@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, EventEmitter, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { BaseComponent } from '../../../base.component';
@@ -7,6 +7,7 @@ import { DynamicFormComponent } from '../../../../shared/dynamic-form/dynamic-fo
 import { LiquidacionService } from '../../../../core/services/liquidacion.service';
 import { Liquidacion } from '../../../../interface/liquidacion.interface';
 import { DynamicField } from '../../../../interface/dynamic-field.interface';
+import { SelectOption } from '../../../../interface/select-option.interface';
 import { KpiCard, KpiCardsComponent } from '../../../../shared/kpi-cards/kpi-cards.component';
 import Swal from 'sweetalert2';
 import { LiquidacionComponent } from '../liquidacion.component';
@@ -27,6 +28,8 @@ export class LiquidacionHistorialComponent extends BaseComponent implements OnIn
   showModal: boolean = false;
   modeloSeleccionado: any = {};
   kpisLiquidacion: KpiCard[] = [];
+  kpisDesglose: KpiCard[] = [];
+  motivosEgreso: any[] = [];
 
   configuracionCampos: DynamicField[] = [];
 
@@ -34,7 +37,56 @@ export class LiquidacionHistorialComponent extends BaseComponent implements OnIn
     this.columnasTabla = [...this.myApp.columnasTabla];
     this.configuracionCampos = [...this.myApp.configuracionCampos];
     await this.cargarPermisos(false);
+    this.cargarCatalogos();
     this.cargarDatos();
+  }
+
+  cargarCatalogos() {
+    this.executeService({
+      callback: async () => {
+        this.motivosEgreso = await this.catalogoService.getMotivosEgreso();
+        const statusEmpleados = await this.catalogoService.getStatusLiquidacion();
+
+        const fieldStatus = this.findToItemField(this.configuracionCampos, 'idStatusEmpleado');
+        fieldStatus.options = this.ordenarGenerico(statusEmpleados, '', 'codigo', 'valor');
+
+        // Asignar EventEmitter para detectar cambios en idStatusEmpleado
+        if (!fieldStatus.onChange) {
+          fieldStatus.onChange = new EventEmitter<any>();
+          fieldStatus.onChange.subscribe((idEstado: any) => {
+             this.alCambiarEstado(idEstado, statusEmpleados);
+          });
+        }
+
+        this.findToItemField(this.configuracionCampos, 'motivoEgreso').options = this.ordenarGenerico(this.motivosEgreso, '', 'codigo', 'valor');
+      }
+    });
+  }
+
+  alCambiarEstado(idEstado: any, statusEmpleados: SelectOption[], isLoad: boolean = false) {
+    const statusObj = statusEmpleados.find(s => s.codigo == idEstado);
+    const nombreStatus = statusObj ? statusObj.valor.toUpperCase() : '';
+
+    const fieldMotivo = this.findToItemField(this.configuracionCampos, 'motivoEgreso');
+    
+    if (nombreStatus === 'BAJA') {
+      const renuncia = this.motivosEgreso.find(m => m.valor.toUpperCase().includes('RENUNCIA'));
+      fieldMotivo.options = this.ordenarGenerico(this.motivosEgreso, '', 'codigo', 'valor');
+      fieldMotivo.disabled = true;
+      if (renuncia && !isLoad) {
+        this.modeloSeleccionado.motivoEgreso = renuncia.codigo;
+      }
+    } else if (nombreStatus === 'DESPEDIDO' || nombreStatus === 'DESPIDO') {
+      const permitidos = this.motivosEgreso.filter(m => m.valor.toUpperCase().includes('JUBILACI') || m.valor.toUpperCase().includes('DESPIDO'));
+      fieldMotivo.options = this.ordenarGenerico(permitidos, '', 'codigo', 'valor');
+      fieldMotivo.disabled = false;
+      if (!isLoad) {
+        this.modeloSeleccionado.motivoEgreso = null;
+      }
+    } else {
+      fieldMotivo.options = this.ordenarGenerico(this.motivosEgreso, '', 'codigo', 'valor');
+      fieldMotivo.disabled = false;
+    }
   }
 
   cargarDatos() {
@@ -56,7 +108,18 @@ export class LiquidacionHistorialComponent extends BaseComponent implements OnIn
   abrirModal(item: Liquidacion) {
     this.executeService({
       callback: async () => {
-        this.modeloSeleccionado = await this.liquidacionService.obtenerPorId(item.idLiquidacion!);
+        const data = await this.liquidacionService.obtenerPorId(item.idLiquidacion!);
+        
+        const code = this.motivosEgreso.find(m => m.valor.toString() === data.motivoEgreso)?.codigo;
+        data.motivoEgreso = code || data.motivoEgreso;
+
+        this.modeloSeleccionado = data;
+
+        const statusEmpleados = this.findToItemField(this.configuracionCampos, 'idStatusEmpleado').options || [];
+        if (data.idStatusEmpleado) {
+          this.alCambiarEstado(data.idStatusEmpleado, statusEmpleados, true);
+        }
+
         this.showModal = true;
         this.actualizarKpis();
       },
@@ -72,10 +135,13 @@ export class LiquidacionHistorialComponent extends BaseComponent implements OnIn
   async actualizarLiquidacion() {
     this.executeService({
       callback: async () => {
-        await this.liquidacionService.procesarLiquidacion({ ...this.modeloSeleccionado });
+        const result = await this.liquidacionService.procesarLiquidacion({ ...this.modeloSeleccionado });
+        this.modeloSeleccionado = { ...result };
+        this.actualizarKpis();
         this.showSuccessAlert('Liquidación actualizada correctamente.');
-        this.cerrarModal();
         this.cargarDatos();
+        // Option to close or keep modal open: we will keep the current behavior which is close, but we updated model.
+        this.cerrarModal();
       },
       showLoading: true
     });
@@ -150,6 +216,14 @@ export class LiquidacionHistorialComponent extends BaseComponent implements OnIn
         colorClass: 'primary',
         isHighlight: true
       }
+    ];
+
+    this.kpisDesglose = [
+      { title: 'Indemnización', value: this.modeloSeleccionado.montoIndemnizacion || 0, currency: 'Q', icon: 'bi-shield-check', colorClass: 'info' },
+      { title: 'Aguinaldo', value: this.modeloSeleccionado.montoAguinaldo || 0, currency: 'Q', icon: 'bi-gift', colorClass: 'info' },
+      { title: 'Bono 14', value: this.modeloSeleccionado.montoBono14 || 0, currency: 'Q', icon: 'bi-calendar-check', colorClass: 'info' },
+      { title: 'Vacaciones', value: this.modeloSeleccionado.montoVacaciones || 0, currency: 'Q', icon: 'bi-sun', colorClass: 'info' },
+      { title: 'Salario Pendiente', value: this.modeloSeleccionado.montoSalarioPendiente || 0, currency: 'Q', icon: 'bi-clock-history', colorClass: 'warning' }
     ];
   }
 }
