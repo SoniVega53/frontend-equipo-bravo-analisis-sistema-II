@@ -9,6 +9,7 @@ export class CalculoPlanillaService extends BaseService {
   private readonly endpoint = 'console/calculo-planilla';
 
   async procesarOObtenerPlanilla(request: PlanillaRequest): Promise<PlanillaResponse> {
+    console.log('Request to procesarOObtenerPlanilla:', request);
     const response: any = await this.post<any>(`${this.endpoint}/procesar`, request);
     return response?.data;
   }
