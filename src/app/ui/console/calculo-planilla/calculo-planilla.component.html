@@ -1,111 +1,34 @@
 <div class="center-page">
   <div class="page-container position-relative">
-    <app-loader [isLoading]="isLoadingPage"></app-loader>
-
-    <h2 class="page-title">Calculo de Planilla</h2>
+    <h2 class="page-title">Módulo de Planillas</h2>
     <hr class="divider" />
 
-    <collapsed-card [hidden]="hiddenFormulary()">
-        <!-- <custom-date-input
-          [id]="fieldDate.name"
-          [label]="fieldDate.label"
-          [placeholder]="fieldDate.placeholder || 'YYYY-MM-DD'"
-          [iconLeft]="fieldDate.iconLeft || ''"
-          [disabled]="fieldDate.disabled || isLoading"
-          [(ngModel)]="modeloDate"
-          [name]="fieldDate.name"
-          [isMonthPicker]="true"
-          (actionMonthSelected)="actionMonthSelected($event)"
-          [required]="fieldDate.required || false">
-        </custom-date-input> -->
+    <ul class="nav nav-tabs nav-fill mb-4" role="tablist">
+        <li class="nav-item">
+            <a class="nav-link" [class.active]="activeTab === 'procesar'" (click)="activeTab = 'procesar'"
+                role="tab" style="cursor: pointer;">
+                <i class="bi bi-calculator me-2"></i>Calcular Planilla
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" [class.active]="activeTab === 'periodo'" (click)="activeTab = 'periodo'"
+                role="tab" style="cursor: pointer;">
+                <i class="bi bi-calendar3 me-2"></i>Gestión de Periodos
+            </a>
+        </li>
+    </ul>
 
-
-        <app-dropdown-select
-          [id]="fieldDate.name"
-          [label]="fieldDate.label"
-          [placeholder]="fieldDate.placeholder || 'Seleccione...'"
-          [iconLeft]="fieldDate.iconLeft || ''"
-          [disabled]="fieldDate.disabled || isLoading"
-          [options]="fieldDate.options || []"
-          [(ngModel)]="modeloDate"
-          [required]="fieldDate.required || false"
-          [showSearch]="true"
-          (selectionChange)="actionMonthSelected($event)"
-          [name]="fieldDate.name">
-        </app-dropdown-select>
-
-        <div class="action-buttons mt-4 justify-content-md-center">
-            <button
-                *ngIf="isActualizar || isProcesar"
-                type="button"
-                class="btn custom-btn-primary"
-                (click)="onClickAction(isActualizar)">
-                {{ textButton }}
-            </button>
+    <div class="tab-content mt-3">
+        <!-- Tab Procesar -->
+        <div class="tab-pane fade" [class.show]="activeTab === 'procesar'" [class.active]="activeTab === 'procesar'">
+            <app-calculo-planilla-procesar *ngIf="activeTab === 'procesar'"></app-calculo-planilla-procesar>
         </div>
 
-      <!-- <app-dynamic-form
-        [saveText]="'Procesar / Consultar'"
-        [fields]="configuracionCampos"
-        [model]="modeloFormulario"
-        [isLoading]="isLoading"
-        [showDelete]="false"
-        [showSave]="roleSecurity?.alta || false"
-        [showCancel]="true"
-        (save)="procesar()"
-        (cancel)="limpiarFormulario()"
-      >
-      </app-dynamic-form> -->
-    </collapsed-card>
-
-    @if (resumenPlanilla) {
-      <div class="mt-4 fade-in">
-    
-
-        <app-kpi-cards 
-            title="Encabezado Planilla" 
-            [items]="kpisLiquidacion">
-        </app-kpi-cards>
-    
-
-        <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3 pb-2 border-bottom">
-            <div class="d-flex align-items-center gap-2">
-            <div class="section-indicator"></div>
-            <h5 class="text-dark fw-bold m-0">Desglose por Empleado</h5>
-            </div>
-            
-            <div class="audit-badge d-flex align-items-center gap-2 px-3 py-1-5 rounded-pill bg-light border">
-            <i class="bi bi-clock-history text-muted"></i>
-            <span class="text-secondary small fw-medium">
-                Procesado: <strong class="text-dark">{{ resumenPlanilla.fechaHoraProcesada | date:'dd/MM/yyyy HH:mm' }}</strong>
-            </span>
-            </div>
+        <!-- Tab Periodos -->
+        <div class="tab-pane fade" [class.show]="activeTab === 'periodo'" [class.active]="activeTab === 'periodo'">
+            <app-calculo-planilla-periodo *ngIf="activeTab === 'periodo'"></app-calculo-planilla-periodo>
         </div>
+    </div>
 
-        <div class="search-container">
-            <input 
-            type="text" 
-            class="form-control search-input" 
-            placeholder="Buscar..." 
-            [(ngModel)]="searchTerm"
-            (ngModelChange)="onSearchChange()">
-        </div>
-
-        <app-dynamic-table
-          [scrollTop]="false"
-          [currentPage]="currentPage"
-          (currentPageChange)="currentPage = $event"
-          [columns]="columnasDetalle"
-          [data]="filteredOptions"
-          [isLoading]="isLoading"
-          [showExport]="false"
-          [showPrint]="false"
-          [reportName]="'Reporte_Planilla_Detalle'"
-          [hiddenAccion]="true"
-          [pageSize]="20"
-        >
-        </app-dynamic-table>
-      </div>
-    }
   </div>
 </div>

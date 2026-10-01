@@ -1,0 +1,106 @@
+<div class="position-relative">
+    <app-loader [isLoading]="isLoadingPage"></app-loader>
+
+    <collapsed-card [hidden]="hiddenFormulary()">
+        <!-- <custom-date-input
+          [id]="fieldDate.name"
+          [label]="fieldDate.label"
+          [placeholder]="fieldDate.placeholder || 'YYYY-MM-DD'"
+          [iconLeft]="fieldDate.iconLeft || ''"
+          [disabled]="fieldDate.disabled || isLoading"
+          [(ngModel)]="modeloDate"
+          [name]="fieldDate.name"
+          [isMonthPicker]="true"
+          (actionMonthSelected)="actionMonthSelected($event)"
+          [required]="fieldDate.required || false">
+        </custom-date-input> -->
+
+
+        <app-dropdown-select
+          [id]="fieldDate.name"
+          [label]="fieldDate.label"
+          [placeholder]="fieldDate.placeholder || 'Seleccione...'"
+          [iconLeft]="fieldDate.iconLeft || ''"
+          [disabled]="fieldDate.disabled || isLoading"
+          [options]="fieldDate.options || []"
+          [(ngModel)]="modeloDate"
+          [required]="fieldDate.required || false"
+          [showSearch]="true"
+          (selectionChange)="actionMonthSelected($event)"
+          [name]="fieldDate.name">
+        </app-dropdown-select>
+
+        <div class="action-buttons mt-4 justify-content-md-center">
+            <button
+                *ngIf="isActualizar || isProcesar"
+                type="button"
+                class="btn custom-btn-primary"
+                (click)="onClickAction(isActualizar)">
+                {{ textButton }}
+            </button>
+        </div>
+
+      <!-- <app-dynamic-form
+        [saveText]="'Procesar / Consultar'"
+        [fields]="configuracionCampos"
+        [model]="modeloFormulario"
+        [isLoading]="isLoading"
+        [showDelete]="false"
+        [showSave]="roleSecurity?.alta || false"
+        [showCancel]="true"
+        (save)="procesar()"
+        (cancel)="limpiarFormulario()"
+      >
+      </app-dynamic-form> -->
+    </collapsed-card>
+
+    @if (resumenPlanilla) {
+      <div class="mt-4 fade-in">
+    
+
+        <app-kpi-cards 
+            title="Encabezado Planilla" 
+            [items]="kpisLiquidacion">
+        </app-kpi-cards>
+    
+
+        <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3 pb-2 border-bottom">
+            <div class="d-flex align-items-center gap-2">
+            <div class="section-indicator"></div>
+            <h5 class="text-dark fw-bold m-0">Desglose por Empleado</h5>
+            </div>
+            
+            <div class="audit-badge d-flex align-items-center gap-2 px-3 py-1-5 rounded-pill bg-light border">
+            <i class="bi bi-clock-history text-muted"></i>
+            <span class="text-secondary small fw-medium">
+                Procesado: <strong class="text-dark">{{ resumenPlanilla.fechaHoraProcesada | date:'dd/MM/yyyy HH:mm' }}</strong>
+            </span>
+            </div>
+        </div>
+
+        <div class="search-container">
+            <input 
+            type="text" 
+            class="form-control search-input" 
+            placeholder="Buscar..." 
+            [(ngModel)]="searchTerm"
+            (ngModelChange)="onSearchChange()">
+        </div>
+
+        <app-dynamic-table
+          [scrollTop]="false"
+          [currentPage]="currentPage"
+          (currentPageChange)="currentPage = $event"
+          [columns]="columnasDetalle"
+          [data]="filteredOptions"
+          [isLoading]="isLoading"
+          [showExport]="false"
+          [showPrint]="false"
+          [reportName]="'Reporte_Planilla_Detalle'"
+          [hiddenAccion]="true"
+          [pageSize]="20"
+        >
+        </app-dynamic-table>
+      </div>
+    }
+</div>

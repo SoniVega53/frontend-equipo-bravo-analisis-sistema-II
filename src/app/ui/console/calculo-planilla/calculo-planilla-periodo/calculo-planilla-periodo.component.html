@@ -1,0 +1,36 @@
+<div class="position-relative">
+    <app-loader [isLoading]="isLoadingPage"></app-loader>
+
+    <h2 class="page-title">Periodos de Planilla</h2>
+    <hr class="divider" />
+
+    <collapsed-card [hidden]="hiddenFormulary()">
+        <app-dynamic-form
+            [saveText]="isUpdate ? 'Actualizar' : 'Crear Nuevo'"
+            [fields]="configuracionCampos"
+            [model]="modeloFormulario"
+            [isLoading]="isLoading"
+            [showDelete]="isUpdate"
+            [showSave]="true"
+            [showCancel]="true"
+            (save)="guardarRegistro()"
+            (cancel)="limpiarFormulario()"
+            (delete)="eliminarRegistro()"
+        >
+        </app-dynamic-form>
+    </collapsed-card>
+
+    <div class="mt-4">
+        <hr class="divider" />
+        <app-dynamic-table
+            [columns]="columnasTabla"
+            [data]="periodos"
+            [isLoading]="isLoading"
+            [showExport]="false"
+            [showPrint]="false"
+            (actionSelect)="seleccionarRegistro($event)"
+            [reportName]="'Reporte_Periodos_Planilla'"
+        >
+        </app-dynamic-table>
+    </div>
+</div>

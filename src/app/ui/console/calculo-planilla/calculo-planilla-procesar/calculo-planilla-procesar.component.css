@@ -1,0 +1,141 @@
+.page-container {
+    min-height: 90vh;
+}
+
+.fade-in {
+    animation: fadeIn 0.4s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.action-buttons {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.btn {
+  padding: 10px 20px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.custom-btn-primary {
+  background-color: var(--color-primary);
+  color: #ffffff;
+  border: none;
+}
+
+.custom-btn-primary:hover:not(:disabled) {
+  background-color: var(--color-primary-hover);
+}
+
+
+.kpi-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem;
+  width: 100%;
+}
+
+.kpi-card {
+  background-color: var(--bg-surface, #ffffff);
+  border-radius: 12px;
+  min-width: 0; 
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.kpi-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.08) !important;
+}
+
+.kpi-icon-wrapper {
+  width: 42px;
+  height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  flex-shrink: 0;
+}
+
+.tracking-wide {
+  letter-spacing: 0.02em;
+  font-size: 0.68rem;
+}
+
+.kpi-value {
+  font-size: clamp(1.05rem, 1.2vw, 1.35rem);
+  white-space: nowrap;
+  letter-spacing: -0.5px;
+}
+
+.kpi-currency {
+  font-size: 0.85em;
+  font-weight: 500;
+  margin-right: 2px;
+}
+
+.kpi-highlight {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 1) 0%, rgba(240, 249, 255, 1) 100%);
+}
+
+@media (max-width: 576px) {
+  .kpi-container {
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 0.65rem;
+  }
+
+  .kpi-icon-wrapper {
+    width: 34px;
+    height: 34px;
+    font-size: 1rem;
+  }
+
+  .tracking-wide {
+    font-size: 0.62rem;
+  }
+
+  .kpi-value {
+    font-size: 0.98rem;
+  }
+}
+
+.search-container {
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--border-color);
+  position: sticky;
+  top: 0;
+  background-color: var(--bg-surface);
+  z-index: 2;
+}
+
+.search-input {
+  font-size: 0.9rem;
+  padding: 8px 12px;
+  border-color: var(--border-color);
+  color: var(--text-body);
+  background-color: var(--bg-app);
+}
+
+.search-input:focus {
+  border-color: var(--color-primary);
+  box-shadow: none;
+  outline: none;
+}
