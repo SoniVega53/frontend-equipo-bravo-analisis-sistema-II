@@ -104,8 +104,10 @@ export class CatalogoService extends BaseService {
         return response?.data || [];
     }
 
-    async getEmpleados(): Promise<SelectOption[]> {
-        const response: any = await this.get<any>(`${this.endpoint}/empleados`);
+    async getEmpleados(isStatusValid: boolean = true): Promise<SelectOption[]> {
+        const response: any = isStatusValid ? 
+            await this.get<any>(`${this.endpoint}/empleados/status`) : 
+            await this.get<any>(`${this.endpoint}/empleados`);
         return response?.data || [];
     }
 
