@@ -18,6 +18,10 @@ import { CalculoPlanillaComponent } from '../../ui/console/calculo-planilla/calc
 import { ReportePlanillaComponent } from '../../ui/console/reporte-planilla/reporte-planilla.component';
 import { LiquidacionComponent } from '../../ui/console/liquidacion/liquidacion.component';
 
+import { BancoComponent } from '../../ui/console/banco/banco.component';
+import { PersonaComponent } from '../../ui/console/persona/persona.component';
+import { EmpleadoComponent } from '../../ui/console/empleado/empleado.component';
+
 export const CONSOLE_ROUTES: Routes = [
   {
     path: '',
@@ -31,6 +35,18 @@ export const CONSOLE_ROUTES: Routes = [
   {
     path: 'sucursal/:code',
     component: SucursalComponent,
+  },
+  {
+    path: 'banco/:code',
+    component: BancoComponent,
+  },
+  {
+    path: 'personas/:code',
+    component: PersonaComponent,
+  },
+  {
+    path: 'empleado/:code',
+    component: EmpleadoComponent,
   },
   {
     path: 'genero/:code',
