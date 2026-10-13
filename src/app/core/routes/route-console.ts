@@ -17,6 +17,8 @@ import { InasistenciaComponent } from '../../ui/console/inasistencia/inasistenci
 import { CalculoPlanillaComponent } from '../../ui/console/calculo-planilla/calculo-planilla.component';
 import { ReportePlanillaComponent } from '../../ui/console/reporte-planilla/reporte-planilla.component';
 import { LiquidacionComponent } from '../../ui/console/liquidacion/liquidacion.component';
+// 1. Importar tu componente
+import { EstadoCivilComponent } from '../../pages/estado-civil/estado-civil.component';
 
 export const CONSOLE_ROUTES: Routes = [
   {
@@ -79,6 +81,11 @@ export const CONSOLE_ROUTES: Routes = [
   {
     path: 'liquidacion/:code',
     component: LiquidacionComponent,
+  },
+  // 2. Agregar la ruta parametrizada para Estado Civil
+  {
+    path: 'estado_civil/:code',
+    component: EstadoCivilComponent,
   },
   {
     path: '403',

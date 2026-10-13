@@ -11,6 +11,8 @@ import { PerfilComponent } from './ui/perfil/perfil.component';
 import { CambiarPasswordComponent } from './ui/cambiar-password/cambiar-password.component';
 import { RecuperarPasswordComponent } from './ui/recuperar-password/recuperar-password.component';
 
+
+
 export const routes: Routes = [
   {
     path: 'login',
