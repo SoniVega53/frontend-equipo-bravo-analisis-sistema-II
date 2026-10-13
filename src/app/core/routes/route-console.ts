@@ -18,6 +18,10 @@ import { CalculoPlanillaComponent } from '../../ui/console/calculo-planilla/calc
 import { ReportePlanillaComponent } from '../../ui/console/reporte-planilla/reporte-planilla.component';
 import { LiquidacionComponent } from '../../ui/console/liquidacion/liquidacion.component';
 
+import { EstadoCivilComponent } from '../../ui/console/estado-civil/estado-civil.component';
+import { DepartamentoComponent } from '../../ui/console/departamento/departamento.component';
+import { PuestoComponent } from '../../ui/console/puesto/puesto.component';
+
 import { BancoComponent } from '../../ui/console/banco/banco.component';
 import { PersonaComponent } from '../../ui/console/persona/persona.component';
 import { EmpleadoComponent } from '../../ui/console/empleado/empleado.component';
@@ -47,6 +51,18 @@ export const CONSOLE_ROUTES: Routes = [
   {
     path: 'empleado/:code',
     component: EmpleadoComponent,
+  },
+  {
+    path: 'estado_civil/:code',
+    component: EstadoCivilComponent,
+  },
+  {
+    path: 'departamento/:code',
+    component: DepartamentoComponent,
+  },
+  {
+    path: 'puesto/:code',
+    component: PuestoComponent,
   },
   {
     path: 'genero/:code',
