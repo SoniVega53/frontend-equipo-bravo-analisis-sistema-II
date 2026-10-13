@@ -1,0 +1,39 @@
+<div class="center-page">
+  <div class="page-container position-relative">
+    <app-loader [isLoading]="isLoadingPage"></app-loader>
+
+    <h2 class="page-title">Estados Civiles</h2>
+
+    <collapsed-card [hidden]="hiddenFormulary()">
+      <app-dynamic-form
+        [saveText]="isUpdate ? 'Actualizar' : 'Crear Nuevo'"
+        [fields]="configuracionCampos"
+        [model]="estadoCivilActual"
+        [isLoading]="isLoading"
+        [showDelete]="showDeleteButton(estadoCivilActual?.idEstadoCivil) && isUpdate"
+        [showSave]="showSaveButton(estadoCivilActual?.idEstadoCivil)"
+        [showCancel]="true"
+        (save)="guardar()"
+        (delete)="eliminar()"
+        (cancel)="limpiarFormulario()"
+      >
+      </app-dynamic-form>
+    </collapsed-card>
+
+    @if (roleSecurity?.consultar) {
+      <hr class="divider" />
+
+      <app-dynamic-table
+        [columns]="columnas"
+        [data]="estadosCiviles"
+        [isLoading]="isLoading"
+        [showExport]="roleSecurity?.exportar || false"
+        [showPrint]="roleSecurity?.imprimir || false"
+        [reportName]="'Reporte_Estados_Civiles'"
+        [hiddenAccion]="hiddenAction()"
+        (actionSelect)="seleccionarParaEditar($event)"
+      >
+      </app-dynamic-table>
+    }
+  </div>
+</div>
