@@ -105,7 +105,7 @@ export class CalculoPlanillaProcesarComponent extends BaseComponent implements O
         }, 'Estas seguro de actualizar la planilla?', 'Confirmar Actualización');
         return;
       }
-      this.procesar(true,isUpdate);
+      this.procesar(false);
   }
 
   onSearchChange(){
