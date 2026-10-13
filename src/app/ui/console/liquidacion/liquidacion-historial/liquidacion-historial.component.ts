@@ -218,12 +218,12 @@ export class LiquidacionHistorialComponent extends BaseComponent implements OnIn
       }
     ];
 
-    this.kpisDesglose = [
-      { title: 'Indemnización', value: this.modeloSeleccionado.montoIndemnizacion || 0, currency: 'Q', icon: 'bi-shield-check', colorClass: 'info' },
-      { title: 'Aguinaldo', value: this.modeloSeleccionado.montoAguinaldo || 0, currency: 'Q', icon: 'bi-gift', colorClass: 'info' },
-      { title: 'Bono 14', value: this.modeloSeleccionado.montoBono14 || 0, currency: 'Q', icon: 'bi-calendar-check', colorClass: 'info' },
-      { title: 'Vacaciones', value: this.modeloSeleccionado.montoVacaciones || 0, currency: 'Q', icon: 'bi-sun', colorClass: 'info' },
-      { title: 'Salario Pendiente', value: this.modeloSeleccionado.montoSalarioPendiente || 0, currency: 'Q', icon: 'bi-clock-history', colorClass: 'warning' }
+      this.kpisDesglose = [
+      { title: 'Indemnización', value: this.modeloSeleccionado.montoIndemnizacion || 0, currency: 'Q', icon: 'bi-shield-check', colorClass: 'info', hidden: !this.myApp.calcular.calcularIndemnizacion },
+      { title: 'Aguinaldo', value: this.modeloSeleccionado.montoAguinaldo || 0, currency: 'Q', icon: 'bi-gift', colorClass: 'info', hidden: !this.myApp.calcular.calcularAguinaldo },
+      { title: 'Bono 14', value: this.modeloSeleccionado.montoBono14 || 0, currency: 'Q', icon: 'bi-calendar-check', colorClass: 'info', hidden: !this.myApp.calcular.calcularBono14 },
+      { title: 'Vacaciones', value: this.modeloSeleccionado.montoVacaciones || 0, currency: 'Q', icon: 'bi-sun', colorClass: 'info', hidden: !this.myApp.calcular.calcularVacaciones},
+      { title: 'Salario Pendiente', value: this.modeloSeleccionado.montoSalarioPendiente || 0, currency: 'Q', icon: 'bi-clock-history', colorClass: 'warning', hidden: !this.myApp.calcular.calcularSalarioPendiente }
     ];
   }
 }
