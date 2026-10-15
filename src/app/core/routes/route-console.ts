@@ -17,6 +17,8 @@ import { InasistenciaComponent } from '../../ui/console/inasistencia/inasistenci
 import { CalculoPlanillaComponent } from '../../ui/console/calculo-planilla/calculo-planilla.component';
 import { ReportePlanillaComponent } from '../../ui/console/reporte-planilla/reporte-planilla.component';
 import { LiquidacionComponent } from '../../ui/console/liquidacion/liquidacion.component';
+import { TipoDocumentoComponent } from '../../ui/console/tipo-documento/tipo-documento.component';
+
 
 export const CONSOLE_ROUTES: Routes = [
   {
@@ -79,6 +81,10 @@ export const CONSOLE_ROUTES: Routes = [
   {
     path: 'liquidacion/:code',
     component: LiquidacionComponent,
+  },
+  {
+    path: 'tipo_documento/:code',
+    component: TipoDocumentoComponent,
   },
   {
     path: '403',
