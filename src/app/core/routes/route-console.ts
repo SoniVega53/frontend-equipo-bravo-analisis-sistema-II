@@ -17,6 +17,7 @@ import { InasistenciaComponent } from '../../ui/console/inasistencia/inasistenci
 import { CalculoPlanillaComponent } from '../../ui/console/calculo-planilla/calculo-planilla.component';
 import { ReportePlanillaComponent } from '../../ui/console/reporte-planilla/reporte-planilla.component';
 import { LiquidacionComponent } from '../../ui/console/liquidacion/liquidacion.component';
+import { FlujoStatusEmpleadoComponent } from '../../ui/console/flujo-status-empleado/flujo-status-empleado.component';
 
 export const CONSOLE_ROUTES: Routes = [
   {
@@ -79,6 +80,10 @@ export const CONSOLE_ROUTES: Routes = [
   {
     path: 'liquidacion/:code',
     component: LiquidacionComponent,
+  },
+  {
+    path: 'flujo_status_empleado/:code',
+    component: FlujoStatusEmpleadoComponent,
   },
   {
     path: '403',
