@@ -1,0 +1,79 @@
+﻿<div class="center-page">
+  <div class="page-container">
+    <h2 class="page-title">Flujos de Status de Empleado</h2>
+    <p class="descripcion">Configura y valida las transiciones permitidas entre estados de empleado.</p>
+
+    <div *ngIf="mensaje" class="mensaje" [class.exito]="tipoMensaje === 'exito'" [class.error]="tipoMensaje === 'error'">
+      {{ mensaje }}
+    </div>
+
+    <form class="formulario" (ngSubmit)="guardar()">
+      <div class="campo">
+        <label for="statusActual">Status actual</label>
+        <select id="statusActual" name="statusActual" [(ngModel)]="actual" [disabled]="editando" required>
+          <option [ngValue]="null">Selecciona el estado actual</option>
+          <option *ngFor="let status of statuses" [ngValue]="status.idStatusEmpleado">
+            {{ status.nombre }}
+          </option>
+        </select>
+      </div>
+
+      <div class="campo">
+        <label for="statusNuevo">Status nuevo</label>
+        <select id="statusNuevo" name="statusNuevo" [(ngModel)]="nuevo" [disabled]="editando" required>
+          <option [ngValue]="null">Selecciona el estado nuevo</option>
+          <option *ngFor="let status of statuses" [ngValue]="status.idStatusEmpleado">
+            {{ status.nombre }}
+          </option>
+        </select>
+      </div>
+
+      <div class="campo campo-completo">
+        <label for="nombreEvento">Nombre del evento (opcional)</label>
+        <input id="nombreEvento" name="nombreEvento" [(ngModel)]="nombreEvento" maxlength="150"
+               placeholder="Ej. Activar empleado">
+      </div>
+
+      <div class="acciones campo-completo">
+        <button type="submit" [disabled]="cargando">
+          {{ editando ? 'Actualizar transición' : 'Guardar transición' }}
+        </button>
+        <button type="button" class="secundario" (click)="validar()" [disabled]="cargando">
+          Validar transición
+        </button>
+        <button *ngIf="editando" type="button" class="secundario" (click)="limpiar()">
+          Cancelar edición
+        </button>
+      </div>
+    </form>
+
+    <h3>Transiciones configuradas</h3>
+    <p *ngIf="cargando">Cargando información...</p>
+    <div class="tabla-contenedor">
+      <table>
+        <thead>
+          <tr>
+            <th>Status actual</th>
+            <th>Status nuevo</th>
+            <th>Evento</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let flujo of flujos">
+            <td>{{ nombreStatus(flujo.idStatusActual) }}</td>
+            <td>{{ nombreStatus(flujo.idStatusNuevo) }}</td>
+            <td>{{ flujo.nombreEvento || '—' }}</td>
+            <td class="acciones-tabla">
+              <button type="button" class="secundario" (click)="editar(flujo)">Editar</button>
+              <button type="button" class="peligro" (click)="eliminar(flujo)">Eliminar</button>
+            </td>
+          </tr>
+          <tr *ngIf="!cargando && flujos.length === 0">
+            <td colspan="4">No hay transiciones configuradas.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
