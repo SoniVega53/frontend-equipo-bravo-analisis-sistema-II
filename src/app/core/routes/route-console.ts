@@ -26,6 +26,8 @@ import { PuestoComponent } from '../../ui/console/puesto/puesto.component';
 import { BancoComponent } from '../../ui/console/banco/banco.component';
 import { PersonaComponent } from '../../ui/console/persona/persona.component';
 import { EmpleadoComponent } from '../../ui/console/empleado/empleado.component';
+import { TipoDocumentoComponent } from '../../ui/console/tipo-documento/tipo-documento.component';
+
 
 export const CONSOLE_ROUTES: Routes = [
   {
@@ -112,6 +114,10 @@ export const CONSOLE_ROUTES: Routes = [
   {
     path: 'liquidacion/:code',
     component: LiquidacionComponent,
+  },
+  {
+    path: 'tipo_documento/:code',
+    component: TipoDocumentoComponent,
   },
   {
     path: '403',
