@@ -17,6 +17,7 @@ import { InasistenciaComponent } from '../../ui/console/inasistencia/inasistenci
 import { CalculoPlanillaComponent } from '../../ui/console/calculo-planilla/calculo-planilla.component';
 import { ReportePlanillaComponent } from '../../ui/console/reporte-planilla/reporte-planilla.component';
 import { LiquidacionComponent } from '../../ui/console/liquidacion/liquidacion.component';
+import { BoletaPagoComponent } from '../../ui/console/boleta-pago/boleta-pago.component';
 
 export const CONSOLE_ROUTES: Routes = [
   {
@@ -83,6 +84,10 @@ export const CONSOLE_ROUTES: Routes = [
   {
     path: '403',
     component: AccesoDenegadoComponent,
+  },
+  {
+    path: 'boleta_pago/:code',
+    component: BoletaPagoComponent,
   },
   {
     path: '**',
