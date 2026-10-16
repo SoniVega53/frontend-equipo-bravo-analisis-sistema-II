@@ -67,7 +67,7 @@ export class BoletaPagoComponent extends BaseComponent implements OnInit {
       callback: async () => {
         if (!this.modeloDate) return;
         const [anioStr, mesStr] = this.modeloDate.split('-');
-        const response = await this.reportePlanillaService.generarReporte({
+        const response = await this.boletaPagoService.generarReporte({
           anio: parseInt(anioStr, 10),
           mes: parseInt(mesStr, 10),
         });

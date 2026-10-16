@@ -13,3 +13,7 @@
   text-align: right;
   font-size: 1.1rem;
 }
+
+.page-container {
+    min-height: 90vh;
+}
