@@ -116,7 +116,7 @@ export const CONSOLE_ROUTES: Routes = [
     component: LiquidacionComponent,
   },
   {
-    path: 'tipo_documento/:code',
+    path: 'tipos_documento/:code',
     component: TipoDocumentoComponent,
   },
   {
