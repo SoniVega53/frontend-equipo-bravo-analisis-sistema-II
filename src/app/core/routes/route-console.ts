@@ -7,6 +7,7 @@ import { NotFoundComponent } from '../../ui/not-found/not-found.component';
 import { AsignacionOpcionRoleComponent } from '../../ui/console/asignacion-opcion-role/asignacion-opcion-role.component';
 import { UsuarioComponent } from '../../ui/console/usuario/usuario.component';
 import { SucursalComponent } from '../../ui/console/sucursal/sucursal.component';
+import { StatusEmpleadoComponent } from '../../ui/console/status-empleado/status-empleado.component';
 import { StatusUsuarioComponent } from '../../ui/console/status-usuario/status-usuario.component';
 import { RoleComponent } from '../../ui/console/role/role.component';
 import { ModuloComponent } from '../../ui/console/modulo/modulo.component';
@@ -39,6 +40,10 @@ export const CONSOLE_ROUTES: Routes = [
   {
     path: 'status_usuario/:code',
     component: StatusUsuarioComponent,
+  },
+  {
+  path: 'status_empleado/:code',
+  component: StatusEmpleadoComponent,
   },
   {
     path: 'usuario/:code',
