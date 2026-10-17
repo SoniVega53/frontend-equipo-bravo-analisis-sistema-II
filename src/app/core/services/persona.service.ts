@@ -26,4 +26,9 @@ export class PersonaService extends BaseService {
   async eliminar(id: number): Promise<any> {
     return this.delete<any>(`${this.endpoint}/${id}`);
   }
+
+  async getPersonas(): Promise<Persona[]> {
+    const response: any = await this.get<any>(this.endpoint);
+    return response?.data || [];
+  }
 }

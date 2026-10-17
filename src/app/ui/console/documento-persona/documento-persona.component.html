@@ -1,0 +1,53 @@
+<div class="center-page">
+  <div class="page-container position-relative">
+    <app-loader [isLoading]="isLoadingPage"></app-loader>
+
+    <h2 class="page-title">Documentos de Personas</h2>
+
+    <collapsed-card [hidden]="hiddenFormulary()">
+      <app-dynamic-form
+        [fields]="configuracionCampos"
+        [model]="documentoActual"
+        [isLoading]="isLoading"
+        [showDelete]="
+          showDeleteButton(
+            documentoActual.idPersona && documentoActual.idTipoDocumento
+              ? 1
+              : undefined
+          )
+        "
+        [showSave]="
+          showSaveButton(
+            documentoActual.idPersona && documentoActual.idTipoDocumento
+              ? 1
+              : undefined
+          )
+        "
+        [showCancel]="true"
+        (save)="guardar()"
+        (delete)="eliminar(
+          documentoActual.idTipoDocumento,
+          documentoActual.idPersona
+        )"
+        (cancel)="limpiarFormulario()"
+      >
+      </app-dynamic-form>
+    </collapsed-card>
+
+    @if (roleSecurity?.consultar) {
+      <hr class="divider" />
+
+      <app-dynamic-table
+        [columns]="columnas"
+        [data]="documentos"
+        [isLoading]="isLoading"
+        [showExport]="roleSecurity?.exportar || false"
+        [showPrint]="roleSecurity?.imprimir || false"
+        [reportName]="'Reporte_Documentos_Personas'"
+        [hiddenAccion]="hiddenAction()"
+        (actionSelect)="seleccionarParaEditar($event)"
+      >
+      </app-dynamic-table>
+    }
+  </div>
+</div>

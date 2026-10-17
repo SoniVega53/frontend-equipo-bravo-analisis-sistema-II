@@ -1,6 +1,7 @@
 export interface IPersona {
   idPersona?: number;
   nombre?: string;
+  nombreCompleto?: string;
   apellido?: string;
   fechaNacimiento?: string;
   idGenero?: number;
