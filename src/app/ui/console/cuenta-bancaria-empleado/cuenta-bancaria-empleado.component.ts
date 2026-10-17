@@ -5,12 +5,8 @@ import { FormsModule } from '@angular/forms';
 import { BaseComponent } from '../../base.component';
 
 import { CuentaBancariaEmpleadoService } from '../../../core/services/cuenta-bancaria-empleado.service';
-import { EmpleadoService } from '../../../core/services/empleado.service';
-import { BancoService } from '../../../core/services/banco.service';
 
 import { CuentaBancariaEmpleado } from '../../../interface/cuenta-bancaria-empleado.interface';
-import { Empleado } from '../../../interface/empleado.interface';
-import { Banco } from '../../../interface/banco.interface';
 import { DynamicField } from '../../../interface/dynamic-field.interface';
 import { SelectOption } from '../../../interface/select-option.interface';
 
@@ -37,17 +33,13 @@ import { CollapsedCardComponent } from '../../../shared/collapsed-card/collapsed
   templateUrl: './cuenta-bancaria-empleado.component.html',
   styleUrl: './cuenta-bancaria-empleado.component.css',
 })
-export class CuentaBancariaEmpleadoComponent
-  extends BaseComponent
-  implements OnInit {
+export class CuentaBancariaEmpleadoComponent extends BaseComponent implements OnInit {
 
   private cuentaService = inject(CuentaBancariaEmpleadoService);
-  private empleadoService = inject(EmpleadoService);
-  private bancoService = inject(BancoService);
 
   cuentas: CuentaBancariaEmpleado[] = [];
-  empleados: Empleado[] = [];
-  bancos: Banco[] = [];
+  empleados: SelectOption[] = [];
+  bancos: SelectOption[] = [];
 
   cuentaActual: CuentaBancariaEmpleado = this.nuevaCuenta();
 
@@ -80,8 +72,8 @@ async cargarDatos() {
 
         const [cuentas, empleados, bancos] = await Promise.all([
           this.cuentaService.getCuentasBancariasEmpleado(),
-          this.empleadoService.getEmpleados(),
-          this.bancoService.getBancos(),
+          this.catalogoService.getEmpleados(),
+          this.catalogoService.getBancos(),
         ]);
 
         console.log('3. Cuentas recibidas:', cuentas);
@@ -89,8 +81,8 @@ async cargarDatos() {
         console.log('5. Bancos recibidos:', bancos);
 
         this.cuentas = Array.isArray(cuentas) ? cuentas : [];
-        this.empleados = Array.isArray(empleados) ? empleados : [];
-        this.bancos = Array.isArray(bancos) ? bancos : [];
+        this.empleados = this.ordenarGenerico(empleados, '', 'codigo', 'valor');
+        this.bancos = this.ordenarGenerico(bancos, '', 'codigo', 'valor');
 
         this.configurarCampos();
         this.configurarColumnas();
@@ -108,20 +100,6 @@ async cargarDatos() {
 
 
   private configurarCampos() {
-    const opcionesEmpleados: SelectOption[] = this.empleados.map(
-      (empleado) => ({
-        codigo: empleado.idEmpleado,
-        valor: empleado.nombreCompleto,
-      })
-    );
-
-    const opcionesBancos: SelectOption[] = this.bancos.map(
-      (banco) => ({
-        codigo: banco.idBanco,
-        valor: banco.nombre,
-      })
-    );
-
     this.configuracionCampos = [
       {
         name: 'idCuentaBancaria',
@@ -137,7 +115,7 @@ async cargarDatos() {
         type: 'dropdown',
         placeholder: 'Seleccione un empleado',
         required: true,
-        options: opcionesEmpleados,
+        options: this.empleados,
         colSpan: 7,
       },
       {
@@ -146,7 +124,7 @@ async cargarDatos() {
         type: 'dropdown',
         placeholder: 'Seleccione un banco',
         required: true,
-        options: opcionesBancos,
+        options: this.bancos,
         colSpan: 7,
       },
       {
@@ -213,12 +191,12 @@ async cargarDatos() {
       ...cuenta,
       nombreEmpleado:
         this.empleados.find(
-          (empleado) => empleado.idEmpleado === cuenta.idEmpleado
-        )?.nombreCompleto ?? `Empleado #${cuenta.idEmpleado}`,
+          (empleado) => empleado.codigo == cuenta.idEmpleado
+        )?.valor ?? `Empleado #${cuenta.idEmpleado}`,
       nombreBanco:
         this.bancos.find(
-          (banco) => banco.idBanco === cuenta.idBanco
-        )?.nombre ?? `Banco #${cuenta.idBanco}`,
+          (banco) => banco.codigo == cuenta.idBanco
+        )?.valor ?? `Banco #${cuenta.idBanco}`,
     }));
   }
 

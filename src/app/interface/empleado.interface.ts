@@ -2,7 +2,7 @@ export interface IEmpleado {
   idEmpleado?: number;
   idPersona?: number;
   idSucursal?: number;
-  nombreCompleto: string;
+  nombreCompleto?: string;
   fechaContratacion?: string;
   idPuesto?: number;
   idStatusEmpleado?: number;

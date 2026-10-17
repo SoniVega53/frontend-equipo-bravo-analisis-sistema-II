@@ -5,12 +5,8 @@ import { FormsModule } from '@angular/forms';
 import { BaseComponent } from '../../base.component';
 
 import { DocumentoPersonaService } from '../../../core/services/documento-persona.service';
-import { PersonaService } from '../../../core/services/persona.service';
-import { TipoDocumentoService } from '../../../core/services/tipo-documento.service';
 
 import { DocumentoPersona } from '../../../interface/documento-persona.interface';
-import { Persona } from '../../../interface/persona.interface';
-import { TipoDocumento } from '../../../interface/tipo-documento.interface';
 import { DynamicField } from '../../../interface/dynamic-field.interface';
 import { SelectOption } from '../../../interface/select-option.interface';
 
@@ -37,17 +33,13 @@ import { CollapsedCardComponent } from '../../../shared/collapsed-card/collapsed
   templateUrl: './documento-persona.component.html',
   styleUrl: './documento-persona.component.css',
 })
-export class DocumentoPersonaComponent
-  extends BaseComponent
-  implements OnInit {
+export class DocumentoPersonaComponent extends BaseComponent implements OnInit {
 
   private documentoService = inject(DocumentoPersonaService);
-  private personaService = inject(PersonaService);
-  private tipoDocumentoService = inject(TipoDocumentoService);
 
   documentos: DocumentoPersona[] = [];
-  personas: Persona[] = [];
-  tiposDocumento: TipoDocumento[] = [];
+  personas: SelectOption[] = [];
+  tiposDocumento: SelectOption[] = [];
 
   documentoActual: DocumentoPersona = this.nuevoDocumento();
 
@@ -77,13 +69,13 @@ export class DocumentoPersonaComponent
         try {
           const [documentos, personas, tipos] = await Promise.all([
             this.documentoService.getDocumentosPersonas(),
-            this.personaService.getPersonas(),
-            this.tipoDocumentoService.getTiposDocumento(),
+            this.catalogoService.getPersonas(),
+            this.catalogoService.getTiposDocumentos(),
           ]);
 
           this.documentos = Array.isArray(documentos) ? documentos : [];
-          this.personas = Array.isArray(personas) ? personas : [];
-          this.tiposDocumento = Array.isArray(tipos) ? tipos : [];
+          this.personas = this.ordenarGenerico(personas, '', 'codigo', 'valor');
+          this.tiposDocumento = this.ordenarGenerico(tipos, '', 'codigo', 'valor');
 
           this.configurarCampos();
           this.configurarColumnas();
@@ -98,23 +90,6 @@ export class DocumentoPersonaComponent
   }
 
   private configurarCampos() {
-    const opcionesPersonas: SelectOption[] = this.personas.map(
-      (persona) => ({
-        codigo: persona.idPersona,
-        valor:
-          persona.nombreCompleto ||
-          `${persona.nombre ?? ''} ${persona.apellido ?? ''}`.trim() ||
-          `Persona #${persona.idPersona}`,
-      })
-    );
-
-    const opcionesTipos: SelectOption[] = this.tiposDocumento.map(
-      (tipo) => ({
-        codigo: tipo.idTipoDocumento,
-        valor: tipo.nombre,
-      })
-    );
-
     this.configuracionCampos = [
       {
         name: 'idPersona',
@@ -122,7 +97,7 @@ export class DocumentoPersonaComponent
         type: 'dropdown',
         placeholder: 'Seleccione una persona',
         required: true,
-        options: opcionesPersonas,
+        options: this.personas,
         disabled: this.editando,
         colSpan: 7,
       },
@@ -132,7 +107,7 @@ export class DocumentoPersonaComponent
         type: 'dropdown',
         placeholder: 'Seleccione un tipo de documento',
         required: true,
-        options: opcionesTipos,
+        options: this.tiposDocumento,
         disabled: this.editando,
         colSpan: 7,
       },
@@ -187,21 +162,19 @@ export class DocumentoPersonaComponent
 
     this.documentos = this.documentos.map((documento) => {
       const persona = this.personas.find(
-        (p) => p.idPersona === documento.idPersona
+        (p) => p.codigo == documento.idPersona
       );
 
       const tipo = this.tiposDocumento.find(
-        (t) => t.idTipoDocumento === documento.idTipoDocumento
+        (t) => t.codigo == documento.idTipoDocumento
       );
 
       return {
         ...documento,
-        nombrePersona: persona
-          ? persona.nombreCompleto ||
-            `${persona.nombre ?? ''} ${persona.apellido ?? ''}`.trim()
-          : `Persona #${documento.idPersona}`,
+        nombrePersona:
+          persona?.valor ?? `Persona #${documento.idPersona}`,
         nombreTipoDocumento:
-          tipo?.nombre ?? `Tipo #${documento.idTipoDocumento}`,
+          tipo?.valor ?? `Tipo #${documento.idTipoDocumento}`,
       };
     });
   }
