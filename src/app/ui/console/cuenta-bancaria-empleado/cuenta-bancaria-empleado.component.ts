@@ -72,15 +72,16 @@ async cargarDatos() {
 
         const [cuentas, empleados, bancos] = await Promise.all([
           this.cuentaService.getCuentasBancariasEmpleado(),
-          this.catalogoService.getEmpleados(),
+          this.catalogoService.getEmpleados(false),
           this.catalogoService.getBancos(),
         ]);
 
-        console.log('3. Cuentas recibidas:', cuentas);
-        console.log('4. Empleados recibidos:', empleados);
-        console.log('5. Bancos recibidos:', bancos);
+        this.cuentas = this.ordenarGenerico(Array.isArray(cuentas) ? cuentas : [], '', 'idCuentaBancaria', 'numeroDeCuenta');
+        this.cuentas = this.cuentas.map((cuenta) => ({
+          ...cuenta,
+          activa: cuenta.activa === 'S' || cuenta.activa === '1' ? 'S' : 'N',
+        }));
 
-        this.cuentas = Array.isArray(cuentas) ? cuentas : [];
         this.empleados = this.ordenarGenerico(empleados, '', 'codigo', 'valor');
         this.bancos = this.ordenarGenerico(bancos, '', 'codigo', 'valor');
 
@@ -191,11 +192,11 @@ async cargarDatos() {
       ...cuenta,
       nombreEmpleado:
         this.empleados.find(
-          (empleado) => empleado.codigo == cuenta.idEmpleado
+          (empleado) => empleado.codigo === cuenta.idEmpleado
         )?.valor ?? `Empleado #${cuenta.idEmpleado}`,
       nombreBanco:
         this.bancos.find(
-          (banco) => banco.codigo == cuenta.idBanco
+          (banco) => banco.codigo === cuenta.idBanco
         )?.valor ?? `Banco #${cuenta.idBanco}`,
     }));
   }
@@ -213,6 +214,8 @@ async cargarDatos() {
     this.executeService({
       callback: async () => {
         const actualizar = !!this.cuentaActual.idCuentaBancaria;
+
+        this.cuentaActual.activa = this.cuentaActual.activa === 'S' || this.cuentaActual.activa === '1' ? '1' : '0';
 
         await this.cuentaService.crearToActualizar({
           ...this.cuentaActual,

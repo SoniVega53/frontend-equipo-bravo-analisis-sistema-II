@@ -5,10 +5,10 @@
     <h2 class="page-title">Cuentas Bancarias de Empleados</h2>
 
     <collapsed-card [hidden]="hiddenFormulary()">
-        <p>Campos configurados: {{ configuracionCampos.length }}</p>
+        <!-- <p>Campos configurados: {{ configuracionCampos.length }}</p> -->
 
 <div *ngFor="let campo of configuracionCampos">
-  <p>{{ campo.label }} - {{ campo.type }}</p>
+  <!-- <p>{{ campo.label }} - {{ campo.type }}</p> -->
 </div>
       <app-dynamic-form
         [fields]="configuracionCampos"

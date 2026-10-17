@@ -4,7 +4,7 @@ export interface CuentaBancariaEmpleado {
   idEmpleado: number;
   idBanco: number;
   numeroDeCuenta: string;
-  activa: 'S' | 'N';
+  activa: 'S' | 'N' | '1' | '0';
   fechaCreacion?: string;
   usuarioCreacion?: string;
   fechaModificacion?: string | null;
