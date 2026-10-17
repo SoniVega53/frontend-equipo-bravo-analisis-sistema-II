@@ -9,7 +9,9 @@ import { UsuarioComponent } from '../../ui/console/usuario/usuario.component';
 import { SucursalComponent } from '../../ui/console/sucursal/sucursal.component';
 import { StatusEmpleadoComponent } from '../../ui/console/status-empleado/status-empleado.component';
 import { StatusUsuarioComponent } from '../../ui/console/status-usuario/status-usuario.component';
+import { CuentaBancariaEmpleadoComponent } from '../../ui/console/cuenta-bancaria-empleado/cuenta-bancaria-empleado.component';
 import { RoleComponent } from '../../ui/console/role/role.component';
+import { DocumentoPersonaComponent } from '../../ui/console/documento-persona/documento-persona.component';
 import { ModuloComponent } from '../../ui/console/modulo/modulo.component';
 import { MenuComponent } from '../../ui/console/menu/menu.component';
 import { OpcionComponent } from '../../ui/console/opcion/opcion.component';
@@ -36,6 +38,14 @@ export const CONSOLE_ROUTES: Routes = [
   {
     path: 'genero/:code',
     component: GeneroComponent,
+  },
+  {
+  path: 'cuenta_bancaria_empleado/:code',
+  component: CuentaBancariaEmpleadoComponent
+  },
+  {
+  path: 'documento_persona/:code',
+  component: DocumentoPersonaComponent,
   },
   {
     path: 'status_usuario/:code',
