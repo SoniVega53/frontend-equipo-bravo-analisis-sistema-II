@@ -10,6 +10,7 @@ import { ReportePlanillaService } from '../../../core/services/reporte-planilla.
 import { BoletaPagoService } from '../../../core/services/boleta-pago.service';
 import { PlanillaDetalle } from '../../../interface/reporte-planilla.interface';
 import { BoletaPagoRequest } from '../../../interface/boleta-pago.interface';
+import { SelectOption } from '../../../interface/select-option.interface';
 
 @Component({
   selector: 'app-boleta-pago',
@@ -31,6 +32,7 @@ export class BoletaPagoComponent extends BaseComponent implements OnInit {
   modeloDate: any;
   idEmpleadoSeleccionado: number | null = null;
   empleadosPeriodo: PlanillaDetalle[] = [];
+  optionsEmpleados: SelectOption[] = [];
 
   fieldDate: DynamicField = {
     name: 'periodoSeleccionado',
@@ -59,6 +61,7 @@ export class BoletaPagoComponent extends BaseComponent implements OnInit {
   actionMonthSelected(event: string) {
     this.idEmpleadoSeleccionado = null;
     this.empleadosPeriodo = [];
+    this.optionsEmpleados = [];
     this.cargarEmpleadosDelPeriodo();
   }
 
@@ -72,9 +75,14 @@ export class BoletaPagoComponent extends BaseComponent implements OnInit {
           mes: parseInt(mesStr, 10),
         });
         this.empleadosPeriodo = this.ordenarGenerico(response.detalles || [], '', 'idEmpleado', 'nombres');
+        this.optionsEmpleados = this.empleadosPeriodo.map((e) => ({
+          codigo: e.idEmpleado,
+          valor: `${e.idEmpleado} - ${e.nombres}`,
+        }));
       },
       callbackError: async (error) => {
         this.empleadosPeriodo = [];
+        this.optionsEmpleados = [];
         this.showErrorAlert(error?.mensaje || 'No hay planilla procesada para el periodo seleccionado.');
       },
       showLoading: true,
@@ -82,7 +90,7 @@ export class BoletaPagoComponent extends BaseComponent implements OnInit {
   }
 
   get detalleSeleccionado(): PlanillaDetalle | undefined {
-    return this.empleadosPeriodo.find((e) => e.idEmpleado === this.idEmpleadoSeleccionado);
+    return this.empleadosPeriodo.find((e) => e.idEmpleado == this.idEmpleadoSeleccionado);
   }
 
   get totalIngresos(): number {
@@ -103,7 +111,7 @@ export class BoletaPagoComponent extends BaseComponent implements OnInit {
     return {
       anio: parseInt(anioStr, 10),
       mes: parseInt(mesStr, 10),
-      idEmpleado: this.idEmpleadoSeleccionado,
+      idEmpleado: Number(this.idEmpleadoSeleccionado),
     };
   }
 

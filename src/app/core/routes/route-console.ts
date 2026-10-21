@@ -109,7 +109,7 @@ export const CONSOLE_ROUTES: Routes = [
   },
   {
     path: 'role/:code',
-    component: RolesComponent,
+    component: RoleComponent,
   },
   {
     path: 'modulo/:code',

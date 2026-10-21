@@ -21,18 +21,17 @@
       </app-dropdown-select>
 
       <div class="mt-3">
-        <label class="form-label fw-semibold" for="empleadoBoleta">Empleado *</label>
-        <select
+        <app-dropdown-select
           id="empleadoBoleta"
-          class="form-select"
+          label="Empleado"
+          placeholder="Seleccione un empleado..."
+          [disabled]="isLoading || empleadosPeriodo.length === 0"
+          [options]="optionsEmpleados"
           [(ngModel)]="idEmpleadoSeleccionado"
-          name="empleadoBoleta"
-          [disabled]="isLoading || empleadosPeriodo.length === 0">
-          <option [ngValue]="null">Seleccione un empleado...</option>
-          @for (e of empleadosPeriodo; track e.idEmpleado) {
-            <option [ngValue]="e.idEmpleado">{{ e.idEmpleado }} - {{ e.nombres }}</option>
-          }
-        </select>
+          [required]="true"
+          [showSearch]="true"
+          name="empleadoBoleta">
+        </app-dropdown-select>
       </div>
     </collapsed-card>
 
