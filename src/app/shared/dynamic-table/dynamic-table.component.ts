@@ -1,7 +1,7 @@
 import { Component, Input, Output, EventEmitter, ViewChild, ElementRef, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { LoaderComponent } from "../loader/loader.component";
-import * as XLSX from 'xlsx';
 import { GenericPdfRequest, PdfExportService } from '../../core/services/pdf-export.service';
 import Swal from 'sweetalert2';
 
@@ -16,7 +16,7 @@ export interface TableColumn {
 @Component({
   selector: 'app-dynamic-table',
   standalone: true,
-  imports: [CommonModule, LoaderComponent],
+  imports: [CommonModule, FormsModule, LoaderComponent],
   templateUrl: './dynamic-table.component.html',
   styleUrls: ['./dynamic-table.component.css']
 })
@@ -29,29 +29,63 @@ export class DynamicTableComponent {
 
   @Input() showExport: boolean = true;
   @Input() showPrint: boolean = true;
+  @Input() showSearch: boolean = true;
+  @Input() searchPlaceholder: string = 'Buscar...';
+  @Input() searchTerm: string = '';
   @Input() hiddenAccion: boolean = false;
   @Input() scrollTop: boolean = true;
   @Input() reportName: string = 'Reporte';
   @Input() pageSize: number = 8;
 
   @Output() actionSelect = new EventEmitter<any>();
+  @Output() currentPageChange = new EventEmitter<number>();
+  @Output() searchTermChange = new EventEmitter<string>();
+  @Output() searchChange = new EventEmitter<string>();
 
   @ViewChild('printZone') printZone!: ElementRef;
 
   @Input() currentPage: number = 1;
 
-  @Output() currentPageChange = new EventEmitter<number>();
-
   isExporting: boolean = false;
   isPrinting: boolean = false;
 
+  onSearchChange() {
+    this.currentPage = 1;
+    this.currentPageChange.emit(this.currentPage);
+    this.searchTermChange.emit(this.searchTerm);
+    this.searchChange.emit(this.searchTerm);
+  }
+
+  get filteredData(): any[] {
+    if (!this.showSearch || !this.searchTerm?.trim()) {
+      return this.data || [];
+    }
+    const term = this.searchTerm.toLowerCase().trim();
+    return (this.data || []).filter((row) => {
+      if (!row) return false;
+      return this.columns.some((col) => {
+        if (col.type === 'audit') {
+          const userVal = row[col.userField || ''] ? String(row[col.userField || '']).toLowerCase() : '';
+          const dateVal = row[col.dateField || ''] ? String(row[col.dateField || '']).toLowerCase() : '';
+          return userVal.includes(term) || dateVal.includes(term);
+        }
+        const val = row[col.field];
+        if (val === null || val === undefined) return false;
+        return String(val).toLowerCase().includes(term);
+      });
+    });
+  }
+
   get totalPages(): number {
-    return Math.ceil(this.data.length / this.pageSize);
+    return Math.ceil(this.filteredData.length / this.pageSize);
   }
 
   get paginatedData(): any[] {
+    if (this.currentPage > this.totalPages && this.totalPages > 0) {
+      this.currentPage = 1;
+    }
     const startIndex = (this.currentPage - 1) * this.pageSize;
-    return this.data.slice(startIndex, startIndex + this.pageSize);
+    return this.filteredData.slice(startIndex, startIndex + this.pageSize);
   }
 
   get pages(): number[] {
@@ -83,8 +117,8 @@ export class DynamicTableComponent {
   }
 
   scrollToTop() {
-   if (!this.scrollTop) return;
-   const mainContainer = document.querySelector('.main-content');
+    if (!this.scrollTop) return;
+    const mainContainer = document.querySelector('.main-content');
     
     if (mainContainer) {
       mainContainer.scrollTo({
@@ -100,7 +134,8 @@ export class DynamicTableComponent {
   }
 
   private buildPdfRequest(): GenericPdfRequest {
-    const exportData = this.data.map(row => {
+    const sourceData = this.showSearch && this.searchTerm?.trim() ? this.filteredData : this.data;
+    const exportData = sourceData.map(row => {
       const rowData: any = {};
       this.columns.forEach(col => {
         if (col.type === 'audit') {

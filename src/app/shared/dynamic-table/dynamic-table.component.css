@@ -11,6 +11,29 @@
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
 }
 
+.search-container {
+  padding: 0;
+  position: relative;
+  max-width: 400px;
+  min-width: 220px;
+}
+
+.search-input {
+  font-size: 0.9rem;
+  padding: 8px 12px;
+  border: 1px solid var(--border-color, #dee2e6);
+  border-radius: 6px;
+  color: var(--text-body, #212529);
+  background-color: var(--bg-app, #ffffff);
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.search-input:focus {
+  border-color: var(--color-primary, #4f46e5);
+  box-shadow: 0 0 0 0.2rem rgba(79, 70, 229, 0.15);
+  outline: none;
+}
+
 .table {
   margin-bottom: 0;
 }
@@ -41,6 +64,10 @@
 @media (max-width: 768px) {
   .table-card {
     padding: 4px;
+  }
+  .search-container {
+    max-width: 100%;
+    width: 100%;
   }
 }
 

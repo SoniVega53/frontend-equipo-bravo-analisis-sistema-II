@@ -17,7 +17,10 @@ export abstract class BaseService {
       return await firstValueFrom(observable$);
     } catch (error: any) {
       if (error instanceof HttpErrorResponse && error.error) {
-        const apiError: ApiErrorResponse = error.error;
+        const apiError: any = error.error;
+        if (!apiError.mensaje && apiError.message) {
+          apiError.mensaje = apiError.message;
+        }
         throw apiError;
       }
       // Error genérico de red o conexión

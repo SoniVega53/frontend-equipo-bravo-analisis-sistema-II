@@ -21,6 +21,7 @@ import { CalculoPlanillaComponent } from '../../ui/console/calculo-planilla/calc
 import { ReportePlanillaComponent } from '../../ui/console/reporte-planilla/reporte-planilla.component';
 import { LiquidacionComponent } from '../../ui/console/liquidacion/liquidacion.component';
 import { BoletaPagoComponent } from '../../ui/console/boleta-pago/boleta-pago.component';
+import { FlujoStatusEmpleadoComponent } from '../../ui/console/flujo-status-empleado/flujo-status-empleado.component';
 
 import { EstadoCivilComponent } from '../../ui/console/estado-civil/estado-civil.component';
 import { DepartamentoComponent } from '../../ui/console/departamento/departamento.component';
@@ -75,20 +76,32 @@ export const CONSOLE_ROUTES: Routes = [
     component: GeneroComponent,
   },
   {
-  path: 'cuenta_bancaria_empleado/:code',
-  component: CuentaBancariaEmpleadoComponent
+    path: 'cuenta_bancaria_empleado/:code',
+    component: CuentaBancariaEmpleadoComponent
   },
   {
-  path: 'documento_persona/:code',
-  component: DocumentoPersonaComponent,
+    path: 'documento_persona/:code',
+    component: DocumentoPersonaComponent,
   },
   {
     path: 'status_usuario/:code',
     component: StatusUsuarioComponent,
   },
   {
-  path: 'status_empleado/:code',
-  component: StatusEmpleadoComponent,
+    path: 'status_empleado/:code',
+    component: StatusEmpleadoComponent,
+  },
+  {
+    path: 'flujo_status_empleado/:code',
+    component: FlujoStatusEmpleadoComponent,
+  },
+  {
+    path: 'status_flujo_empleado/:code',
+    component: FlujoStatusEmpleadoComponent,
+  },
+  {
+    path: 'flujo-status-empleado/:code',
+    component: FlujoStatusEmpleadoComponent,
   },
   {
     path: 'usuario/:code',

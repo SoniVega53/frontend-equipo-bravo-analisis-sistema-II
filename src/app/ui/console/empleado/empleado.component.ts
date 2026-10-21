@@ -122,6 +122,9 @@ export class EmpleadoComponent extends BaseComponent implements OnInit {
           puesto: this.nombreOpcion(this.optionsPuesto, e.idPuesto),
           status: this.nombreOpcion(this.optionsStatus, e.idStatusEmpleado),
         }));
+
+        this.empleados = this.ordenarGenerico(this.empleados, '', 'idEmpleado', 'persona');
+
         this.columnas = [
           { field: 'idEmpleado', header: 'ID' },
           { field: 'persona', header: 'Persona' },
