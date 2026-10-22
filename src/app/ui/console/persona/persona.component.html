@@ -1,0 +1,39 @@
+<div class="center-page">
+  <div class="page-container position-relative">
+    <app-loader [isLoading]="isLoadingPage"></app-loader>
+
+    <h2 class="page-title">Personas</h2>
+
+    <collapsed-card [hidden]="hiddenFormulary()">
+      <app-dynamic-form
+        [saveText]="isUpdate ? 'Actualizar' : 'Crear Nuevo'"
+        [fields]="configuracionCampos"
+        [model]="personaActual"
+        [isLoading]="isLoading"
+        [showDelete]="showDeleteButton(personaActual?.idPersona) && isUpdate"
+        [showSave]="showSaveButton(personaActual?.idPersona)"
+        [showCancel]="true"
+        (save)="guardar()"
+        (delete)="eliminar()"
+        (cancel)="limpiarFormulario()"
+      >
+      </app-dynamic-form>
+    </collapsed-card>
+
+    @if (roleSecurity?.consultar) {
+      <hr class="divider" />
+
+      <app-dynamic-table
+        [columns]="columnas"
+        [data]="personas"
+        [isLoading]="isLoading"
+        [showExport]="roleSecurity?.exportar || false"
+        [showPrint]="roleSecurity?.imprimir || false"
+        [reportName]="'Reporte_Personas'"
+        [hiddenAccion]="hiddenAction()"
+        (actionSelect)="seleccionarParaEditar($event)"
+      >
+      </app-dynamic-table>
+    }
+  </div>
+</div>

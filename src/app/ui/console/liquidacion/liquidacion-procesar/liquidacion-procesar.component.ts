@@ -37,13 +37,7 @@ export class LiquidacionProcesarComponent extends BaseComponent implements OnIni
   kpisLiquidacion: KpiCard[] = [];
   kpisDesglose: KpiCard[] = [];
 
-  calcular: any = {
-      calcularIndemnizacion: true,
-      calcularSalarioPendiente: true,
-      calcularAguinaldo: true,
-      calcularBono14: true,
-      calcularVacaciones: true,
-  }
+
 
   campoEmpleado: DynamicField = {
     name: 'idEmpleado', label: 'Seleccionar Empleado', type: 'dropdown', required: true, options: []
@@ -176,11 +170,11 @@ export class LiquidacionProcesarComponent extends BaseComponent implements OnIni
     ];
 
     this.kpisDesglose = [
-      { title: 'Indemnización', value: this.modeloFormulario.montoIndemnizacion || 0, currency: 'Q', icon: 'bi-shield-check', colorClass: 'info', hidden: !this.calcular.calcularIndemnizacion },
-      { title: 'Aguinaldo', value: this.modeloFormulario.montoAguinaldo || 0, currency: 'Q', icon: 'bi-gift', colorClass: 'info', hidden: !this.calcular.calcularAguinaldo },
-      { title: 'Bono 14', value: this.modeloFormulario.montoBono14 || 0, currency: 'Q', icon: 'bi-calendar-check', colorClass: 'info', hidden: !this.calcular.calcularBono14 },
-      { title: 'Vacaciones', value: this.modeloFormulario.montoVacaciones || 0, currency: 'Q', icon: 'bi-sun', colorClass: 'info', hidden: !this.calcular.calcularVacaciones},
-      { title: 'Salario Pendiente', value: this.modeloFormulario.montoSalarioPendiente || 0, currency: 'Q', icon: 'bi-clock-history', colorClass: 'warning', hidden: !this.calcular.calcularSalarioPendiente }
+      { title: 'Indemnización', value: this.modeloFormulario.montoIndemnizacion || 0, currency: 'Q', icon: 'bi-shield-check', colorClass: 'info', hidden: !this.myApp.calcular.calcularIndemnizacion },
+      { title: 'Aguinaldo', value: this.modeloFormulario.montoAguinaldo || 0, currency: 'Q', icon: 'bi-gift', colorClass: 'info', hidden: !this.myApp.calcular.calcularAguinaldo },
+      { title: 'Bono 14', value: this.modeloFormulario.montoBono14 || 0, currency: 'Q', icon: 'bi-calendar-check', colorClass: 'info', hidden: !this.myApp.calcular.calcularBono14 },
+      { title: 'Vacaciones', value: this.modeloFormulario.montoVacaciones || 0, currency: 'Q', icon: 'bi-sun', colorClass: 'info', hidden: !this.myApp.calcular.calcularVacaciones},
+      { title: 'Salario Pendiente', value: this.modeloFormulario.montoSalarioPendiente || 0, currency: 'Q', icon: 'bi-clock-history', colorClass: 'warning', hidden: !this.myApp.calcular.calcularSalarioPendiente }
     ];
   }
 
@@ -205,7 +199,7 @@ export class LiquidacionProcesarComponent extends BaseComponent implements OnIni
   async procesarLiquidacion() {
     this.executeService({
       callback: async () => {
-        const request = { ...this.modeloFormulario, ...this.calcular };
+        const request = { ...this.modeloFormulario, ...this.myApp.calcular };
         
 
         const result = await this.liquidacionService.procesarLiquidacion(request);

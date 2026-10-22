@@ -2,29 +2,46 @@
   <div class="table-card position-relative">
     <app-loader [isLoading]="isLoading"></app-loader>
 
-    <div class="d-flex flex-wrap justify-content-end gap-2 mb-3">
-      @if (showExport) {
-        <button 
-          class="btn btn-outline-danger btn-sm" 
-          (click)="exportarPdf()" 
-          [disabled]="isLoading || isExporting || isPrinting || data.length === 0">
-          <i class="bi bi-file-earmark-pdf-fill me-1" *ngIf="!isExporting"></i>
-          <span *ngIf="isExporting" class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
-          {{ isExporting ? 'Generando...' : 'Exportar a PDF' }}
-        </button>
-      }
-      
-      @if (showPrint) {
-        <button 
-          class="btn btn-outline-secondary btn-sm" 
-          (click)="imprimir()" 
-          [disabled]="isLoading || isExporting || isPrinting || data.length === 0">
-          <i class="bi bi-printer-fill me-1" *ngIf="!isPrinting"></i>
-          <span *ngIf="isPrinting" class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
-          {{ isPrinting ? 'Preparando...' : 'Imprimir Tabla' }}
-        </button>
-      }
-    </div>
+    @if (showSearch || showExport || showPrint) {
+      <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3 no-print">
+        @if (showSearch) {
+          <div class="search-container flex-grow-1">
+            <input 
+              type="text" 
+              class="form-control search-input" 
+              [placeholder]="searchPlaceholder" 
+              [(ngModel)]="searchTerm"
+              (ngModelChange)="onSearchChange()">
+          </div>
+        }
+
+        @if (showExport || showPrint) {
+          <div class="d-flex flex-wrap gap-2 ms-auto">
+            @if (showExport) {
+              <button 
+                class="btn btn-outline-danger btn-sm" 
+                (click)="exportarPdf()" 
+                [disabled]="isLoading || isExporting || isPrinting || filteredData.length === 0">
+                <i class="bi bi-file-earmark-pdf-fill me-1" *ngIf="!isExporting"></i>
+                <span *ngIf="isExporting" class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
+                {{ isExporting ? 'Generando...' : 'Exportar a PDF' }}
+              </button>
+            }
+            
+            @if (showPrint) {
+              <button 
+                class="btn btn-outline-secondary btn-sm" 
+                (click)="imprimir()" 
+                [disabled]="isLoading || isExporting || isPrinting || filteredData.length === 0">
+                <i class="bi bi-printer-fill me-1" *ngIf="!isPrinting"></i>
+                <span *ngIf="isPrinting" class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
+                {{ isPrinting ? 'Preparando...' : 'Imprimir Tabla' }}
+              </button>
+            }
+          </div>
+        }
+      </div>
+    }
 
     <div class="table-responsive" #printZone>
       <table class="table table-hover align-middle">
@@ -61,9 +78,9 @@
             </tr>
           }
 
-          @if (data.length === 0) {
+          @if (filteredData.length === 0) {
             <tr>
-              <td [attr.colspan]="columns.length + 1" class="text-center py-4 text-muted">
+              <td [attr.colspan]="columns.length + (hiddenAccion ? 0 : 1)" class="text-center py-4 text-muted">
                 No hay registros disponibles.
               </td>
             </tr>
@@ -72,12 +89,12 @@
       </table>
     </div>
 
-    @if (data.length > pageSize) {
+    @if (filteredData.length > pageSize) {
       <div class="d-flex flex-column flex-md-row justify-content-between align-items-center gap-3 mt-3 no-print">
         <span class="text-muted small text-center text-md-start">
           Mostrando {{ (currentPage - 1) * pageSize + 1 }} a 
-          {{ (currentPage * pageSize) > data.length ? data.length : (currentPage * pageSize) }} 
-          de {{ data.length }} registros
+          {{ (currentPage * pageSize) > filteredData.length ? filteredData.length : (currentPage * pageSize) }} 
+          de {{ filteredData.length }} registros
         </span>
         <nav>
           <ul class="pagination pagination-sm mb-0 flex-wrap justify-content-center">

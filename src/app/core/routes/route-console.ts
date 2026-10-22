@@ -7,8 +7,11 @@ import { NotFoundComponent } from '../../ui/not-found/not-found.component';
 import { AsignacionOpcionRoleComponent } from '../../ui/console/asignacion-opcion-role/asignacion-opcion-role.component';
 import { UsuarioComponent } from '../../ui/console/usuario/usuario.component';
 import { SucursalComponent } from '../../ui/console/sucursal/sucursal.component';
+import { StatusEmpleadoComponent } from '../../ui/console/status-empleado/status-empleado.component';
 import { StatusUsuarioComponent } from '../../ui/console/status-usuario/status-usuario.component';
+import { CuentaBancariaEmpleadoComponent } from '../../ui/console/cuenta-bancaria-empleado/cuenta-bancaria-empleado.component';
 import { RoleComponent } from '../../ui/console/role/role.component';
+import { DocumentoPersonaComponent } from '../../ui/console/documento-persona/documento-persona.component';
 import { ModuloComponent } from '../../ui/console/modulo/modulo.component';
 import { MenuComponent } from '../../ui/console/menu/menu.component';
 import { OpcionComponent } from '../../ui/console/opcion/opcion.component';
@@ -17,6 +20,18 @@ import { InasistenciaComponent } from '../../ui/console/inasistencia/inasistenci
 import { CalculoPlanillaComponent } from '../../ui/console/calculo-planilla/calculo-planilla.component';
 import { ReportePlanillaComponent } from '../../ui/console/reporte-planilla/reporte-planilla.component';
 import { LiquidacionComponent } from '../../ui/console/liquidacion/liquidacion.component';
+import { BoletaPagoComponent } from '../../ui/console/boleta-pago/boleta-pago.component';
+import { FlujoStatusEmpleadoComponent } from '../../ui/console/flujo-status-empleado/flujo-status-empleado.component';
+
+import { EstadoCivilComponent } from '../../ui/console/estado-civil/estado-civil.component';
+import { DepartamentoComponent } from '../../ui/console/departamento/departamento.component';
+import { PuestoComponent } from '../../ui/console/puesto/puesto.component';
+
+import { BancoComponent } from '../../ui/console/banco/banco.component';
+import { PersonaComponent } from '../../ui/console/persona/persona.component';
+import { EmpleadoComponent } from '../../ui/console/empleado/empleado.component';
+import { TipoDocumentoComponent } from '../../ui/console/tipo-documento/tipo-documento.component';
+
 
 export const CONSOLE_ROUTES: Routes = [
   {
@@ -33,12 +48,60 @@ export const CONSOLE_ROUTES: Routes = [
     component: SucursalComponent,
   },
   {
+    path: 'banco/:code',
+    component: BancoComponent,
+  },
+  {
+    path: 'personas/:code',
+    component: PersonaComponent,
+  },
+  {
+    path: 'empleado/:code',
+    component: EmpleadoComponent,
+  },
+  {
+    path: 'estado_civil/:code',
+    component: EstadoCivilComponent,
+  },
+  {
+    path: 'departamento/:code',
+    component: DepartamentoComponent,
+  },
+  {
+    path: 'puesto/:code',
+    component: PuestoComponent,
+  },
+  {
     path: 'genero/:code',
     component: GeneroComponent,
   },
   {
+    path: 'cuenta_bancaria_empleado/:code',
+    component: CuentaBancariaEmpleadoComponent
+  },
+  {
+    path: 'documento_persona/:code',
+    component: DocumentoPersonaComponent,
+  },
+  {
     path: 'status_usuario/:code',
     component: StatusUsuarioComponent,
+  },
+  {
+    path: 'status_empleado/:code',
+    component: StatusEmpleadoComponent,
+  },
+  {
+    path: 'flujo_status_empleado/:code',
+    component: FlujoStatusEmpleadoComponent,
+  },
+  {
+    path: 'status_flujo_empleado/:code',
+    component: FlujoStatusEmpleadoComponent,
+  },
+  {
+    path: 'flujo-status-empleado/:code',
+    component: FlujoStatusEmpleadoComponent,
   },
   {
     path: 'usuario/:code',
@@ -46,7 +109,7 @@ export const CONSOLE_ROUTES: Routes = [
   },
   {
     path: 'role/:code',
-    component: RolesComponent,
+    component: RoleComponent,
   },
   {
     path: 'modulo/:code',
@@ -81,8 +144,16 @@ export const CONSOLE_ROUTES: Routes = [
     component: LiquidacionComponent,
   },
   {
+    path: 'tipos_documento/:code',
+    component: TipoDocumentoComponent,
+  },
+  {
     path: '403',
     component: AccesoDenegadoComponent,
+  },
+  {
+    path: 'boleta_pago/:code',
+    component: BoletaPagoComponent,
   },
   {
     path: '**',

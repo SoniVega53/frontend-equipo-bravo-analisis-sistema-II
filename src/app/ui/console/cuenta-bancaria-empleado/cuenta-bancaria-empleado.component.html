@@ -1,0 +1,43 @@
+<div class="center-page">
+  <div class="page-container position-relative">
+    <app-loader [isLoading]="isLoadingPage"></app-loader>
+
+    <h2 class="page-title">Cuentas Bancarias de Empleados</h2>
+
+    <collapsed-card [hidden]="hiddenFormulary()">
+        <!-- <p>Campos configurados: {{ configuracionCampos.length }}</p> -->
+
+<div *ngFor="let campo of configuracionCampos">
+  <!-- <p>{{ campo.label }} - {{ campo.type }}</p> -->
+</div>
+      <app-dynamic-form
+        [fields]="configuracionCampos"
+        [model]="cuentaActual"
+        [isLoading]="isLoading"
+        [showDelete]="showDeleteButton(cuentaActual.idCuentaBancaria)"
+        [showSave]="showSaveButton(cuentaActual.idCuentaBancaria)"
+        [showCancel]="true"
+        (save)="guardar()"
+        (delete)="eliminar(cuentaActual.idCuentaBancaria)"
+        (cancel)="limpiarFormulario()"
+      >
+      </app-dynamic-form>
+    </collapsed-card>
+
+    @if (roleSecurity?.consultar) {
+      <hr class="divider" />
+
+      <app-dynamic-table
+        [columns]="columnas"
+        [data]="cuentas"
+        [isLoading]="isLoading"
+        [showExport]="roleSecurity?.exportar || false"
+        [showPrint]="roleSecurity?.imprimir || false"
+        [reportName]="'Reporte_Cuentas_Bancarias_Empleados'"
+        [hiddenAccion]="hiddenAction()"
+        (actionSelect)="seleccionarParaEditar($event)"
+      >
+      </app-dynamic-table>
+    }
+  </div>
+</div>

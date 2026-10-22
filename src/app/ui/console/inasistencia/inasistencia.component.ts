@@ -148,7 +148,7 @@ export class InasistenciaComponent extends BaseComponent implements OnInit {
 
           
           if (this.inasistenciaActual.procesado) {
-            this.showErrorAlert('No se puede eliminar una inasistencia que ya ha sido procesada en la planilla.');
+            this.showErrorAlert('No se puede Actualizar una inasistencia que ya ha sido procesada en la planilla.');
             return;
           }
 

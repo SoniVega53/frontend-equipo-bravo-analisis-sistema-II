@@ -27,6 +27,14 @@ export class LiquidacionComponent extends BaseComponent implements OnInit {
     });
   }
 
+  calcular: any = {
+    calcularIndemnizacion: true,
+    calcularSalarioPendiente: true,
+    calcularAguinaldo: true,
+    calcularBono14: true,
+    calcularVacaciones: false,
+  }
+
 
   configuracionCampos: DynamicField[] = [
     { name: 'nombreEmpleado', label: 'Empleado', type: 'text', required: true, colSpan: 12, disabled: true },
