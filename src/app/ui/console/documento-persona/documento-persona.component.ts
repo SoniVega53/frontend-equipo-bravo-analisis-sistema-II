@@ -97,6 +97,7 @@ export class DocumentoPersonaComponent extends BaseComponent implements OnInit {
         type: 'dropdown',
         placeholder: 'Seleccione una persona',
         required: true,
+        showSearch: true,
         options: this.personas,
         disabled: this.editando,
         colSpan: 7,

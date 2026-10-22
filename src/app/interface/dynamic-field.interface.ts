@@ -13,6 +13,7 @@ export interface DynamicField {
   iconRight?: string;
   policyData?: PasswordPolicy;
   hidden?: boolean;
+  showSearch?: boolean;
   required?: boolean;
   readonly?: boolean;
   disabled?: boolean;

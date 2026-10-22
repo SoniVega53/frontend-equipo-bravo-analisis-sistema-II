@@ -116,6 +116,7 @@ async cargarDatos() {
         type: 'dropdown',
         placeholder: 'Seleccione un empleado',
         required: true,
+        showSearch: true,
         options: this.empleados,
         colSpan: 7,
       },
