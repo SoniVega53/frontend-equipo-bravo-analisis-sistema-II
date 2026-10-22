@@ -28,6 +28,7 @@
           [options]="field.options || []"
           [(ngModel)]="model[field.name]"
           [required]="field.required || false"
+          [showSearch]="field.showSearch || false"
           (selectionChange)="selectionChange($event,field)"
           [name]="field.name">
         </app-dropdown-select>

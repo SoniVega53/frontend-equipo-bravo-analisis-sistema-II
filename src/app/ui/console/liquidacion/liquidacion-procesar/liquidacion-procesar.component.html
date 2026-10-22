@@ -65,6 +65,7 @@
         (currentPageChange)="currentPage = $event"
         [columns]="columnasTabla"
         [data]="historialEmpleado"
+        [showSearch]="false"
         [isLoading]="isLoading"
         [showExport]="roleSecurity.exportar ?? false"
         [showPrint]="roleSecurity.imprimir ?? false"
